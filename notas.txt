@@ -1,0 +1,9 @@
+*** revisar impuestos en productos, esta como campo de la tabla producto
+    solo grava dos impuestos : iva e ice
+
+*** modificar la bbdd o crear tabla factura y eliminar sales para no duplicar data
+luego modificar las consultas de los reportes y todo
+
+
+
+
