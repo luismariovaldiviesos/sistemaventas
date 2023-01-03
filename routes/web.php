@@ -28,13 +28,13 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('users', Users::class)->name('users');
+
 Route::middleware(['auth'])->group(function () {
 
     Route::get('categories', Categories::class)->name('categories');
     Route::get('products', Products::class)->name('products');
     Route::get('customers', Customers::class)->name('customers');
-    //Route::get('users', Users::class)->name('users');
+    Route::get('users', Users::class)->name('users');
     Route::get('sales', Sales::class)->name('sales');
     Route::get('reports', Reports::class)->name('reports');
     Route::get('dash', Dashboard::class)->name('dash');

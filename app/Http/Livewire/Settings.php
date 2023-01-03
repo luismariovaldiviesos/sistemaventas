@@ -9,8 +9,12 @@ use Livewire\WithFileUploads;
 
 class Settings extends Component
 {
-    public $name, $address, $phone, $leyend, $printer, $logo, $logoPreview;
+
     use WithFileUploads;
+
+    public $razonSocial, $nombreComercial, $ruc,$estab,$ptoEmi,$dirMatriz,$dirEstablecimiento,
+    $telefono, $email, $ambiente,$tipoEmision,$contribuyenteEspecial,$obligadoContabilidad,
+    $logo, $leyend, $printer, $selected_id, $logoPreview;
 
 
     public function mount()
@@ -19,13 +23,23 @@ class Settings extends Component
         //dd($info);
 
         if($info){
-            $this->name = $info->name;
-            $this->address = $info->address;
-            $this->phone = $info->phone;
+            $this->selected_id = $info->id;
+            $this->razonSocial = $info->razonSocial;
+            $this->nombreComercial = $info->nombreComercial;
+            $this->ruc = $info->ruc;
+            $this->estab = $info->estab;
+            $this->ptoEmi = $info->ptoEmi;
+            $this->dirMatriz = $info->dirMatriz;
+            $this->dirEstablecimiento = $info->dirEstablecimiento;
+            $this->telefono = $info->telefono;
+            $this->email = $info->email;
+            $this->ambiente = $info->ambiente;
+            $this->tipoEmision = $info->tipoEmision;
+            $this->contribuyenteEspecial = $info->contribuyenteEspecial;
+            $this->obligadoContabilidad = $info->obligadoContabilidad;
+            $this->logo = $info->logo;
             $this->leyend = $info->leyend;
             $this->printer = $info->printer;
-            $this->logoPreview = $info->logo;
-            $this->logo = null;
         }
     }
 
@@ -38,34 +52,50 @@ class Settings extends Component
 
     public function Store()
     {
-     $rules = [
-        'name' => 'required|min:3|max:65',
-        'phone' => 'required|max:10',
-        'address' => 'required|max:255',
-        'leyend' => 'required|max:50',
-        'printer' => 'required|max:30',
-        'logo' => 'required|image|mimes:jpg,png,jpeg|dimensions:min_width=128,min_height=128,max_width=128,max_height=128'
-    ];
+        $rules = [
+            'razonSocial' => 'required',
+            'nombreComercial' => 'required',
+            'ruc' => 'required|max:13',
+            'estab' => 'required|max:3',
+            'ptoEmi' => 'required|max:3',
+            'dirMatriz' => 'required',
+            'dirEstablecimiento' => 'required',
+            'telefono' => 'required',
+            'email' => "required|email|unique:settings,email,{$this->selected_id}",
+            'ambiente' => 'required|max:1',
+            'tipoEmision' => 'required|max:1',
+            'contribuyenteEspecial' => 'required|max:13',
+            'obligadoContabilidad' => 'required|max:2'
 
-    $msg = [
-        'name.required' => 'Ingresa el nombre del negocio',
-        'name.min' => 'El nombre debe tener al menos 3 caracteres',
-        'name.max' => 'El nombre debe tener máximo 65 caracteres',
-        'phone.required' => 'Ingresa el teléfono',
-        'phone.max' => 'El teléfono debe tener máximo 10 caracteres',
-        'address.required' => 'Ingresa la dirección',
-        'address.max' => 'La dirección debe tener máximo 255 caracteres',
-        'leyend.required' => 'Ingresa la leyenda',
-        'leyend.max' => 'La leyenda debe tener máximo 50 caracteres',
-        'printer.required' => 'Ingresa el nombre de la impresora',
-        'printer.max' => 'El nombre de la impresora debe tener máximo 30 caracteres',
-        'logo.required' => 'Selecciona la imagen de logo',
-        'logo.image' => 'El logo debe ser un archivo de tipo imagen',
-        'logo.mimes' => 'El tipo de archivo para el logo debe ser JPG,PNG,JPEG',
-        'logo.dimensions' => 'Las dimensiones del logo deben ser 128x128',
-    ];
+        ];
 
-    $this->validate($rules, $msg);
+        $messages =[
+            'razonSocial.required' => 'Ingrese la razón social de la empresa',
+            'nombreComercial.required' => 'Ingrese el nombre comercial de la empresa',
+            'estab.required' => 'Ingrese el código del establecimiento',
+            'estab.max' => 'Código del establecimiento debe ser máximo 3  caracteres',
+            'ruc.required' => 'Ingrese un ruc ',
+            'ruc.max' => 'Ruc debe tener máximo 13 caracteres ',
+            'ptoEmi.required' => 'Ingrese un punto de emisión ',
+            'ptoEmi.max' => 'Punto emision  debe tener máximo 3 caracteres ',
+            'dirMatriz.required' => 'Ingrese la direccion matriz',
+            'dirEstablecimiento.required' => 'Ingrese la direccion de establecimiento',
+            'telefono.required' => 'Ingrese el teléfono del establecimiento',
+            'email.required' => 'Ingrese el correo ',
+            'email.email' => 'Ingrese un correo válido',
+            'ambiente.required' => 'Ingrese  el ambiente del sistema',
+            'ambiente.max' => 'El ambiente debe ser de un solo caracter',
+            'tipoEmision.required' => 'Ingrese  el tipo de emision',
+            'tipoEmision.max' => 'El tipo de emisión debe ser de un solo caracter',
+            'contribuyenteEspecial.required' => 'Ingrese si es contribuyente especial',
+            'contribuyenteEspecial.max' => 'El codigo contribuyente especial debe tener máximo 13 caracteres',
+            'obligadoContabilidad.required' => 'Campo requerido',
+            'obligadoContabilidad.max' => 'El campo debe tener máximo 2 caracteres',
+
+
+        ];
+
+        $this->validate($rules, $messages);
 
     sleep(2);
 
@@ -76,9 +106,20 @@ class Settings extends Component
 
     $config = Setting::create(
         [
-            'name' => $this->name,
-            'phone' => $this->phone,
-            'address' => $this->address,
+            'razonSocial' => $this->razonSocial,
+            'nombreComercial' => $this->nombreComercial,
+            'ruc' => $this->ruc,
+            'estab' => $this->estab,
+            'ptoEmi' => $this->ptoEmi,
+            'dirMatriz' => $this->dirMatriz,
+            'dirEstablecimiento' => $this->dirEstablecimiento,
+            'telefono' => $this->telefono,
+            'email' => $this->email,
+            'ambiente' => $this->ambiente,
+            'tipoEmision' => $this->tipoEmision,
+            'contribuyenteEspecial' => $this->contribuyenteEspecial,
+            'obligadoContabilidad' => $this->obligadoContabilidad,
+            'logo' => $this->logo,
             'leyend' => $this->leyend,
             'printer' => $this->printer,
         ]

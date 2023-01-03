@@ -4,8 +4,8 @@
 *** modificar la bbdd o crear tabla factura y eliminar sales para no duplicar data
 luego modificar las consultas de los reportes y todo
 
-prueba de git
-
+primero seeder de usuario
+despues modificar tabla de empresa
 
 
 

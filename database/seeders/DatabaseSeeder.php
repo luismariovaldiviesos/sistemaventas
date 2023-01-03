@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
 
         // \App\Models\Category::factory(5)->create();
         // \App\Models\Product::factory(20)->create();
-         \App\Models\User::factory(20)->create();
+         //\App\Models\User::factory(20)->create();
         // \App\Models\Customer::factory(20)->create();
 
         // \App\Models\Order::factory(20)->create()->each(function($order){
@@ -35,5 +35,8 @@ class DatabaseSeeder extends Seeder
         //         'price' => $order->total / $order->items
         //     ]);
         // });
+        $this->call(PermisosSeeder::class);
+        $this->call(UserSeeder::class);
+
     }
 }
