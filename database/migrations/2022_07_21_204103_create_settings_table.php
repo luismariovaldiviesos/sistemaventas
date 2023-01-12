@@ -23,13 +23,13 @@ return new class extends Migration
             $table->string('ptoEmi');  // max 3
             $table->string('dirMatriz',500);
             $table->string('dirEstablecimiento',500);
-            $table->string('telefono',10)->nullable();
-            $table->string('email')->nullable();
+            $table->string('telefono',13)->nullable();
+            $table->string('email');
             $table->integer('ambiente');  //1 0 2
             $table->integer('tipoEmision'); // 1
             $table->string('contribuyenteEspecial'); //5368
             $table->string('obligadoContabilidad'); // si no
-            $table->string('logo');
+            $table->string('logo')->nullable();
             $table->string('leyend',50)->nullable();
             $table->string('printer',30)->nullable();
             $table->timestamps();

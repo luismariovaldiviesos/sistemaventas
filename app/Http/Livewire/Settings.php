@@ -37,7 +37,7 @@ class Settings extends Component
             $this->tipoEmision = $info->tipoEmision;
             $this->contribuyenteEspecial = $info->contribuyenteEspecial;
             $this->obligadoContabilidad = $info->obligadoContabilidad;
-            $this->logo = $info->logo;
+            $this->logoPreview = $info->logo;
             $this->leyend = $info->leyend;
             $this->printer = $info->printer;
         }
@@ -98,9 +98,9 @@ class Settings extends Component
         $this->validate($rules, $messages);
 
     sleep(2);
-
+        //guardamos temporalmente el logo
     $tempLogo = Setting::first()->logo ?? null;
-
+        //eliminamos info de la tabla
     Setting::truncate();
 
 
@@ -126,13 +126,12 @@ class Settings extends Component
     );
 
     if ($this->logo != null) {
-
-            // delete current logo
+        //eliminar logo anterior
         if (File::exists(public_path($tempLogo))) {
           File::delete($tempLogo);
       }
 
-      // save logo in db
+      // guardar logo en la db
       $customFileName = uniqid() . '_.' . $this->logo->extension();
       $config->logo = $customFileName;
       $config->save();
