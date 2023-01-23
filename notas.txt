@@ -9,3 +9,9 @@ despues modificar tabla de empresa
 
 
 
+hacer lo mismo que esta en sale en factura para despues eliminar sale
+y sacar desde factura todo
+
+grabqa cabecara factura
+
+hacer detalle factura

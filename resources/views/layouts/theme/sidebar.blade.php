@@ -29,6 +29,12 @@
         <li>
             <a href="{{ route('sales') }}" class="side-menu">
                 <div class="side-menu__icon"> <i data-feather="dollar-sign"></i> </div>
+                <div class="side-menu__title"> sales  </div>
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('facturas') }}" class="side-menu">
+                <div class="side-menu__icon"> <i data-feather="dollar-sign"></i> </div>
                 <div class="side-menu__title"> FACTURAR  </div>
             </a>
         </li>
