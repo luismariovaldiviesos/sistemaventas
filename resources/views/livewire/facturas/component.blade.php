@@ -180,13 +180,17 @@
                             @foreach($categories as $category)
                             <div class="intro-y col-span-6 sm:col-span-4 md:col-span-3 xxl:col-span-2">
                                 <div wire:click="getProductsByCategory({{ $category->id}})" class="file box rounded-md px-5 pt-8 pb-5 px-3 sm:px-5 relative zoom-in">
-
+                                    <h3>{{ $category->name }}</h3>
                                     <a href="javascript:;" class="w-3/5 file__icon file__icon--image mx-auto">
+
                                         <div class="file__icon--image__preview image-fit ">
-                                            <img alt="img" src="{{ asset($category->img) }}">
+                                            <img alt="img" src="{{ asset($category->img)}}">
+                                        </div>
+                                        <div>
+
                                         </div>
                                     </a>
-                                    <a href="javascript:;" class="hidden block font-medium mt-4 text-center truncate">{{$category->name}}</a>
+                                    {{-- <a href="javascript:;" class="hidden block font-medium mt-4 text-center truncate">{{$category->name}}</a> --}}
 
                                 </div>
                             </div>

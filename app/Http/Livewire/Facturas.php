@@ -240,6 +240,11 @@ class Facturas extends Component
 
             ]);
 
+            if ($factura) {
+                $items =  $this->getContentCart();
+                dd($items);
+            }
+
             DB::commit();
             $this->clearCart();
             $this->resetUI();
