@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\Category;
 use App\Models\Customer;
+use App\Models\DetalleFactura;
 use App\Models\Factura;
 use App\Models\Product;
 use App\Models\User;
@@ -54,18 +55,18 @@ class Facturas extends Component
      public function mount()
      {
 
-         $fact  = new Factura();
-         $this->fechaFactura =  Carbon::now()->format('d-m-Y');
-         $this->claveAcceso = $fact->claveAcceso();
-        $this->secuencial = $fact->secuencial();
 
-        //dd($this->claveAcceso, $this->secuencial);
+
      }
 
 
 
     public function render()
     {
+        $fact  = new Factura();
+        $this->fechaFactura =  Carbon::now()->format('d-m-Y');
+        $this->claveAcceso = $fact->claveAcceso();
+       $this->secuencial = $fact->secuencial();
         $this->validaCaja();
         if(strlen($this->searchCustomer) > 0)
             $this->customers =  Customer::where('businame','like',"%{$this->searchCustomer}%")
@@ -212,7 +213,7 @@ class Facturas extends Component
       // guardar venta
       public function storeSale($print = false)
       {
-        //dd($this->claveAcceso);
+        //dd($this->secuencial);
         //**********  validamos que haya productos  en la venta */
         if ($this->getTotalCart() <= 0) {
             $this->noty('AGREGA PRODUCTOS A LA VENTA', 'noty', 'error');
@@ -243,6 +244,15 @@ class Facturas extends Component
             if ($factura) {
                 $items =  $this->getContentCart();
                 dd($items);
+            //    foreach($items  as $item)
+            //    {
+            //     DetalleFactura::create([
+            //         'factura_id' => $factura->id,
+            //         'product_id' => $item->id,
+            //         'cantidad' => $item->qty,
+            //         'descripcion' => $item->name,
+            //     ]);
+            //    }
             }
 
             DB::commit();

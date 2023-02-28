@@ -12,6 +12,9 @@ despues modificar tabla de empresa
 hacer lo mismo que esta en sale en factura para despues eliminar sale
 y sacar desde factura todo
 
-grabqa cabecara factura
+se modifica secuencial no cargaba
+desde aqui se inicia a modificar cabecera factura y detalle factura
+primero modificar en la tabla del er
+luego modificar migracion
 
-hacer detalle factura
+seguir el modelo del excel que ya esta resumido
