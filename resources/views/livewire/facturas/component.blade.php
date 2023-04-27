@@ -243,11 +243,11 @@
                     <h4 class="text-2x1">${{number_format($this->subTotSinImpuesto,2)}}</h4>
                 </div>
                 <div class="mt-3">
-                    <h1 class="text-2x1 font-bold">TARIFA 12</h1>
+                    <h1 class="text-2x1 font-bold"> sub total TARIFA 12</h1>
                     <h4 class="text-2x1"> ${{number_format($this->iva12,2)}}</h4>
                 </div>
                 <div class="mt-3">
-                    <h1 class="text-2x1 font-bold">TARIFA 0</h1>
+                    <h1 class="text-2x1 font-bold">sub total TARIFA 0</h1>
                     <h4 class="text-2x1"> ${{number_format($this->iva0,2)}}</h4>
                 </div>
                 <div class="mt-3">
