@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('facturas', function (Blueprint $table) {
             $table->id();
             $table->string('secuencial',9); // ma´ximo 9 en tamaño
-             $table->string('numeroAutorizacion'); //sri capaz que toca en otra tabla
-            $table->date('fechaAutorizacion'); // sri capaz que toca en otra tabla
+             $table->string('numeroAutorizacion')->nullable(); //sri capaz que toca en otra tabla
+            $table->date('fechaAutorizacion')->nullable(); // sri capaz que toca en otra tabla
             $table->string('codDoc',2); // máximo dos en tamaño
             $table->string('claveAcceso',49); // maximo 49 en tamaño
             $table->foreignId('customer_id')->constrained();

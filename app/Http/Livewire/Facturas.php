@@ -14,6 +14,7 @@ use App\Traits\PrinterTrait;
 use DB;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB as FacadesDB;
 
 class Facturas extends Component
 {
@@ -230,20 +231,49 @@ class Facturas extends Component
                 $this->customer_id = Customer::where('businame', 'consumidor final')->first()->id;
             }
 
+            // dd(
+            //     "secuencial" . " " . $this->secuencial,
+            //     "coDoc" . " " . '01',
+            //     "clave acceso" . " " . $this->claveAcceso,
+            //     "id cliente" . " " . $this->customer_id,
+            //     "id usuario" . " " . Auth()->user()->id,
+
+            //     "subtotal" . " " . $this->subTotSinImpuesto,
+            //      "subtotal 0" . " " . $this->iva0,
+            //      "subo total 12" . " " . $this->iva12,
+            //      "ice" . " " . $this->totalIce,
+            //      "sub ttal sin impuesto" . " " . $this->subTotSinImpuesto,
+            //      "descuento" . " " . $this->totalDscto,
+            //      "iva 12 " . " " . $this->totalImpuesto12,
+            //      "total " . " " . $this->totalCart,
+            //      "forma de pago " . " " . "01",
+
+
+            //      "DETALLE FACTURA:". " ",
+            //      "FACT_ID" . " " . "SACAR",
+            //      $items =  $this->getContentCart(),
+            // );
+
             $factura  =  Factura::create([
 
-                'user_id' => Auth()->user()->id,
-                'customer_id' =>  $this->customer_id,
+                'secuencial' => $this->secuencial,
                 'codDoc' => '01',
                 'claveAcceso' =>   $this->claveAcceso,
-                'secuencial' =>   $this->secuencial,
-                'estado' => 'PAGADA'
-
+                'customer_id' =>  $this->customer_id,
+                'user_id' => Auth()->user()->id,
+                'subtotal' => $this->subTotSinImpuesto,
+                'subtotal0' => $this->iva0,
+                'subtotal12' => $this->iva12,
+                'ice' => $this->totalIce,
+                'descuento' => $this->totalDscto,
+                'iva12' => $this->totalImpuesto12,
+                'total' => $this->totalCart,
+                'formaPago' => '01'
             ]);
 
-            if ($factura) {
-                $items =  $this->getContentCart();
-                dd($items);
+            // if ($factura) {
+            //     $items =  $this->getContentCart();
+            //     dd($items);
             //    foreach($items  as $item)
             //    {
             //     DetalleFactura::create([
@@ -253,7 +283,7 @@ class Facturas extends Component
             //         'descripcion' => $item->name,
             //     ]);
             //    }
-            }
+            // }
 
             DB::commit();
             $this->clearCart();
@@ -267,9 +297,10 @@ class Facturas extends Component
 
         }
         catch (\Throwable $e) {
-            DB::rollback();
+            FacadesDB::rollback();
             $this->noty('Error al guardar el pedido: ' . $e->getMessage(), 'noty', 'error');
         }
+
       }
 
 
