@@ -11,7 +11,6 @@ class DetalleFactura extends Model
 
     protected $fillable =
     [      'factura_id','product_id','cantidad','descripcion',
-           'precioUnitario','descuento','precioTotalSinImpuesto','formaPago',
-           'subtotal12','subtotal0','iva12','total'
+           'precioUnitario','descuento','total'
    ];
 }

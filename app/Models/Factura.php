@@ -10,7 +10,9 @@ class Factura extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id','customer_id','codDoc','claveAcceso','secuencial','estado'];
+    protected $fillable = ['secuencial','numeroAutorizacion','fechaAutorizacion','codDoc','claveAcceso','customer_id',
+                            'user_id','subtotal','subtotal0','subtotal12','ice','descuento','iva12','total','formaPago'
+                            ];
 
 
     // validaciones
@@ -21,12 +23,18 @@ class Factura extends Model
         {
             return[
 
-                'user_id' => 'required',
-                'customer_id' => 'required',
-                'codDoc'=> 'required',
+                'secuencial' => 'required',
+                'codDoc' => 'required',
                 'claveAcceso'=> 'required',
-                'secuencial'=> 'required',
-                'estado'=> 'required',
+                'customer_id'=> 'required',
+                'user_id'=> 'required',
+                // 'subtotal'=> 'required',
+                // 'subtotal0'=> 'required',
+                // 'subtotal12'=> 'required',
+                // 'ice'=> 'required',
+                // 'iva12'=> 'required',
+                // 'total'=> 'required',
+                // 'formaPago'=> 'required',
 
             ];
 
@@ -37,9 +45,14 @@ class Factura extends Model
         'user_id.required' => 'usuario requerido',
         'customer_id.required' => 'cliente es requerido',
         'codDoc.required' => 'Código es  requerido',
-        'claveAcceso.required' => 'calve de acceso  requerido',
-        'secuencial.required' => 'secuencial  requerido',
-        'estado.required' => 'estado factura requerido', // por interno va
+        'claveAcceso.required' => 'calve de acceso  requerido'
+        // 'subtotal.required' => 'subtotal  requerido',
+        // 'subtotal0.required' => 'subtotal0  requerido',
+        // 'subtotal12.required' => 'subtotal12  requerido',
+        // 'ice.required' => 'ice  requerido',
+        // 'descuento.required' => 'descuento  requerido',
+        // 'iva12.required' => 'iva12  requerido',
+
     ];
 
 

@@ -21,11 +21,6 @@ return new class extends Migration
             $table->string('descripcion');
             $table->decimal('precioUnitario',10,2);
             $table->decimal('descuento',10,2);
-            $table->decimal('precioTotalSinImpuesto',10,2);
-            $table->string('formaPago'); //01 efectivo
-            $table->decimal('subtotal12',10,2);
-            $table->decimal('subtotal0',10,2);
-            $table->decimal('iva12',10,2);
             $table->decimal('total',10,2);
             $table->timestamps();
         });
