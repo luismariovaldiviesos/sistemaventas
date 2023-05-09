@@ -271,19 +271,27 @@ class Facturas extends Component
                 'formaPago' => '01'
             ]);
 
-            // if ($factura) {
-            //     $items =  $this->getContentCart();
-            //     dd($items);
-            //    foreach($items  as $item)
-            //    {
-            //     DetalleFactura::create([
-            //         'factura_id' => $factura->id,
-            //         'product_id' => $item->id,
-            //         'cantidad' => $item->qty,
-            //         'descripcion' => $item->name,
-            //     ]);
-            //    }
-            // }
+            if ($factura) {
+                $items =  $this->getContentCart();
+                //dd($items);
+               foreach($items  as $item)
+               {
+                DetalleFactura::create([
+                    'factura_id' => $factura->id,
+                    'product_id' => $item->id,
+                    'cantidad' => $item->qty,
+                    'descripcion' => $item->name,
+                    'precioUnitario' => $item->price,
+                    'descuento' =>$item->descuento,
+                    'total' =>$item->price * $item->qty
+                ]);
+
+                 //**********  actualizamos stock */
+                 $product = Product::find($item->id);
+                 $product->stock = $product->stock - $item->qty;
+                 $product->save();
+               }
+            }
 
             DB::commit();
             $this->clearCart();
