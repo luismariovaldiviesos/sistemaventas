@@ -299,6 +299,8 @@ class Facturas extends Component
 
             //if ($print) $this->PrintTicket($sale->id);
 
+
+
             $this->noty('VENTA REGISTRADA CON EXITO');
 
 
@@ -308,6 +310,8 @@ class Facturas extends Component
             FacadesDB::rollback();
             $this->noty('Error al guardar el pedido: ' . $e->getMessage(), 'noty', 'error');
         }
+
+        dd('xml');
 
       }
 

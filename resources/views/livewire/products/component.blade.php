@@ -70,6 +70,7 @@
                                         @else
                                         <td class="text-center font-medium ">
                                             <button type="text" class="btn btn-outline-primary sm">aceptable</button>
+                                            <small>{{ $product->stock }}</small>
                                         </td>
                                         @endif
 
