@@ -23,10 +23,10 @@
                             <label  class="form-label">Tipo</label>
                             <select wire:model='typeidenti' id="typeidenti" class="form-control form-control-lg border-start-0 kioskboard">
                                 <option selected>Elegir</option>
-                                 <option value="ci">ci</option>
-                                <option value="ruc">ruc</option>
-
-                            </select>
+                                <option value="04">RUC</option>
+                                <option value="05">CI</option>
+                                <option value="06">PASAPORTE</option>
+                              </select>
                             @error('businame')
                                 <x-alert msg="{{ $message }}" />
                             @enderror

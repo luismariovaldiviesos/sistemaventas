@@ -311,7 +311,7 @@ class Facturas extends Component
             $this->noty('Error al guardar el pedido: ' . $e->getMessage(), 'noty', 'error');
         }
 
-        dd('xml');
+       $factura->xmlFactura();
 
       }
 

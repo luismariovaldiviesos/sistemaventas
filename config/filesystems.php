@@ -30,6 +30,11 @@ return [
 
     'disks' => [
 
+        'comprobantes/no_firmados' => [
+            'driver' => 'local',
+            'root' => storage_path('app/comprobantes/no_firmados'),
+        ],
+
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app'),
