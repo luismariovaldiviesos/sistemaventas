@@ -231,28 +231,21 @@ class Facturas extends Component
                 $this->customer_id = Customer::where('businame', 'consumidor final')->first()->id;
             }
 
-            // dd(
-            //     "secuencial" . " " . $this->secuencial,
-            //     "coDoc" . " " . '01',
-            //     "clave acceso" . " " . $this->claveAcceso,
-            //     "id cliente" . " " . $this->customer_id,
-            //     "id usuario" . " " . Auth()->user()->id,
-
-            //     "subtotal" . " " . $this->subTotSinImpuesto,
-            //      "subtotal 0" . " " . $this->iva0,
-            //      "subo total 12" . " " . $this->iva12,
-            //      "ice" . " " . $this->totalIce,
-            //      "sub ttal sin impuesto" . " " . $this->subTotSinImpuesto,
-            //      "descuento" . " " . $this->totalDscto,
-            //      "iva 12 " . " " . $this->totalImpuesto12,
-            //      "total " . " " . $this->totalCart,
-            //      "forma de pago " . " " . "01",
+            // PARA EL CLEINTE EN EL XML
+            $customer =  Customer::find($this->customer_id);
+           //dd($customer);
+            $tipo = $customer->typeidenti;
+            if($tipo == 'ci')
+            {
+                $tipeIDenti = '05';   //cedula
+            }
+            else{
+                $tipeIDenti = '04';  //ruc
+            }
 
 
-            //      "DETALLE FACTURA:". " ",
-            //      "FACT_ID" . " " . "SACAR",
-            //      $items =  $this->getContentCart(),
-            // );
+
+
 
             $factura  =  Factura::create([
 
@@ -311,7 +304,7 @@ class Facturas extends Component
             $this->noty('Error al guardar el pedido: ' . $e->getMessage(), 'noty', 'error');
         }
 
-       $factura->xmlFactura();
+       $factura->xmlFactura($tipeIDenti, $customer->businame,$customer->valueidenti, $this->subTotSinImpuesto,$this->totalDscto);
 
       }
 

@@ -143,7 +143,9 @@ class Factura extends Model
 
     // public function xmlFactura($fecha,$correo,$secuencial,$codigo,$cantidad,$descripcion,
     //                          $preciou,$descuento,$preciot,$subtotal,$iva12,$total)
-    public function xmlFactura()
+    public function xmlFactura($tipoIdentificadorCli, $razonSocialCli, $identificadorCliente, $totalSinImpuesto, $totalDescuento
+
+                                )
     {
     $empresa = $this->empresa();
     //dd($empresa);
@@ -173,15 +175,15 @@ class Factura extends Model
 
 
         $xml_def = $xml->createElement('infoFactura');
-		$xml_fec = $xml->createElement('fechaEmision',date('dmY'));
+		$xml_fec = $xml->createElement('fechaEmision',date('d/m/Y'));
 		$xml_des = $xml->createElement('dirEstablecimiento',$empresa[0]->dirEstablecimiento);
 		$xml_con = $xml->createElement('contribuyenteEspecial',$empresa[0]->contribuyenteEspecial);
 		$xml_obl = $xml->createElement('obligadoContabilidad',$empresa[0]->obligadoContabilidad);
-		$xml_ide = $xml->createElement('tipoIdentificacionComprador','05'); // ******************revisar***************
-		$xml_rco = $xml->createElement('razonSocialComprador','Cliente Prueba'); // ******************revisar***************
-		$xml_idc = $xml->createElement('identificacionComprador','9999999999');// ******************revisar***************
-		$xml_tsi = $xml->createElement('totalSinImpuestos',20);// ******************revisar***************
-		$xml_tds = $xml->createElement('totalDescuento','0.00');// ******************revisar***************
+		$xml_ide = $xml->createElement('tipoIdentificacionComprador', $tipoIdentificadorCli); // ******************revisar***************
+		$xml_rco = $xml->createElement('razonSocialComprador', $razonSocialCli); // ******************revisar***************
+		$xml_idc = $xml->createElement('identificacionComprador', $identificadorCliente);// ******************revisar***************
+		$xml_tsi = $xml->createElement('totalSinImpuestos', $totalSinImpuesto);// ******************revisar***************
+		$xml_tds = $xml->createElement('totalDescuento', $totalDescuento);// ******************revisar***************
 
 
         //SEGUNDA PARTE 2.2
