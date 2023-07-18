@@ -231,6 +231,7 @@ class Facturas extends Component
                 $this->customer_id = Customer::where('businame', 'consumidor final')->first()->id;
             }
 
+            // -----***********OJO REVISAR SI CONSUMIDAR FINAL SE FACTURA ********---------------
             // PARA EL CLEINTE EN EL XML
             $customer =  Customer::find($this->customer_id);
            //dd($customer);
@@ -245,7 +246,7 @@ class Facturas extends Component
 
 
 
-
+            //dd($this->iva12);
 
             $factura  =  Factura::create([
 
@@ -304,7 +305,8 @@ class Facturas extends Component
             $this->noty('Error al guardar el pedido: ' . $e->getMessage(), 'noty', 'error');
         }
 
-       $factura->xmlFactura($tipeIDenti, $customer->businame,$customer->valueidenti, $this->subTotSinImpuesto,$this->totalDscto);
+       $factura->xmlFactura($tipeIDenti, $customer->businame,$customer->valueidenti,$customer->address,
+                         $this->subTotSinImpuesto,$this->totalDscto, $this->iva12, $this->totalImpuesto12);
 
       }
 

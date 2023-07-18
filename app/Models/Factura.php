@@ -143,9 +143,8 @@ class Factura extends Model
 
     // public function xmlFactura($fecha,$correo,$secuencial,$codigo,$cantidad,$descripcion,
     //                          $preciou,$descuento,$preciot,$subtotal,$iva12,$total)
-    public function xmlFactura($tipoIdentificadorCli, $razonSocialCli, $identificadorCliente, $totalSinImpuesto, $totalDescuento
-
-                                )
+    public function xmlFactura($tipoIdentificadorCli, $razonSocialCli, $identificadorCliente,$direccionCliente,
+     $totalSinImpuesto, $totalDescuento,$subtotaliva12, $totalIva12)
     {
     $empresa = $this->empresa();
     //dd($empresa);
@@ -179,20 +178,24 @@ class Factura extends Model
 		$xml_des = $xml->createElement('dirEstablecimiento',$empresa[0]->dirEstablecimiento);
 		$xml_con = $xml->createElement('contribuyenteEspecial',$empresa[0]->contribuyenteEspecial);
 		$xml_obl = $xml->createElement('obligadoContabilidad',$empresa[0]->obligadoContabilidad);
-		$xml_ide = $xml->createElement('tipoIdentificacionComprador', $tipoIdentificadorCli); // ******************revisar***************
-		$xml_rco = $xml->createElement('razonSocialComprador', $razonSocialCli); // ******************revisar***************
-		$xml_idc = $xml->createElement('identificacionComprador', $identificadorCliente);// ******************revisar***************
-		$xml_tsi = $xml->createElement('totalSinImpuestos', $totalSinImpuesto);// ******************revisar***************
-		$xml_tds = $xml->createElement('totalDescuento', $totalDescuento);// ******************revisar***************
+		$xml_ide = $xml->createElement('tipoIdentificacionComprador', $tipoIdentificadorCli);
+		$xml_rco = $xml->createElement('razonSocialComprador', $razonSocialCli);
+		$xml_idc = $xml->createElement('identificacionComprador', $identificadorCliente);
+        $xml_dir_cli = $xml->createElement('direccionComprador',$direccionCliente);
+		$xml_tsi = $xml->createElement('totalSinImpuestos', $totalSinImpuesto);// total de factura ok
+		$xml_tds = $xml->createElement('totalDescuento', $totalDescuento);// ttal de descuento factura ok
 
 
         //SEGUNDA PARTE 2.2
-		$xml_imp = $xml->createElement('totalConImpuestos');// ******************revisar***************
-		$xml_tim = $xml->createElement('totalImpuesto');// ******************revisar***************
-		$xml_tco = $xml->createElement('codigo','2');// ******************revisar***************
-		$xml_cpr = $xml->createElement('codigoPorcentaje','0');// ******************revisar***************
-		$xml_bas = $xml->createElement('baseImponible',0.00); // ******************revisar***************
-		$xml_val = $xml->createElement('valor','0');// ******************revisar***************
+		$xml_imp = $xml->createElement('totalConImpuestos');// inicio de impuestos ok
+        // iva 12%
+		$xml_tim = $xml->createElement('totalImpuesto');// ok iva 12
+		$xml_tco = $xml->createElement('codigo','2');// ok codi¿go impuesto 2  = iva
+		$xml_cpr = $xml->createElement('codigoPorcentaje','2');// ok codigo porcentaje iva 12 = 2
+		$xml_bas = $xml->createElement('baseImponible',$subtotaliva12); // ok subtotal iva 12
+		$xml_val = $xml->createElement('valor',$totalIva12);// total impuesto 12 %
+
+        //REVISAR AQUI EL ICE
 
         //PARTE 2.3
 		$xml_pro = $xml->createElement('propina','0.00');  // ******************revisar***************
@@ -253,6 +256,7 @@ class Factura extends Model
 		$xml_def->appendChild($xml_ide);
 		$xml_def->appendChild($xml_rco);
 		$xml_def->appendChild($xml_idc);
+		$xml_def->appendChild($xml_dir_cli);
 		$xml_def->appendChild($xml_tsi);
 		$xml_def->appendChild($xml_tds);
 		$xml_def->appendChild($xml_imp);
