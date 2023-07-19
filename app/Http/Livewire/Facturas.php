@@ -246,7 +246,7 @@ class Facturas extends Component
 
 
 
-            //dd($this->iva12);
+           // dd($this->totalCart);
 
             $factura  =  Factura::create([
 
@@ -288,8 +288,7 @@ class Facturas extends Component
             }
 
             DB::commit();
-            $this->clearCart();
-            $this->resetUI();
+
 
             //if ($print) $this->PrintTicket($sale->id);
 
@@ -306,7 +305,10 @@ class Facturas extends Component
         }
 
        $factura->xmlFactura($tipeIDenti, $customer->businame,$customer->valueidenti,$customer->address,
-                         $this->subTotSinImpuesto,$this->totalDscto, $this->iva12, $this->totalImpuesto12);
+                         $this->subTotSinImpuesto,$this->totalDscto, $this->iva12, $this->totalImpuesto12,$this->totalCart);
+
+                         $this->clearCart();
+                         $this->resetUI();
 
       }
 

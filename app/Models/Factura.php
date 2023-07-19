@@ -144,7 +144,7 @@ class Factura extends Model
     // public function xmlFactura($fecha,$correo,$secuencial,$codigo,$cantidad,$descripcion,
     //                          $preciou,$descuento,$preciot,$subtotal,$iva12,$total)
     public function xmlFactura($tipoIdentificadorCli, $razonSocialCli, $identificadorCliente,$direccionCliente,
-     $totalSinImpuesto, $totalDescuento,$subtotaliva12, $totalIva12)
+     $totalSinImpuesto, $totalDescuento,$subtotaliva12, $totalIva12,$totalFactura)
     {
     $empresa = $this->empresa();
     //dd($empresa);
@@ -198,17 +198,17 @@ class Factura extends Model
         //REVISAR AQUI EL ICE
 
         //PARTE 2.3
-		$xml_pro = $xml->createElement('propina','0.00');  // ******************revisar***************
-		$xml_imt = $xml->createElement('importeTotal',20);// ******************revisar***************
-		$xml_mon = $xml->createElement('moneda','DOLAR');// ******************revisar***************
+		$xml_pro = $xml->createElement('propina','0.00');  // ok
+		$xml_imt = $xml->createElement('importeTotal',$totalFactura);// ok
+		$xml_mon = $xml->createElement('moneda','DOLAR');// ok
 
 		//PARTE PAGOS
-		$xml_pgs = $xml->createElement('pagos');// ******************revisar***************
-		$xml_pag = $xml->createElement('pago');// ******************revisar***************
-		$xml_fpa = $xml->createElement('formaPago','01');// ******************revisar***************
-		$xml_tot = $xml->createElement('total',20);// ******************revisar***************
-		$xml_pla = $xml->createElement('plazo','1');// ******************revisar***************
-		$xml_uti = $xml->createElement('unidadTiempo','dias');// ******************revisar***************
+		$xml_pgs = $xml->createElement('pagos');//ok
+		$xml_pag = $xml->createElement('pago');// ok
+		$xml_fpa = $xml->createElement('formaPago','01');// efectivo ok
+		$xml_tot = $xml->createElement('total',$totalFactura);// ok
+		$xml_pla = $xml->createElement('plazo','90');// ok
+		$xml_uti = $xml->createElement('unidadTiempo','dias');// ok
 
 
         $xml_dts = $xml->createElement('detalles');// ******************revisar***************
