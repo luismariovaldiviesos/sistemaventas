@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use DOMDocument;
+use Illuminate\Support\Arr;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\Unique;
@@ -144,7 +145,7 @@ class Factura extends Model
     // public function xmlFactura($fecha,$correo,$secuencial,$codigo,$cantidad,$descripcion,
     //                          $preciou,$descuento,$preciot,$subtotal,$iva12,$total)
     public function xmlFactura($tipoIdentificadorCli, $razonSocialCli, $identificadorCliente,$direccionCliente,
-     $totalSinImpuesto, $totalDescuento,$subtotaliva12, $totalIva12,$totalFactura)
+     $totalSinImpuesto, $totalDescuento,$subtotaliva12, $totalIva12,$totalFactura, $detalles)
     {
     $empresa = $this->empresa();
     //dd($empresa);
@@ -211,25 +212,54 @@ class Factura extends Model
 		$xml_uti = $xml->createElement('unidadTiempo','dias');// ok
 
 
-        $xml_dts = $xml->createElement('detalles');// ******************revisar***************
-		$xml_det = $xml->createElement('detalle');// ******************revisar***************
-		$xml_cop = $xml->createElement('codigoPrincipal',01);// ******************revisar***************
-		$xml_dcr = $xml->createElement('descripcion','descrp');// ******************revisar***************
-		$xml_can = $xml->createElement('cantidad',20);// ******************revisar***************
-		$xml_pru = $xml->createElement('precioUnitario',20);// ******************revisar***************
-		$xml_dsc = $xml->createElement('descuento',0.00);// ******************revisar***************
-		$xml_tsm = $xml->createElement('precioTotalSinImpuesto',0.00);// ******************revisar***************
+        $xml_dts = $xml->createElement('detalles');
 
-        $xml_ips = $xml->createElement('impuestos'); // ******************revisar***************
-		$xml_ipt = $xml->createElement('impuesto');// ******************revisar***************
-		$xml_cdg = $xml->createElement('codigo','2');// ******************revisar***************
-		$xml_cpt = $xml->createElement('codigoPorcentaje','0');// ******************revisar***************
-		$xml_trf = $xml->createElement('tarifa','0.00');// ******************revisar***************
-		$xml_bsi = $xml->createElement('baseImponible','1.00');// ******************revisar***************
-		$xml_vlr = $xml->createElement('valor','0.00');// ******************revisar***************
+        // $detalles = array(
+        //     array('producto_id' => 1, 'descripcion' => 'producto uno', 'cantidad' => 2, 'precioUnitario' => 2.00, 'descuento' => 0.00, 'total' => 2.00),
+        //     array('producto_id' => 1, 'descripcion' => 'producto dos', 'cantidad' => 3, 'precioUnitario' => 4.00, 'descuento' => 0.00, 'total' => 12.00),
+        //     array('producto_id' => 3, 'descripcion' => 'producto tres', 'cantidad' => 2, 'precioUnitario' => 2.00, 'descuento' => 0.00, 'total' => 8.00),
+        //     array('producto_id' => 4, 'descripcion' => 'producto cuatro', 'cantidad' => 2, 'precioUnitario' => 8.00, 'descuento' => 0.00, 'total' => 16.00)
+        // );
 
-        $xml_ifa = $xml->createElement('infoAdicional');// ******************revisar***************
-		$xml_cp1 = $xml->createElement('campoAdicional','sacta@mail');// ******************revisar***************
+        foreach ($detalles as $d) {
+            $xml_det = $xml->createElement('detalle');
+
+            $xml_cop = $xml->createElement('codigoPrincipal', $d['id']);
+            $xml_dcr = $xml->createElement('descripcion', $d['name']);
+            $xml_can = $xml->createElement('cantidad', $d['qty']);
+            $xml_pru = $xml->createElement('precioUnitario', $d['price']);
+            $xml_dsc = $xml->createElement('descuento', $d['descuento']);
+            $xml_tsm = $xml->createElement('precioTotalSinImpuesto', $d['price']);
+            $xml_ips = $xml->createElement('impuestos');
+            $xml_ipt = $xml->createElement('impuesto');
+            $xml_cdg = $xml->createElement('codigo', '2');
+            $xml_cpt = $xml->createElement('codigoPorcentaje', '2');
+            $xml_trf = $xml->createElement('tarifa', '12');
+            $xml_bsi = $xml->createElement('baseImponible',$d['price']);
+            $xml_vlr = $xml->createElement('valor', $d['price2']);
+
+            $xml_det->appendChild($xml_cop);
+            $xml_det->appendChild($xml_dcr);
+            $xml_det->appendChild($xml_can);
+            $xml_det->appendChild($xml_pru);
+            $xml_det->appendChild($xml_dsc);
+            $xml_det->appendChild($xml_tsm);
+            $xml_det->appendChild($xml_ips);
+
+            $xml_ips->appendChild($xml_ipt);
+            $xml_ipt->appendChild($xml_cdg);
+            $xml_ipt->appendChild($xml_cpt);
+            $xml_ipt->appendChild($xml_trf);
+            $xml_ipt->appendChild($xml_bsi);
+            $xml_ipt->appendChild($xml_vlr);
+
+            $xml_dts->appendChild($xml_det);
+        }
+
+        // Finalmente, agregar el elemento 'detalles' al XML
+        $xml->appendChild($xml_dts);
+        $xml_ifa = $xml->createElement('infoAdicional');//ok
+		$xml_cp1 = $xml->createElement('campoAdicional',$empresa[0]->email);// ok
 		$atributo = $xml->createAttribute('nombre');// ******************revisar***************
 		$atributo->value = 'email';// ******************revisar***************
 
@@ -288,19 +318,7 @@ class Factura extends Model
 
 		$xml_fac->appendChild($xml_dts);
 		$xml_dts->appendChild($xml_det);
-		$xml_det->appendChild($xml_cop);
-		$xml_det->appendChild($xml_dcr);
-		$xml_det->appendChild($xml_can);
-		$xml_det->appendChild($xml_pru);
-		$xml_det->appendChild($xml_dsc);
-		$xml_det->appendChild($xml_tsm);
-		$xml_det->appendChild($xml_ips);
-		$xml_ips->appendChild($xml_ipt);
-		$xml_ipt->appendChild($xml_cdg);
-		$xml_ipt->appendChild($xml_cpt);
-		$xml_ipt->appendChild($xml_trf);
-		$xml_ipt->appendChild($xml_bsi);
-		$xml_ipt->appendChild($xml_vlr);
+
 
 
 		$xml_fac->appendChild($xml_ifa);

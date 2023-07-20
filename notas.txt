@@ -23,3 +23,6 @@ modelo entidad relacion tabla factura y detalle factura modificado y ok
 falta cambiar migracion, modelo controller vista  etc
 
 ojo -->  hay que revisar los totales de la factura, descuadra cuando hay impuestos y descuentos en los productos
+
+https://www.youtube.com/watch?v=b3D57UxlTEw
+
