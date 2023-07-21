@@ -81,6 +81,7 @@ class Certificados extends Component
 
         Certificado::truncate(); // solo guarda un certificado de firma
         //dd($this->certificado);
+        Storage::deleteDirectory('certificados');
         $nombrecert = $this->certificado->getClientOriginalName();
         $certificado  =  $this->certificado->storeAs('certificados',$nombrecert);  //C:\laragon\www\sistemaventas\storage\app\certificados
         Certificado::create([
