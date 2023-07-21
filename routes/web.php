@@ -4,6 +4,7 @@ use App\Http\Livewire\Arqueos;
 use App\Http\Livewire\Asignar;
 use App\Http\Livewire\Cajas;
 use App\Http\Livewire\Categories;
+use App\Http\Livewire\Certificados;
 use App\Http\Livewire\Customers;
 use App\Http\Livewire\Dashboard;
 use App\Http\Livewire\Descuentos;
@@ -47,8 +48,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('permisos', Permisos::class)->name('permisos');
     Route::get('asignar', Asignar::class)->name('asignar');
     Route::get('descuentos', Descuentos::class)->name('descuentos');
-
     Route::get('facturas', Facturas::class)->name('facturas');
+    Route::get('archivop12', Certificados::class)->name('archivop12');
 
 
 
