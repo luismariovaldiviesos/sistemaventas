@@ -44,41 +44,6 @@ class Certificados extends Component
     function Store()
     {
         sleep(1);
-
-
-        // $tempcertificado =  Certificado::first()->certificado ?? null;
-        // dd($tempcertificado);
-        // eliminamos info de la tabla
-        // Certificado::truncate();
-        // $config = Certificado::create([
-        //     'password' => $this->password,
-        //     'certificado' => $this->certificado,
-        // ]);
-
-        // dd($this->certificado);
-
-        // if ($this->certificado != null) {
-        //     eliminamos certificado anterior
-        //     if (File::exists(storage_path('certificados')) ) {
-        //         File::delete($tempcertificado);
-        //     }
-
-        //     guardar certificado en la db
-        //     dd($this->certificado);
-        //     $config->certificado = $this->certificado;
-        //     $config->save();
-
-        //     guarda el archivo en la carpeta certificados
-        //     nombre del certificado
-        //     $cert = uniqid() . '_.' .$this->certificado.'.p12'; // nombre de la imagen
-        //     dd($cert);
-        //     Y se guarda en el nombre del archivo 'achivo.xml', y el obejto nstanciado
-        //    Storage::disk('certificados')->put('nombrecertificado',$this->certificado);
-        //    $archivoGuardado = $this->certificado->store('certificados');
-        // }
-        //
-
-
         Certificado::truncate(); // solo guarda un certificado de firma
         //dd($this->certificado);
         Storage::deleteDirectory('certificados');
