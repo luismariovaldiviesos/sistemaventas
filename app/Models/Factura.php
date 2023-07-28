@@ -7,14 +7,19 @@ use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use DOMDocument;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\Unique;
+use RobRichards\XMLSecLibs\XMLSecurityDSig;
+use RobRichards\XMLSecLibs\XMLSecurityKey;
 
 class Factura extends Model
 {
     use HasFactory;
     use WithFileUploads;
+
+    //const $PASSCERTIFICADO =  Certificado::first('pass');
 
     protected $fillable = ['secuencial','numeroAutorizacion','fechaAutorizacion','codDoc','claveAcceso','customer_id',
                             'user_id','subtotal','subtotal0','subtotal12','ice','descuento','iva12','total','formaPago'
@@ -147,8 +152,8 @@ class Factura extends Model
     public function xmlFactura($tipoIdentificadorCli, $razonSocialCli, $identificadorCliente,$direccionCliente,
      $totalSinImpuesto, $totalDescuento,$subtotaliva12, $totalIva12,$totalFactura, $detalles)
     {
-    $empresa = $this->empresa();
-    //dd($empresa);
+        $empresa = $this->empresa();
+        //dd($empresa);
      $xml =  new DOMDocument('1.0','utf-8');
      $xml->formatOutput = true;
      //PRIMERA PARTE
@@ -339,7 +344,7 @@ class Factura extends Model
         //Se instancia el objeto
         $xml_string =$xml->saveXML();
         //nombre del archivo
-        $factura = uniqid() . '_.' .$empresa[0]->ruc.'.xml'; // nombre de la imagen
+        $factura = $identificadorCliente.'_'.$this->secuencial().'.xml'; // nombre de la imagen
         //Y se guarda en el nombre del archivo 'achivo.xml', y el obejto nstanciado
         Storage::disk('comprobantes/no_firmados')->put($factura,$xml_string);
 
@@ -351,6 +356,108 @@ class Factura extends Model
         //$xml->save('public/comprobantes/no_firmados/prueba.xml');
        //$xml->storeAs('public/comprobantes/no_firmados', $this->secuencial());
         //Storage::put('public/comprobantes/no_firmados/prueba.xml', $xml);
+
+    }
+
+    public function firmarUltimaFactura()
+    {
+        //obtener el id de la ultima factura
+        $facturaId = $this->getLastTicket();
+        // dd($facturaId);
+        // Verificar si hay facturas sin firmar
+        // if (!$facturaId) {
+        //     return 'No hay facturas sin firmar.';
+        // }
+         // Llamar al método para firmar la factura utilizando el ID obtenido
+         $resultadoFirma = $this->firmarFactura($facturaId);
+         return $resultadoFirma;
+    }
+
+    public function firmarFactura($facturaId)
+    {
+
+        //ruta de la factura
+        $factAFir =  base_path('storage/app/comprobantes/no_firmados/'.$facturaId.'.xml');
+
+        //ruta del certifixcado
+        // Ruta del certificado digital (archivo .pfx o .p12)
+        $certPath = base_path('storage/app/certificados/P0000119207.p12');
+
+        // Contraseña del certificado digital
+        $certPass = 'Okz9UqnjX1';
+
+        // Ruta donde se guardará el archivo firmado
+        $signedPdfPath =  base_path('storage/app/comprobantes/firmados/'.$facturaId.'.xml');
+
+        // Contenido del xml
+        $factContent = file_get_contents($factAFir);
+
+        // Cargar el certificado digital
+        $certStore = openssl_pkcs12_read(file_get_contents($certPath), $certs, $certPass);
+        if (!$certStore) {
+            dd('Error al cargar el certificado digital.');
+        }
+        // Extraer la clave privada y el certificado del almacenamiento
+        $key = openssl_pkey_get_private($certs['pkey']);
+        $cert = openssl_x509_read($certs['cert']);
+
+        dd($key,$cert);
+
+
+    }
+
+
+    // public  function firmarFactura($factura){
+
+    //     // Obtener la ruta del archivo XML de la factura
+    //     //$rutaFacturaXml = 'comprobantes/no_firmados/' . $factura . '.xml';
+    //     $rutaFacturaXml = storage_path('app\\comprobantes\\no_firmados\\' . $factura . '.xml');
+    //     //dd($rutaFacturaXml);
+    //    //$rutaCertificado = 'C:/laragon/www/sistemaventas/storage/certificados/P0000119207.p12';
+    //    $rutaCertificado = DB::table('certificados')->where('id', 1)->value('certificado');
+
+    //    $contrasenaCertificado = DB::table('certificados')->where('id', 1)->value('password');
+
+    //    // Verificar que el archivo XML de la factura exista
+    //    if (!Storage::exists($rutaFacturaXml)) {
+    //         dd('no se encuantra lla factura a firmar');
+    //         return;
+    //    }
+    //    dd($contrasenaCertificado);
+
+    //      // Verificar que el archivo de firma electrónica exista
+    //      if (!Storage::exists($rutaCertificado)) {
+    //         dd('no se encuentra el archivo a firmar');
+    //     }
+    //     //dd($rutaCertificado);
+
+    //     // Leer el contenido del archivo XML de la factura
+    //     $contenidoFacturaXml = file_get_contents($rutaFacturaXml);
+    //     dd($contenidoFacturaXml);
+
+
+
+
+    // }
+
+
+
+
+
+    public function getLastTicket() { // obtiene la ultima factura generada en no_firmados
+
+        $archivosNoFirmados = Storage::files('comprobantes\no_firmados');
+        // Verificar si hay archivos en la carpeta
+        if (empty($archivosNoFirmados)) {
+            return 'No hay facturas sin firmar.';
+        }
+        // nombre del ultimo archivo generado
+        $last = end($archivosNoFirmados);
+        // Extraer el ID de la factura del nombre del archivo
+        $rutaInfo = pathinfo($last);
+        $nombreArchivo = $rutaInfo['basename'];
+        $facturaId = substr($nombreArchivo, 0, -4); // Remover la extensión .xml
+        return $facturaId;
 
     }
 

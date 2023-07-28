@@ -100,6 +100,7 @@ class Facturas extends Component
             'categories' => Category::orderBy('name','asc')->get(),
         ])
         ->layout('layouts.theme.app');
+
     }
 
 
@@ -304,14 +305,17 @@ class Facturas extends Component
             $this->noty('Error al guardar el pedido: ' . $e->getMessage(), 'noty', 'error');
         }
         //dd($this->getContentCart());
-       $factura->xmlFactura(
+      $factura->xmlFactura(
                         $tipeIDenti, $customer->businame,$customer->valueidenti,$customer->address,
                          $this->subTotSinImpuesto,$this->totalDscto, $this->iva12,
                          $this->totalImpuesto12,$this->totalCart, $this->getContentCart()
                         );
 
+        $factura->firmarUltimaFactura();
         $this->clearCart();
         $this->resetUI();
+       // dd($factura->getLastTicket());
+
 
       }
 

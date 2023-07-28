@@ -51,7 +51,8 @@ class Certificados extends Component
         $certificado  =  $this->certificado->storeAs('certificados',$nombrecert);  //C:\laragon\www\sistemaventas\storage\app\certificados
         Certificado::create([
             'certificado' => $certificado,
-            'password' => bcrypt($this->password)
+            //'password' => bcrypt($this->password)
+            'password' => $this->password
         ]);
         // Limpiar los campos después de guardar el certificado
         $this->reset(['certificado', 'password']);
