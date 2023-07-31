@@ -11,8 +11,12 @@ use Illuminate\Support\Facades\DB;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\Unique;
+use phpseclib3\File\X509 as FileX509;
 use RobRichards\XMLSecLibs\XMLSecurityDSig;
 use RobRichards\XMLSecLibs\XMLSecurityKey;
+use phpseclib\File\X509;
+use phpseclib\Crypt\RSA;
+
 
 class Factura extends Model
 {
@@ -401,7 +405,37 @@ class Factura extends Model
         $key = openssl_pkey_get_private($certs['pkey']);
         $cert = openssl_x509_read($certs['cert']);
 
-        dd($key,$cert);
+       // dd($key,$cert);
+       // Crear el objeto XMLSecurityDSig
+        $xmlSecDSig = new XMLSecurityDSig();
+
+        // Cargar el contenido del XML a firmar
+        $xmlSecDSig->sigNode = $xmlSecDSig->createNewSignNode('signature', 'nodonuevo');
+        $xmlSecDSig->idKeys = ['wsu:Id'];
+
+        $doc = new DOMDocument();
+        $doc->loadXML($factContent);
+
+        dd($doc);
+
+        // // Crear un nuevo objeto XMLSecurityKey a partir de la clave privada
+
+
+        // // Crear el objeto X509 para el certificado
+        // $x509 = new X509();
+        // $x509->loadX509($certs['cert']);
+        // $xmlSecDSig->add509Cert($x509);
+
+        // // Firmar el XML
+        // $xmlSecDSig->sign($key);
+
+        // // Guardar el XML firmado en el archivo
+        // $signedXml = $xmlSecDSig->getXPathObj()->document->saveXML();
+
+        // // Guardar el XML firmado en un archivo
+        // file_put_contents($signedPdfPath, $signedXml);
+
+
 
 
     }
