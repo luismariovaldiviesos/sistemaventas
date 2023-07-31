@@ -416,9 +416,19 @@ class Factura extends Model
         $doc = new DOMDocument();
         $doc->loadXML($factContent);
 
-        dd($doc);
-
+        //dd($doc);
+        $nuevo_xml =  $facturaId . 'signed';
         // // Crear un nuevo objeto XMLSecurityKey a partir de la clave privada
+        // $argumentos = $ruta_no_firmados . ' ' . $ruta_si_firmados . ' ' . $nuevo_xml . ' ' . $firma . ' ' . $clave;
+        $argumentos = $factAFir . ' ' . $signedPdfPath . ' ' . $nuevo_xml . ' ' . $certPath . ' ' . $certPass;
+        $comando = ('java -jar C:\\Comprobantes\\firmaComprobanteElectronico\\dist\\firmaComprobanteElectronico.jar ' . $argumentos);
+        try {
+            $resp = shell_exec($comando);
+        } catch (\Exception $e) {
+            dd('Error al buscar java: ' . $e->getMessage());
+        }
+
+        dd($resp);
 
 
         // // Crear el objeto X509 para el certificado
