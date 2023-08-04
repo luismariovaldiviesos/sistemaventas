@@ -428,7 +428,17 @@ class Factura extends Model
             dd('Error al buscar java: ' . $e->getMessage());
         }
 
+        $claveAcces = simplexml_load_file($signedPdfPath . $nuevo_xml);
+        $claveAcceso['claveAccesoComprobante'] = substr($claveAcces->infoTributaria[0]->claveAcceso, 0, 49);
+        var_dump($claveAcceso);
+        var_dump($comando);
+        var_dump($resp);
+
         dd($resp);
+        // switch (substr($resp, 0, 7)){
+        //     case 'FIRMADO' :
+
+        // }
 
 
         // // Crear el objeto X509 para el certificado
@@ -444,6 +454,22 @@ class Factura extends Model
 
         // // Guardar el XML firmado en un archivo
         // file_put_contents($signedPdfPath, $signedXml);
+        //31072023 FECHA
+        //010104649843001 RUC EMPRESA
+        //1
+        //001
+        //001
+        //1
+        //000000136
+        //000000016
+        //31072023 FECHA
+        //010104649843001 RUC EMPRESA
+        //1
+        //001
+        //001
+        //1
+        //000000136
+        //000000016
 
 
 
