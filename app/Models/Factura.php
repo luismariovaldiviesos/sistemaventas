@@ -391,7 +391,7 @@ class Factura extends Model
         $certPass = 'Okz9UqnjX1';
 
         // Ruta donde se guardará el archivo firmado
-        $signedPdfPath =  base_path('storage/app/comprobantes/firmados/'.$facturaId.'.xml');
+        $signedPdfPath =  base_path('storage/app/comprobantes/firmados/');
 
         // Contenido del xml
         $factContent = file_get_contents($factAFir);
@@ -417,7 +417,7 @@ class Factura extends Model
         $doc->loadXML($factContent);
 
         //dd($doc);
-        $nuevo_xml =  $facturaId . 'signed';
+        $nuevo_xml =  $facturaId . '.xml';
         // // Crear un nuevo objeto XMLSecurityKey a partir de la clave privada
         // $argumentos = $ruta_no_firmados . ' ' . $ruta_si_firmados . ' ' . $nuevo_xml . ' ' . $firma . ' ' . $clave;
         $argumentos = $factAFir . ' ' . $signedPdfPath . ' ' . $nuevo_xml . ' ' . $certPath . ' ' . $certPass;
