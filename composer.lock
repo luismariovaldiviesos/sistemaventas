@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e93f3d5706a0d83b3145d1e0bdd32629",
+    "content-hash": "57e49929980e6d4ab2f197bb659fc0ae",
     "packages": [
         {
             "name": "barryvdh/laravel-dompdf",
@@ -142,6 +142,73 @@
                 }
             ],
             "time": "2021-08-15T20:50:18+00:00"
+        },
+        {
+            "name": "codedge/laravel-fpdf",
+            "version": "1.12.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/codedge/laravel-fpdf.git",
+                "reference": "251cf70c26592bebe9268ed394b929ac5056030d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/codedge/laravel-fpdf/zipball/251cf70c26592bebe9268ed394b929ac5056030d",
+                "reference": "251cf70c26592bebe9268ed394b929ac5056030d",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^9.0 || ^10.0",
+                "php": "~8.0 || ~8.1 || ~8.2"
+            },
+            "require-dev": {
+                "ergebnis/composer-normalize": "^2.30",
+                "orchestra/testbench": "^6.25.1 || ^8.0",
+                "phpunit/phpunit": "^9.6.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "Fpdf": "Codedge\\Fpdf\\Facades\\Fpdf"
+                    },
+                    "providers": [
+                        "Codedge\\Fpdf\\FpdfServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Codedge\\Fpdf\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Holger Lösken",
+                    "email": "holger.loesken@codedge.de"
+                }
+            ],
+            "description": "Laravel package to include Fpdf. It ships with Fpdf 1.86.",
+            "keywords": [
+                "fpdf",
+                "laravel",
+                "pdf"
+            ],
+            "support": {
+                "issues": "https://github.com/codedge/laravel-fpdf/issues",
+                "source": "https://github.com/codedge/laravel-fpdf"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/codedge",
+                    "type": "github"
+                }
+            ],
+            "time": "2023-08-16T09:46:42+00:00"
         },
         {
             "name": "dflydev/dot-access-data",
@@ -515,6 +582,74 @@
                 }
             ],
             "time": "2022-01-18T15:43:28+00:00"
+        },
+        {
+            "name": "econea/nusoap",
+            "version": "v0.9.16",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/f00b4r/nusoap.git",
+                "reference": "9ead68ec7ad8d1e14943658ce1559435247d14bf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/f00b4r/nusoap/zipball/9ead68ec7ad8d1e14943658ce1559435247d14bf",
+                "reference": "9ead68ec7ad8d1e14943658ce1559435247d14bf",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-xml": "*",
+                "ext-zlib": "*",
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "php-parallel-lint/php-parallel-lint": "~1.2.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.10.x-dev"
+                }
+            },
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.1-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Milan Felix Šulc",
+                    "homepage": "https://f3l1x.io"
+                }
+            ],
+            "description": "Fixed NuSOAP for PHP 5.4 - 8.2",
+            "homepage": "https://github.com/pwnlabs/nusoap",
+            "keywords": [
+                "client",
+                "http",
+                "nusoap",
+                "php",
+                "soap",
+                "transport",
+                "xml"
+            ],
+            "support": {
+                "issues": "https://github.com/f00b4r/nusoap/issues",
+                "source": "https://github.com/f00b4r/nusoap/tree/v0.9.16"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/f3l1x",
+                    "type": "github"
+                }
+            ],
+            "time": "2023-07-19T12:40:31+00:00"
         },
         {
             "name": "egulias/email-validator",

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Traits\FuncionesTrait;
+use App\Traits\PdfTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
@@ -16,12 +18,16 @@ use RobRichards\XMLSecLibs\XMLSecurityDSig;
 use RobRichards\XMLSecLibs\XMLSecurityKey;
 use phpseclib\File\X509;
 use phpseclib\Crypt\RSA;
-
+use nusoap_client;
+use Exception;
+use PhpParser\Node\Stmt\Break_;
 
 class Factura extends Model
 {
     use HasFactory;
     use WithFileUploads;
+    use FuncionesTrait;
+    use PdfTrait;
 
     //const $PASSCERTIFICADO =  Certificado::first('pass');
 
@@ -81,20 +87,21 @@ class Factura extends Model
 
     public function claveAcceso()
     {
-        $fecha =  Carbon::now()->format('dmY');
-        $codigo  = "01";
-        $parteUno = $fecha.$codigo;
+        $fecha =  Carbon::now()->format('dmY'); //1
+        $codigo  = "01"; //2
+        $parteUno = $fecha.$codigo;   //1+2***********
         $empresa =  $this->empresa();
-        $ruc =  $empresa[0]->ruc;
-        $ambiente  =  $empresa[0]->ambiente;
+        $ruc =  $empresa[0]->ruc;  //3
+        $ambiente  =  $empresa[0]->ambiente;  //4
         $establecimiento =  $empresa[0]->estab;
         $puntoEmi  =  $empresa[0]->ptoEmi;
-        $serie  = $establecimiento.$puntoEmi;
-        $tipoEmi  = "1";
-        $parteDos =  $ruc.$ambiente.$serie.$tipoEmi;
-        $cadenaUNo = $parteUno.$parteDos;
-        $codigoNumerico  = "00000001";
-        $cadenaDos  = $cadenaUNo.$this->secuencial().$codigoNumerico;
+        $serie  = $establecimiento.$puntoEmi;  //5
+        $parteDos =  $ruc.$ambiente.$serie;  // 3 4 y 5***********
+        $cadenaUNo = $parteUno.$parteDos;   /// 1 al 5 *********************
+        $secuencial =  $this->secuencial(); //6
+        $codigoNumerico  = "00000001";  //7
+        $tipoEmi  = "1";   //8
+        $cadenaDos  = $cadenaUNo.$secuencial.$codigoNumerico.$tipoEmi;   // 1 al 8   **********
         $dig  =  $this->getMod11Dv($cadenaDos);
         $claveFinal = $cadenaDos.$dig;
         return $claveFinal ;
@@ -104,16 +111,14 @@ class Factura extends Model
     {
         $fac = Factura::latest('secuencial')->first(); // ultimo ingresao  registro por el campo secuencial
         if ($fac == null) {
-            $fac  = "000000001";
+            $numeroActual = 1;
         }
         else{
-           $sec_bd=  $fac->secuencial; // secuencial base de datos =  a
-           $fac = $sec_bd+1; // se suma uno al secuencial
-           $tamano = 9;  // max de ceros a la izquierda
-           $fac = substr(str_repeat(0,$tamano).$fac,-$tamano); // se lelna de ceros a la izq
-        }
-       // codigo numerico es el mismo para toda fac tiene que ser 8 dig
-        return $fac;
+            $numeroActual = intval($fac->secuencial) +1 ; // Incrementar el número
+            }
+        $numeroFormateado = str_pad($numeroActual,9,'0',STR_PAD_LEFT);
+
+        return $numeroFormateado;
     }
 
     public function getMod11Dv($num)
@@ -179,7 +184,7 @@ class Factura extends Model
 		$xml_doc = $xml->createElement('codDoc','01');  ///simpre va a ser 01 porque es fact
 		$xml_est = $xml->createElement('estab',$empresa[0]->estab);
 		$xml_emi = $xml->createElement('ptoEmi',$empresa[0]->ptoEmi);
-		$xml_sec = $xml->createElement('secuencial','0000'.$this->secuencial());
+		$xml_sec = $xml->createElement('secuencial',$this->secuencial());
 		$xml_dir = $xml->createElement('dirMatriz',$empresa[0]->dirMatriz);
 
 
@@ -380,8 +385,33 @@ class Factura extends Model
     public function firmarFactura($facturaId)
     {
 
+        // variables generales para autorizar xml sri
+        $vtipoambiente=1;
+        $wsdls = $this->wsdl($vtipoambiente);
+        $recepcion = $wsdls['recepcion'];
+        $autorizacionws = $wsdls['autorizacion'];
+
+        //RUTAS PARA LOS ARCHIVOS XML
         //ruta de la factura
-        $factAFir =  base_path('storage/app/comprobantes/no_firmados/'.$facturaId.'.xml');
+        $ruta_no_firmados =  base_path('storage/app/comprobantes/no_firmados/'.$facturaId.'.xml');
+
+         // Ruta donde se guardará el archivo firmado
+         $ruta_si_firmados =  base_path('storage/app/comprobantes/firmados/');
+
+         //autorizados
+         $ruta_autorizados = base_path('storage/app/comprobantes/autorizados/');
+
+         //pdfs
+         $pathPdf = base_path('storage/app/comprobantes/pdf/');
+
+         //varaiblers varias
+        $tipo='FV';
+        $controlError = false;
+        $m = '';
+        $show = '';
+
+
+
 
         //ruta del certifixcado
         // Ruta del certificado digital (archivo .pfx o .p12)
@@ -390,11 +420,10 @@ class Factura extends Model
         // Contraseña del certificado digital
         $certPass = 'Okz9UqnjX1';
 
-        // Ruta donde se guardará el archivo firmado
-        $signedPdfPath =  base_path('storage/app/comprobantes/firmados/');
+
 
         // Contenido del xml
-        $factContent = file_get_contents($factAFir);
+        $factContent = file_get_contents($ruta_no_firmados);
 
         // Cargar el certificado digital
         $certStore = openssl_pkcs12_read(file_get_contents($certPath), $certs, $certPass);
@@ -420,7 +449,7 @@ class Factura extends Model
         $nuevo_xml =  $facturaId . '.xml';
         // // Crear un nuevo objeto XMLSecurityKey a partir de la clave privada
         // $argumentos = $ruta_no_firmados . ' ' . $ruta_si_firmados . ' ' . $nuevo_xml . ' ' . $firma . ' ' . $clave;
-        $argumentos = $factAFir . ' ' . $signedPdfPath . ' ' . $nuevo_xml . ' ' . $certPath . ' ' . $certPass;
+        $argumentos = $ruta_no_firmados . ' ' . $ruta_si_firmados . ' ' . $nuevo_xml . ' ' . $certPath . ' ' . $certPass;
         $comando = ('java -jar C:\\Comprobantes\\firmaComprobanteElectronico\\dist\\firmaComprobanteElectronico.jar ' . $argumentos);
         try {
             $resp = shell_exec($comando);
@@ -428,90 +457,143 @@ class Factura extends Model
             dd('Error al buscar java: ' . $e->getMessage());
         }
 
-        $claveAcces = simplexml_load_file($signedPdfPath . $nuevo_xml);
+        $claveAcces = simplexml_load_file($ruta_si_firmados . $nuevo_xml);
         $claveAcceso['claveAccesoComprobante'] = substr($claveAcces->infoTributaria[0]->claveAcceso, 0, 49);
+        //dd($claveAcceso);
         var_dump($claveAcceso);
         var_dump($comando);
         var_dump($resp);
 
-        dd($resp);
-        // switch (substr($resp, 0, 7)){
-        //     case 'FIRMADO' :
+       // dd($resp);
+        switch (substr($resp, 0, 7)){
+            case 'FIRMADO' :
+                $xml_firmado =  file_get_contents($ruta_si_firmados .  $nuevo_xml);
+                $data['xml'] =  base64_encode($xml_firmado);
+                try {
+                    $client = new nusoap_client($recepcion, true);
+                    $client->soap_defencoding = 'utf-8';
+                    $client->xml_encoding = 'utf-8';
+                    $client->decode_utf8 = false;
+                    $response = $client->call('validarComprobante', $data);
+                } catch (\Exception $e) {
+                    $response = "Error!<br>";
+                    $response .= $e->getMessage().'<br>';
+                    $response .= 'Last response: ' . $client->response . '<br>';
+                }
 
-        // }
+               // dd($response) ;
 
+                switch ($response['RespuestaRecepcionComprobante']['estado']){
+                    case 'RECIBIDA' :
+                        $client = new nusoap_client($autorizacionws, true);
+                        $client->soap_defencoding = 'utf-8';
+                        $client->xml_encoding = 'utf-8';
+                        $client->decode_utf8 = false;
 
-        // // Crear el objeto X509 para el certificado
-        // $x509 = new X509();
-        // $x509->loadX509($certs['cert']);
-        // $xmlSecDSig->add509Cert($x509);
+                        try {
+                            $responseAut = $client->call('autorizacionComprobante', $claveAcceso);
 
-        // // Firmar el XML
-        // $xmlSecDSig->sign($key);
+                        } catch (\Exception $e) {
+                            echo "Error!<br>";
+                            echo $e->getMessage();
+                            echo 'Last response: ' . $client->response . '<br />';
+                        }
+                        dd($responseAut);
+                        switch ($response['RespuestaAutorizacionComprobante']['autorizaciones']['autorizacion']['estado']) {
+                            case 'AUTORIZADO':
+                                $autorizacion = $response['RespuestaAutorizacionComprobante']['autorizaciones']['autorizacion'];
+                                $estado = $autorizacion['estado'];
+                                $numeroAutorizacion = $autorizacion['numeroAutorizacion'];
+                                $fechaAutorizacion = $autorizacion['fechaAutorizacion'];
+                                $comprobanteAutorizacion = $autorizacion['comprobante'];
+                                echo '<script>alert("COMPROBANTE AUTORIZADO Y ENVIADO AL CORREO");location.href="../vistas/index.php";</script>';
+                                //echo '<script>alert(Comprobante AUTORIZADO y enviado con exito con autoricacion N° '.$numeroAutorizacion.');</script>';
+                                $vfechaauto = substr($fechaAutorizacion, 0, 10) . ' ' . substr($fechaAutorizacion, 11, 5);
+                                //echo 'Xml ' .
+                                $this->crearXmlAutorizado($estado, $numeroAutorizacion, $fechaAutorizacion, $comprobanteAutorizacion, $ruta_autorizados, $nuevo_xml);
+                               // $pdf = new pdf();
+                                $this->pdfFactura($correo);
+                                $this->correos($correo);
+                                //unlink($ruta_si_firmados . $nuevo_xml);
+                               //require_once './funciones/factura_pdf.php';
+                                //var_dump($func);
+                                break;
 
-        // // Guardar el XML firmado en el archivo
-        // $signedXml = $xmlSecDSig->getXPathObj()->document->saveXML();
+                                case 'EN PROCESO':
+                                    echo "El comprobante se encuentra EN PROCESO:<br>";
+                                    echo $response['RespuestaAutorizacionComprobante']['autorizaciones']['autorizacion']['estado'] . '<br>';
+                                    $m .= 'El documento se encuentra en proceso<br>';
+                                    $controlError = true;
+                                break;
 
-        // // Guardar el XML firmado en un archivo
-        // file_put_contents($signedPdfPath, $signedXml);
-        //31072023 FECHA
-        //010104649843001 RUC EMPRESA
-        //1
-        //001
-        //001
-        //1
-        //000000136
-        //000000016
-        //31072023 FECHA
-        //010104649843001 RUC EMPRESA
-        //1
-        //001
-        //001
-        //1
-        //000000136
-        //000000016
+                                default:if ($responseAut['RespuestaAutorizacionComprobante']['numeroComprobantes'] == "0") {
+                                    echo 'No autorizado</br>';
+                                    echo 'No se encontro informacion del comprobante en el SRI, vuelva an enviarlo.</br>';
+                                } else if ($responseAut['RespuestaAutorizacionComprobante']['numeroComprobantes'] == "1") {
+                                    echo $responseAut['RespuestaAutorizacionComprobante']["autorizaciones"]["autorizacion"]["estado"].'</br>';
+                                    echo $responseAut['RespuestaAutorizacionComprobante']["autorizaciones"]["autorizacion"]["mensajes"]["mensaje"]["mensaje"].'</br>';
+                                    if(isset($responseAut['RespuestaAutorizacionComprobante']["autorizaciones"]["autorizacion"]["mensajes"]["mensaje"]["mensaje"]["informacionAdicional"])){
+                                        echo $responseAut['RespuestaAutorizacionComprobante']["autorizaciones"]["autorizacion"]["mensajes"]["mensaje"]["mensaje"]["informacionAdicional"].'</br>';
+                                        $ms = $responseAut['RespuestaAutorizacionComprobante']["autorizaciones"]["autorizacion"]["mensajes"]["mensaje"]["mensaje"].' => '.
+                                                $responseAut['RespuestaAutorizacionComprobante']["autorizaciones"]["autorizacion"]["mensajes"]["mensaje"]["mensaje"]["informacionAdicional"];
+                                    }else{
+                                        $ms = $responseAut['RespuestaAutorizacionComprobante']["autorizaciones"]["autorizacion"]["mensajes"]["mensaje"]["mensaje"];
+                                    }
+                                    //BORRAR EL VAR_DUMP
+                                    echo '<br/><br/>'.var_dump($responseAut).'<br/><br/>';
+                                } else {
+                                    echo 'No autorizado<br/>';
+                                    echo "Esta es la respuesta de SRI:<br/>";
+                                    echo var_dump($responseAut);
+                                    echo "<br/>";
+                                    echo 'INFORME AL ADMINISTRADOR!</br>';
+                                }
+                            break;
+                        }
 
+                        break;
 
+                    case 'DEVUELTA':
+                        $m .= $response["RespuestaRecepcionComprobante"]["estado"] . '<br>';
+                                $m .= $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["claveAcceso"] . '<br>';
+                                $m .= $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["mensaje"] . '<br>';
+                                if (isset($response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["informacionAdicional"])) {
+                                    $m .= $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["informacionAdicional"] . '<br>';
+                                    $ms = $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["mensaje"] . ' => ' . $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["informacionAdicional"];
+                                } else {
 
+                                    $ms = $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["mensaje"];
+                                }
 
+                                $m .= $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["tipo"] . '<br><br>';
+                                echo $response["RespuestaRecepcionComprobante"]["estado"] . '<br>';
+                                echo $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["claveAcceso"] . '<br>';
+                                echo $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["mensaje"] . '<br>';
+                                if (isset($response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["informacionAdicional"])) {
+                                    echo $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["informacionAdicional"] . '<br>';
+                                }
+                                echo $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["tipo"] . '<br><br>';
+                                $controlError = true;
+                            break;
+
+                            case  false:
+                            	//echo 'nose';
+                            break;
+                            default:
+                            echo "<br>Se ha producido un problema. Vuelve a intentarlo.<br>";
+                            echo "Esta es la respuesta de SRI:<br/>";
+                            //echo var_dump($response).'<br>';
+                            $m .= var_dump($response).'<br>';
+                            echo "<br><br>";
+                            $controlError = true;
+                            break;
+                }
+            break;
+            default:
+                    echo 'no se puede firmar el doc';
+                    break;
+        }
     }
-
-
-    // public  function firmarFactura($factura){
-
-    //     // Obtener la ruta del archivo XML de la factura
-    //     //$rutaFacturaXml = 'comprobantes/no_firmados/' . $factura . '.xml';
-    //     $rutaFacturaXml = storage_path('app\\comprobantes\\no_firmados\\' . $factura . '.xml');
-    //     //dd($rutaFacturaXml);
-    //    //$rutaCertificado = 'C:/laragon/www/sistemaventas/storage/certificados/P0000119207.p12';
-    //    $rutaCertificado = DB::table('certificados')->where('id', 1)->value('certificado');
-
-    //    $contrasenaCertificado = DB::table('certificados')->where('id', 1)->value('password');
-
-    //    // Verificar que el archivo XML de la factura exista
-    //    if (!Storage::exists($rutaFacturaXml)) {
-    //         dd('no se encuantra lla factura a firmar');
-    //         return;
-    //    }
-    //    dd($contrasenaCertificado);
-
-    //      // Verificar que el archivo de firma electrónica exista
-    //      if (!Storage::exists($rutaCertificado)) {
-    //         dd('no se encuentra el archivo a firmar');
-    //     }
-    //     //dd($rutaCertificado);
-
-    //     // Leer el contenido del archivo XML de la factura
-    //     $contenidoFacturaXml = file_get_contents($rutaFacturaXml);
-    //     dd($contenidoFacturaXml);
-
-
-
-
-    // }
-
-
-
 
 
     public function getLastTicket() { // obtiene la ultima factura generada en no_firmados

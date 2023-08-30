@@ -90,7 +90,7 @@
             </div>
 
             <div class="col-span-2">
-                <label  class="form-label">ambiente hacer select</label>
+                <label  class="form-label">Ambiente 1 pruebas -2 prod  </label>
                 <input wire:model="ambiente"  id="ambiente" type="text"
                 class="form-control  kioskboard"  placeholder="ejem1" />
                 @error('ambiente')

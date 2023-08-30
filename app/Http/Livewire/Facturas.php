@@ -304,7 +304,7 @@ class Facturas extends Component
             FacadesDB::rollback();
             $this->noty('Error al guardar el pedido: ' . $e->getMessage(), 'noty', 'error');
         }
-        //dd($this->getContentCart());
+        //dd($customer->valueidenti);
       $factura->xmlFactura(
                         $tipeIDenti, $customer->businame,$customer->valueidenti,$customer->address,
                          $this->subTotSinImpuesto,$this->totalDscto, $this->iva12,
