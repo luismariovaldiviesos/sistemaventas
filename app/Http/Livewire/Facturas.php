@@ -304,17 +304,19 @@ class Facturas extends Component
             FacadesDB::rollback();
             $this->noty('Error al guardar el pedido: ' . $e->getMessage(), 'noty', 'error');
         }
-        //dd($customer->valueidenti);
-      $factura->xmlFactura(
-                        $tipeIDenti, $customer->businame,$customer->valueidenti,$customer->address,
-                         $this->subTotSinImpuesto,$this->totalDscto, $this->iva12,
-                         $this->totalImpuesto12,$this->totalCart, $this->getContentCart()
-                        );
 
-        $factura->firmarUltimaFactura();
+    //   $factura->xmlFactura(
+    //                     $tipeIDenti, $customer->businame,$customer->valueidenti,$customer->address,
+    //                      $this->subTotSinImpuesto,$this->totalDscto, $this->iva12,
+    //                      $this->totalImpuesto12,$this->totalCart, $this->getContentCart()
+    //                     );
+
+    //     $factura->firmarUltimaFactura();
+
         $this->clearCart();
         $this->resetUI();
        // dd($factura->getLastTicket());
+       dd($this->secuencial);
 
 
       }

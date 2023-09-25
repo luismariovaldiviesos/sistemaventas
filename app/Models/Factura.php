@@ -107,18 +107,49 @@ class Factura extends Model
         return $claveFinal ;
     }
 
+    // public  function secuencial ()
+    // {
+    //     $fac = Factura::latest('secuencial')->first(); // ultimo ingresao  registro por el campo secuencial
+    //     if ($fac == null) {
+    //         $numeroActual = 1;
+    //     }
+    //     else{
+    //         $numeroActual = intval($fac->secuencial +1)  ; // Incrementar el número
+    //         }
+    //     $numeroFormateado = str_pad($numeroActual,9,'0',STR_PAD_LEFT);
+    //     //dd($numeroFormateado);
+    //     return $numeroFormateado;
+    // }
+
     public  function secuencial ()
     {
-        $fac = Factura::latest('secuencial')->first(); // ultimo ingresao  registro por el campo secuencial
-        if ($fac == null) {
-            $numeroActual = 1;
-        }
-        else{
-            $numeroActual = intval($fac->secuencial) +1 ; // Incrementar el número
-            }
-        $numeroFormateado = str_pad($numeroActual,9,'0',STR_PAD_LEFT);
+    //     $fac = Factura::latest('secuencial')->first(); // ultimo ingresao  registro por el campo secuencial
+    //     if ($fac == null) {
+    //         $fac  = "000000001";
+    //     }
+    //     else{
+    //        $sec_bd=  $fac->secuencial; // secuencial base de datos =  a
+    //        $fac = $sec_bd+1; // se suma uno al secuencial
+    //        $tamano = 9;  // max de ceros a la izquierda
+    //        $fac = substr(str_repeat(0,$tamano).$fac,-$tamano); // se lelna de ceros a la izq
+    //     }
+    //    // codigo numerico es el mismo para toda fac tiene que ser 8 dig
+    //    dd($fac);
+    //    return $fac;
+     // Consultar si la tabla de facturas está vacía
+     $ultimaFactura = Factura::latest('secuencial')->first();
 
-        return $numeroFormateado;
+    if ($ultimaFactura == null) {
+        $numeroSecuencial = 1;
+    } else {
+        $numeroSecuencial = intval($ultimaFactura->secuencial) + 1;
+    }
+
+    // Formatear el número secuencial con ceros a la izquierda y asegurarse de que no exceda 9 dígitos
+    $numeroFormateado = str_pad($numeroSecuencial, 9, '0', STR_PAD_LEFT);
+    $numeroFormateado = substr($numeroFormateado, -9); // Limitar a 9 dígitos
+
+    return $numeroFormateado;
     }
 
     public function getMod11Dv($num)
@@ -162,7 +193,7 @@ class Factura extends Model
      $totalSinImpuesto, $totalDescuento,$subtotaliva12, $totalIva12,$totalFactura, $detalles)
     {
         $empresa = $this->empresa();
-        //dd($empresa);
+        dd($this->secuencial());
      $xml =  new DOMDocument('1.0','utf-8');
      $xml->formatOutput = true;
      //PRIMERA PARTE
