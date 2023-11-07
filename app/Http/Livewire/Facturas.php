@@ -66,7 +66,7 @@ class Facturas extends Component
     {
         $fact  = new Factura();
         $this->fechaFactura =  Carbon::now()->format('d-m-Y');
-        $this->claveAcceso = $fact->claveAcceso();
+       $this->claveAcceso = $fact->claveAcceso();
        $this->secuencial = $fact->secuencial();
         $this->validaCaja();
         if(strlen($this->searchCustomer) > 0)
@@ -292,6 +292,7 @@ class Facturas extends Component
 
 
             //if ($print) $this->PrintTicket($sale->id);
+            
 
 
 
@@ -305,18 +306,18 @@ class Facturas extends Component
             $this->noty('Error al guardar el pedido: ' . $e->getMessage(), 'noty', 'error');
         }
 
-    //   $factura->xmlFactura(
-    //                     $tipeIDenti, $customer->businame,$customer->valueidenti,$customer->address,
-    //                      $this->subTotSinImpuesto,$this->totalDscto, $this->iva12,
-    //                      $this->totalImpuesto12,$this->totalCart, $this->getContentCart()
-    //                     );
 
-    //     $factura->firmarUltimaFactura();
+        $factura->xmlFactura(
+                                $tipeIDenti, $customer->businame,$customer->valueidenti,$customer->address,
+                                $this->subTotSinImpuesto,$this->totalDscto, $this->iva12,
+                                $this->totalImpuesto12,$this->totalCart, $this->getContentCart()
+                            );
+       // $factura->firmarUltimaFactura();
 
         $this->clearCart();
         $this->resetUI();
        // dd($factura->getLastTicket());
-       dd($this->secuencial);
+       //dd($this->secuencial);
 
 
       }

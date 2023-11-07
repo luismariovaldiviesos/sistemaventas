@@ -87,6 +87,9 @@ class Factura extends Model
 
     public function claveAcceso()
     {
+        //  $ultimaFactura = Factura::latest()->first();
+        // $secuencial = $ultimaFactura->secuencial;
+        //dd($this->secuencial());
         $fecha =  Carbon::now()->format('dmY'); //1
         $codigo  = "01"; //2
         $parteUno = $fecha.$codigo;   //1+2***********
@@ -98,7 +101,7 @@ class Factura extends Model
         $serie  = $establecimiento.$puntoEmi;  //5
         $parteDos =  $ruc.$ambiente.$serie;  // 3 4 y 5***********
         $cadenaUNo = $parteUno.$parteDos;   /// 1 al 5 *********************
-        $secuencial =  $this->secuencial(); //6
+        $secuencial =  $this->secuencial(); //6  aqui hay errror por que suma un digito mas al secuencial y la clave acceo en el xml se forma mal 
         $codigoNumerico  = "00000001";  //7
         $tipoEmi  = "1";   //8
         $cadenaDos  = $cadenaUNo.$secuencial.$codigoNumerico.$tipoEmi;   // 1 al 8   **********
@@ -107,49 +110,25 @@ class Factura extends Model
         return $claveFinal ;
     }
 
-    // public  function secuencial ()
-    // {
-    //     $fac = Factura::latest('secuencial')->first(); // ultimo ingresao  registro por el campo secuencial
-    //     if ($fac == null) {
-    //         $numeroActual = 1;
-    //     }
-    //     else{
-    //         $numeroActual = intval($fac->secuencial +1)  ; // Incrementar el número
-    //         }
-    //     $numeroFormateado = str_pad($numeroActual,9,'0',STR_PAD_LEFT);
-    //     //dd($numeroFormateado);
-    //     return $numeroFormateado;
-    // }
+  
 
     public  function secuencial ()
     {
-    //     $fac = Factura::latest('secuencial')->first(); // ultimo ingresao  registro por el campo secuencial
-    //     if ($fac == null) {
-    //         $fac  = "000000001";
-    //     }
-    //     else{
-    //        $sec_bd=  $fac->secuencial; // secuencial base de datos =  a
-    //        $fac = $sec_bd+1; // se suma uno al secuencial
-    //        $tamano = 9;  // max de ceros a la izquierda
-    //        $fac = substr(str_repeat(0,$tamano).$fac,-$tamano); // se lelna de ceros a la izq
-    //     }
-    //    // codigo numerico es el mismo para toda fac tiene que ser 8 dig
-    //    dd($fac);
-    //    return $fac;
-     // Consultar si la tabla de facturas está vacía
-     $ultimaFactura = Factura::latest('secuencial')->first();
+    
+        // Consultar si la tabla de facturas está vacía
+        $ultimaFactura = Factura::latest('secuencial')->first();
 
-    if ($ultimaFactura == null) {
-        $numeroSecuencial = 1;
-    } else {
-        $numeroSecuencial = intval($ultimaFactura->secuencial) + 1;
-    }
+        if ($ultimaFactura == null) {
+            $numeroSecuencial = 1;
+        } else {
+            $numeroSecuencial = intval($ultimaFactura->secuencial) + 1;
+        }
 
-    // Formatear el número secuencial con ceros a la izquierda y asegurarse de que no exceda 9 dígitos
-    $numeroFormateado = str_pad($numeroSecuencial, 9, '0', STR_PAD_LEFT);
-    $numeroFormateado = substr($numeroFormateado, -9); // Limitar a 9 dígitos
+        // Formatear el número secuencial con ceros a la izquierda y asegurarse de que no exceda 9 dígitos
+        $numeroFormateado = str_pad($numeroSecuencial, 9, '0', STR_PAD_LEFT);
+        $numeroFormateado = substr($numeroFormateado, -9); // Limitar a 9 dígitos
 
-    return $numeroFormateado;
+        return $numeroFormateado;
     }
 
     public function getMod11Dv($num)
@@ -193,10 +172,11 @@ class Factura extends Model
      $totalSinImpuesto, $totalDescuento,$subtotaliva12, $totalIva12,$totalFactura, $detalles)
     {
         $empresa = $this->empresa();
-        dd($this->secuencial());
-     $xml =  new DOMDocument('1.0','utf-8');
-     $xml->formatOutput = true;
-     //PRIMERA PARTE
+        $ultimaFactura = Factura::latest()->first();
+        $secuencial = $ultimaFactura->secuencial;        
+        $xml =  new DOMDocument('1.0','utf-8');
+        $xml->formatOutput = true;
+        //PRIMERA PARTE
 		$xml_fac = $xml->createElement('factura');
 		$cabecera = $xml->createAttribute('id');
 		$cabecera->value = 'comprobante';
@@ -215,7 +195,7 @@ class Factura extends Model
 		$xml_doc = $xml->createElement('codDoc','01');  ///simpre va a ser 01 porque es fact
 		$xml_est = $xml->createElement('estab',$empresa[0]->estab);
 		$xml_emi = $xml->createElement('ptoEmi',$empresa[0]->ptoEmi);
-		$xml_sec = $xml->createElement('secuencial',$this->secuencial());
+		$xml_sec = $xml->createElement('secuencial',$secuencial);
 		$xml_dir = $xml->createElement('dirMatriz',$empresa[0]->dirMatriz);
 
 
@@ -384,18 +364,11 @@ class Factura extends Model
         //Se instancia el objeto
         $xml_string =$xml->saveXML();
         //nombre del archivo
-        $factura = $identificadorCliente.'_'.$this->secuencial().'.xml'; // nombre de la imagen
+        $factura = $identificadorCliente.'_'.$secuencial.'.xml'; // nombre de la imagen
         //Y se guarda en el nombre del archivo 'achivo.xml', y el obejto nstanciado
         Storage::disk('comprobantes/no_firmados')->put($factura,$xml_string);
+        //dd($this->claveAcceso());
 
-
-
-
-
-        //$xml->save('../Comprobantes/no_firmados/prueba.xml');
-        //$xml->save('public/comprobantes/no_firmados/prueba.xml');
-       //$xml->storeAs('public/comprobantes/no_firmados', $this->secuencial());
-        //Storage::put('public/comprobantes/no_firmados/prueba.xml', $xml);
 
     }
 
