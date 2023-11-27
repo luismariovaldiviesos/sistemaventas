@@ -169,11 +169,13 @@ class Factura extends Model
     // public function xmlFactura($fecha,$correo,$secuencial,$codigo,$cantidad,$descripcion,
     //                          $preciou,$descuento,$preciot,$subtotal,$iva12,$total)
     public function xmlFactura($tipoIdentificadorCli, $razonSocialCli, $identificadorCliente,$direccionCliente,
-     $totalSinImpuesto, $totalDescuento,$subtotaliva12, $totalIva12,$totalFactura, $detalles)
+     $totalSinImpuesto, $totalDescuento,$subtotaliva12, $totalIva12,$totalFactura, $detalles,$secuencia,$claveAcce)
     {
+
+       // dd($secuencia,$claveAcce); LLEGA BIEN DESDE EL METODO DEL CONTROLLER
         $empresa = $this->empresa();
-        $ultimaFactura = Factura::latest()->first();
-        $secuencial = $ultimaFactura->secuencial;        
+        //$ultimaFactura = Factura::latest()->first();
+        //$secuencial = $ultimaFactura->secuencial;        
         $xml =  new DOMDocument('1.0','utf-8');
         $xml->formatOutput = true;
         //PRIMERA PARTE
@@ -191,11 +193,11 @@ class Factura extends Model
 		//$fechasf=date('dmY'); /// ******************revisar***************
 		// $dig = new modulo();
 		// $clave_acceso=$fechasf.'01010376784400110010010000'.$secuencial.'123456781';
-		$xml_cla = $xml->createElement('claveAcceso',$this->claveAcceso());
+		$xml_cla = $xml->createElement('claveAcceso',$claveAcce);
 		$xml_doc = $xml->createElement('codDoc','01');  ///simpre va a ser 01 porque es fact
 		$xml_est = $xml->createElement('estab',$empresa[0]->estab);
 		$xml_emi = $xml->createElement('ptoEmi',$empresa[0]->ptoEmi);
-		$xml_sec = $xml->createElement('secuencial',$secuencial);
+		$xml_sec = $xml->createElement('secuencial',$secuencia);
 		$xml_dir = $xml->createElement('dirMatriz',$empresa[0]->dirMatriz);
 
 
@@ -364,7 +366,7 @@ class Factura extends Model
         //Se instancia el objeto
         $xml_string =$xml->saveXML();
         //nombre del archivo
-        $factura = $identificadorCliente.'_'.$secuencial.'.xml'; // nombre de la imagen
+        $factura = $identificadorCliente.'_'.$secuencia.'.xml'; // nombre de la imagen
         //Y se guarda en el nombre del archivo 'achivo.xml', y el obejto nstanciado
         Storage::disk('comprobantes/no_firmados')->put($factura,$xml_string);
         //dd($this->claveAcceso());
@@ -398,7 +400,7 @@ class Factura extends Model
         //RUTAS PARA LOS ARCHIVOS XML
         //ruta de la factura
         $ruta_no_firmados =  base_path('storage/app/comprobantes/no_firmados/'.$facturaId.'.xml');
-
+        //dd($ruta_no_firmados);
          // Ruta donde se guardará el archivo firmado
          $ruta_si_firmados =  base_path('storage/app/comprobantes/firmados/');
 
@@ -455,8 +457,10 @@ class Factura extends Model
         // $argumentos = $ruta_no_firmados . ' ' . $ruta_si_firmados . ' ' . $nuevo_xml . ' ' . $firma . ' ' . $clave;
         $argumentos = $ruta_no_firmados . ' ' . $ruta_si_firmados . ' ' . $nuevo_xml . ' ' . $certPath . ' ' . $certPass;
         $comando = ('java -jar C:\\Comprobantes\\firmaComprobanteElectronico\\dist\\firmaComprobanteElectronico.jar ' . $argumentos);
+       
         try {
             $resp = shell_exec($comando);
+            dd($resp);
         } catch (\Exception $e) {
             dd('Error al buscar java: ' . $e->getMessage());
         }
