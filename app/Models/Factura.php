@@ -460,7 +460,7 @@ class Factura extends Model
        
         try {
             $resp = shell_exec($comando);
-            dd($resp);
+            //dd($resp);
         } catch (\Exception $e) {
             dd('Error al buscar java: ' . $e->getMessage());
         }
