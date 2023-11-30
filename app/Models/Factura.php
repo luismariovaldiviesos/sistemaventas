@@ -101,7 +101,7 @@ class Factura extends Model
         $serie  = $establecimiento.$puntoEmi;  //5
         $parteDos =  $ruc.$ambiente.$serie;  // 3 4 y 5***********
         $cadenaUNo = $parteUno.$parteDos;   /// 1 al 5 *********************
-        $secuencial =  $this->secuencial(); //6  aqui hay errror por que suma un digito mas al secuencial y la clave acceo en el xml se forma mal 
+        $secuencial =  $this->secuencial(); //6  aqui hay errror por que suma un digito mas al secuencial y la clave acceo en el xml se forma mal
         $codigoNumerico  = "00000001";  //7
         $tipoEmi  = "1";   //8
         $cadenaDos  = $cadenaUNo.$secuencial.$codigoNumerico.$tipoEmi;   // 1 al 8   **********
@@ -110,11 +110,11 @@ class Factura extends Model
         return $claveFinal ;
     }
 
-  
+
 
     public  function secuencial ()
     {
-    
+
         // Consultar si la tabla de facturas está vacía
         $ultimaFactura = Factura::latest('secuencial')->first();
 
@@ -175,7 +175,7 @@ class Factura extends Model
        // dd($secuencia,$claveAcce); LLEGA BIEN DESDE EL METODO DEL CONTROLLER
         $empresa = $this->empresa();
         //$ultimaFactura = Factura::latest()->first();
-        //$secuencial = $ultimaFactura->secuencial;        
+        //$secuencial = $ultimaFactura->secuencial;
         $xml =  new DOMDocument('1.0','utf-8');
         $xml->formatOutput = true;
         //PRIMERA PARTE
@@ -457,7 +457,7 @@ class Factura extends Model
         // $argumentos = $ruta_no_firmados . ' ' . $ruta_si_firmados . ' ' . $nuevo_xml . ' ' . $firma . ' ' . $clave;
         $argumentos = $ruta_no_firmados . ' ' . $ruta_si_firmados . ' ' . $nuevo_xml . ' ' . $certPath . ' ' . $certPass;
         $comando = ('java -jar C:\\Comprobantes\\firmaComprobanteElectronico\\dist\\firmaComprobanteElectronico.jar ' . $argumentos);
-       
+
         try {
             $resp = shell_exec($comando);
             //dd($resp);
@@ -472,10 +472,11 @@ class Factura extends Model
         var_dump($comando);
         var_dump($resp);
 
-       // dd($resp);
+        //dd($resp);
         switch (substr($resp, 0, 7)){
             case 'FIRMADO' :
                 $xml_firmado =  file_get_contents($ruta_si_firmados .  $nuevo_xml);
+                dd($xml_firmado);
                 $data['xml'] =  base64_encode($xml_firmado);
                 try {
                     $client = new nusoap_client($recepcion, true);
