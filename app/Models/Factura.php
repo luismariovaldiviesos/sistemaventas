@@ -473,7 +473,7 @@ class Factura extends Model
         var_dump($resp);
 
         //dd($resp);
-        dd("desde aqui empezamos servicios SRI ")
+        dd("desde aqui empezamos servicios SRI ");
         // switch (substr($resp, 0, 7)){
         //     case 'FIRMADO' :
         //         $xml_firmado =  file_get_contents($ruta_si_firmados .  $nuevo_xml);
