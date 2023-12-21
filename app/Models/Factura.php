@@ -474,6 +474,9 @@ class Factura extends Model
 
         //dd($resp);
 
+        // *********** DESDE AQUI INICIAMOS CON LA INSTALACION DE LA LIBRERIA ************************
+        // *********** LIBRERIA NOSOAP INSTALADA ************************
+
         // switch (substr($resp, 0, 7)){
         //     case 'FIRMADO' :
         //         $xml_firmado =  file_get_contents($ruta_si_firmados .  $nuevo_xml);
@@ -604,7 +607,7 @@ class Factura extends Model
         //             break;
         // }
 
-        // VAMOS CTM :
+
 
 
     }
