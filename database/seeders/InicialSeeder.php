@@ -22,7 +22,7 @@ class InicialSeeder extends Seeder
         $customer = Customer::create([
             'businame' => 'Consumidor final',
             'typeidenti' => 'ci',
-            'valueidenti' => '09999999999',
+            'valueidenti' => '0999999999',
             'address' => 'dirección',
             'address' => 'dirección',
             'email' => 'final@mail',
@@ -88,9 +88,9 @@ class InicialSeeder extends Seeder
         ]);
 
         Setting::create([
-            'razonSocial' => 'Khipu Desarrollo de Software',
-            'nombreComercial' => 'Khipu Desarrollo de Software',
-            'ruc' => '0104649843001',
+            'razonSocial' => 'CHOCHO ORELLANA ANGELA XIMENA',
+            'nombreComercial' => 'CHOCHO ORELLANA ANGELA XIMENA',
+            'ruc' => '0103844494001',
             'estab' => '001',
             'ptoEmi' => '001',
             'dirMatriz' => 'Dávila Chica y Manuel Moreno',
