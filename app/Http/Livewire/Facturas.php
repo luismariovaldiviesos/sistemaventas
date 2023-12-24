@@ -68,6 +68,8 @@ class Facturas extends Component
         $this->fechaFactura =  Carbon::now()->format('d-m-Y');
        $this->claveAcceso = $fact->claveAcceso();
        $this->secuencial = $fact->secuencial();
+       //dd($this->secuencial);
+       //dd($this->claveAcceso);
         $this->validaCaja();
         if(strlen($this->searchCustomer) > 0)
             $this->customers =  Customer::where('businame','like',"%{$this->searchCustomer}%")
@@ -250,7 +252,7 @@ class Facturas extends Component
            // dd($this->totalCart);
 
             $factura  =  Factura::create([
-
+                //dd($this->secuencial, $this->claveAcceso), hasta aqui llega bien secuencial y clave 
                 'secuencial' => $this->secuencial,
                 'codDoc' => '01',
                 'claveAcceso' =>   $this->claveAcceso,
@@ -310,9 +312,10 @@ class Facturas extends Component
         $factura->xmlFactura(
                                 $tipeIDenti, $customer->businame,$customer->valueidenti,$customer->address,
                                 $this->subTotSinImpuesto,$this->totalDscto, $this->iva12,
-                                $this->totalImpuesto12,$this->totalCart, $this->getContentCart()
+                                $this->totalImpuesto12,$this->totalCart, $this->getContentCart(),
+                                $this->secuencial, $this->claveAcceso
                             );
-       // $factura->firmarUltimaFactura();
+        $factura->firmarUltimaFactura();
 
         $this->clearCart();
         $this->resetUI();

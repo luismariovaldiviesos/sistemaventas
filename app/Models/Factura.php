@@ -21,6 +21,8 @@ use phpseclib\Crypt\RSA;
 use nusoap_client;
 use Exception;
 use PhpParser\Node\Stmt\Break_;
+//require_once "/vendor/econea/nusoap/src/nusoap.php";
+use soap_server;
 
 class Factura extends Model
 {
@@ -101,7 +103,7 @@ class Factura extends Model
         $serie  = $establecimiento.$puntoEmi;  //5
         $parteDos =  $ruc.$ambiente.$serie;  // 3 4 y 5***********
         $cadenaUNo = $parteUno.$parteDos;   /// 1 al 5 *********************
-        $secuencial =  $this->secuencial(); //6  aqui hay errror por que suma un digito mas al secuencial y la clave acceo en el xml se forma mal 
+        $secuencial =  $this->secuencial(); //6  aqui hay errror por que suma un digito mas al secuencial y la clave acceo en el xml se forma mal
         $codigoNumerico  = "00000001";  //7
         $tipoEmi  = "1";   //8
         $cadenaDos  = $cadenaUNo.$secuencial.$codigoNumerico.$tipoEmi;   // 1 al 8   **********
@@ -110,11 +112,11 @@ class Factura extends Model
         return $claveFinal ;
     }
 
-  
+
 
     public  function secuencial ()
     {
-    
+
         // Consultar si la tabla de facturas está vacía
         $ultimaFactura = Factura::latest('secuencial')->first();
 
@@ -169,11 +171,13 @@ class Factura extends Model
     // public function xmlFactura($fecha,$correo,$secuencial,$codigo,$cantidad,$descripcion,
     //                          $preciou,$descuento,$preciot,$subtotal,$iva12,$total)
     public function xmlFactura($tipoIdentificadorCli, $razonSocialCli, $identificadorCliente,$direccionCliente,
-     $totalSinImpuesto, $totalDescuento,$subtotaliva12, $totalIva12,$totalFactura, $detalles)
+     $totalSinImpuesto, $totalDescuento,$subtotaliva12, $totalIva12,$totalFactura, $detalles,$secuencia,$claveAcce)
     {
+
+       // dd($secuencia,$claveAcce); LLEGA BIEN DESDE EL METODO DEL CONTROLLER
         $empresa = $this->empresa();
-        $ultimaFactura = Factura::latest()->first();
-        $secuencial = $ultimaFactura->secuencial;        
+        //$ultimaFactura = Factura::latest()->first();
+        //$secuencial = $ultimaFactura->secuencial;
         $xml =  new DOMDocument('1.0','utf-8');
         $xml->formatOutput = true;
         //PRIMERA PARTE
@@ -191,11 +195,11 @@ class Factura extends Model
 		//$fechasf=date('dmY'); /// ******************revisar***************
 		// $dig = new modulo();
 		// $clave_acceso=$fechasf.'01010376784400110010010000'.$secuencial.'123456781';
-		$xml_cla = $xml->createElement('claveAcceso',$this->claveAcceso());
+		$xml_cla = $xml->createElement('claveAcceso',$claveAcce);
 		$xml_doc = $xml->createElement('codDoc','01');  ///simpre va a ser 01 porque es fact
 		$xml_est = $xml->createElement('estab',$empresa[0]->estab);
 		$xml_emi = $xml->createElement('ptoEmi',$empresa[0]->ptoEmi);
-		$xml_sec = $xml->createElement('secuencial',$secuencial);
+		$xml_sec = $xml->createElement('secuencial',$secuencia);
 		$xml_dir = $xml->createElement('dirMatriz',$empresa[0]->dirMatriz);
 
 
@@ -364,7 +368,7 @@ class Factura extends Model
         //Se instancia el objeto
         $xml_string =$xml->saveXML();
         //nombre del archivo
-        $factura = $identificadorCliente.'_'.$secuencial.'.xml'; // nombre de la imagen
+        $factura = $identificadorCliente.'_'.$secuencia.'.xml'; // nombre de la imagen
         //Y se guarda en el nombre del archivo 'achivo.xml', y el obejto nstanciado
         Storage::disk('comprobantes/no_firmados')->put($factura,$xml_string);
         //dd($this->claveAcceso());
@@ -398,7 +402,7 @@ class Factura extends Model
         //RUTAS PARA LOS ARCHIVOS XML
         //ruta de la factura
         $ruta_no_firmados =  base_path('storage/app/comprobantes/no_firmados/'.$facturaId.'.xml');
-
+        //dd($ruta_no_firmados);
          // Ruta donde se guardará el archivo firmado
          $ruta_si_firmados =  base_path('storage/app/comprobantes/firmados/');
 
@@ -455,8 +459,10 @@ class Factura extends Model
         // $argumentos = $ruta_no_firmados . ' ' . $ruta_si_firmados . ' ' . $nuevo_xml . ' ' . $firma . ' ' . $clave;
         $argumentos = $ruta_no_firmados . ' ' . $ruta_si_firmados . ' ' . $nuevo_xml . ' ' . $certPath . ' ' . $certPass;
         $comando = ('java -jar C:\\Comprobantes\\firmaComprobanteElectronico\\dist\\firmaComprobanteElectronico.jar ' . $argumentos);
+
         try {
             $resp = shell_exec($comando);
+            //dd($resp);
         } catch (\Exception $e) {
             dd('Error al buscar java: ' . $e->getMessage());
         }
@@ -468,10 +474,18 @@ class Factura extends Model
         var_dump($comando);
         var_dump($resp);
 
-       // dd($resp);
-        switch (substr($resp, 0, 7)){
+        //dd($resp);
+
+        // *********** DESDE AQUI INICIAMOS CON LA INSTALACION DE LA LIBRERIA ************************
+        // *********** LIBRERIA NOSOAP INSTALADA ************************
+
+        //
+
+        switch(substr($resp, 0, 7)){
+
             case 'FIRMADO' :
                 $xml_firmado =  file_get_contents($ruta_si_firmados .  $nuevo_xml);
+                //dd($xml_firmado);
                 $data['xml'] =  base64_encode($xml_firmado);
                 try {
                     $client = new nusoap_client($recepcion, true);
@@ -479,82 +493,84 @@ class Factura extends Model
                     $client->xml_encoding = 'utf-8';
                     $client->decode_utf8 = false;
                     $response = $client->call('validarComprobante', $data);
+
+
                 } catch (\Exception $e) {
-                    $response = "Error!<br>";
-                    $response .= $e->getMessage().'<br>';
-                    $response .= 'Last response: ' . $client->response . '<br>';
+                    echo "Error!<br />";
+                    echo $e->getMessage();
+                    echo 'Last response: ' . $client->response . '<br />';
+                    var_dump($client->debug_str);
                 }
 
-               // dd($response) ;
-
-                switch ($response['RespuestaRecepcionComprobante']['estado']){
-                    case 'RECIBIDA' :
-                        $client = new nusoap_client($autorizacionws, true);
-                        $client->soap_defencoding = 'utf-8';
-                        $client->xml_encoding = 'utf-8';
-                        $client->decode_utf8 = false;
-
+                //$response =  $response["RespuestaRecepcionComprobante"]["estado"];
+                //dd($client->debug_str);
+                switch ($response["RespuestaRecepcionComprobante"]["estado"]) {
+                    case false:
+                        dd("me parece que es error del sri ");
+                    break;
+                    case 'RECIBIDA':
+                       $client =  new nusoap_client($autorizacionws, true);
+                       $client->soap_defencoding = 'utf-8';
+                       $client->xml_encoding = 'utf-8';
+                       $client->decode_utf8 = false;
                         try {
                             $responseAut = $client->call('autorizacionComprobante', $claveAcceso);
-
                         } catch (\Exception $e) {
                             echo "Error!<br>";
-                            echo $e->getMessage();
-                            echo 'Last response: ' . $client->response . '<br />';
+                                  echo $e->getMessage();
+                                  echo 'Last response: ' . $client->response . '<br />';
                         }
-                        dd($responseAut);
-                        switch ($response['RespuestaAutorizacionComprobante']['autorizaciones']['autorizacion']['estado']) {
+                        //dd($responseAut);
+                        switch ($responseAut['RespuestaAutorizacionComprobante']['autorizaciones']['autorizacion']['estado']) {
+
                             case 'AUTORIZADO':
-                                $autorizacion = $response['RespuestaAutorizacionComprobante']['autorizaciones']['autorizacion'];
+                                $autorizacion = $responseAut['RespuestaAutorizacionComprobante']['autorizaciones']['autorizacion'];
                                 $estado = $autorizacion['estado'];
-                                $numeroAutorizacion = $autorizacion['numeroAutorizacion'];
-                                $fechaAutorizacion = $autorizacion['fechaAutorizacion'];
-                                $comprobanteAutorizacion = $autorizacion['comprobante'];
-                                echo '<script>alert("COMPROBANTE AUTORIZADO Y ENVIADO AL CORREO");location.href="../vistas/index.php";</script>';
-                                //echo '<script>alert(Comprobante AUTORIZADO y enviado con exito con autoricacion N° '.$numeroAutorizacion.');</script>';
-                                $vfechaauto = substr($fechaAutorizacion, 0, 10) . ' ' . substr($fechaAutorizacion, 11, 5);
-                                //echo 'Xml ' .
-                                $this->crearXmlAutorizado($estado, $numeroAutorizacion, $fechaAutorizacion, $comprobanteAutorizacion, $ruta_autorizados, $nuevo_xml);
-                               // $pdf = new pdf();
-                                $this->pdfFactura($correo);
-                                $this->correos($correo);
-                                //unlink($ruta_si_firmados . $nuevo_xml);
-                               //require_once './funciones/factura_pdf.php';
-                                //var_dump($func);
-                                break;
+                                        $numeroAutorizacion = $autorizacion['numeroAutorizacion'];
+                                        $fechaAutorizacion = $autorizacion['fechaAutorizacion'];
+                                        $comprobanteAutorizacion = $autorizacion['comprobante'];
+                                        echo '<script>alert("COMPROBANTE AUTORIZADO Y ENVIADO AL CORREO");location.href="../vistas/index.php";</script>';
+                                        $vfechaauto = substr($fechaAutorizacion, 0, 10) . ' ' . substr($fechaAutorizacion, 11, 5);
 
-                                case 'EN PROCESO':
-                                    echo "El comprobante se encuentra EN PROCESO:<br>";
-                                    echo $response['RespuestaAutorizacionComprobante']['autorizaciones']['autorizacion']['estado'] . '<br>';
-                                    $m .= 'El documento se encuentra en proceso<br>';
-                                    $controlError = true;
-                                break;
+                                    //**********CREAR XML AUTORIZADO Y ENVIAR CORREO ******* */
 
-                                default:if ($responseAut['RespuestaAutorizacionComprobante']['numeroComprobantes'] == "0") {
-                                    echo 'No autorizado</br>';
-                                    echo 'No se encontro informacion del comprobante en el SRI, vuelva an enviarlo.</br>';
-                                } else if ($responseAut['RespuestaAutorizacionComprobante']['numeroComprobantes'] == "1") {
-                                    echo $responseAut['RespuestaAutorizacionComprobante']["autorizaciones"]["autorizacion"]["estado"].'</br>';
-                                    echo $responseAut['RespuestaAutorizacionComprobante']["autorizaciones"]["autorizacion"]["mensajes"]["mensaje"]["mensaje"].'</br>';
-                                    if(isset($responseAut['RespuestaAutorizacionComprobante']["autorizaciones"]["autorizacion"]["mensajes"]["mensaje"]["mensaje"]["informacionAdicional"])){
-                                        echo $responseAut['RespuestaAutorizacionComprobante']["autorizaciones"]["autorizacion"]["mensajes"]["mensaje"]["mensaje"]["informacionAdicional"].'</br>';
-                                        $ms = $responseAut['RespuestaAutorizacionComprobante']["autorizaciones"]["autorizacion"]["mensajes"]["mensaje"]["mensaje"].' => '.
-                                                $responseAut['RespuestaAutorizacionComprobante']["autorizaciones"]["autorizacion"]["mensajes"]["mensaje"]["mensaje"]["informacionAdicional"];
-                                    }else{
-                                        $ms = $responseAut['RespuestaAutorizacionComprobante']["autorizaciones"]["autorizacion"]["mensajes"]["mensaje"]["mensaje"];
-                                    }
-                                    //BORRAR EL VAR_DUMP
-                                    echo '<br/><br/>'.var_dump($responseAut).'<br/><br/>';
-                                } else {
-                                    echo 'No autorizado<br/>';
-                                    echo "Esta es la respuesta de SRI:<br/>";
-                                    echo var_dump($responseAut);
-                                    echo "<br/>";
-                                    echo 'INFORME AL ADMINISTRADOR!</br>';
-                                }
+                                        // $func->crearXmlAutorizado($estado, $numeroAutorizacion, $fechaAutorizacion, $comprobanteAutorizacion, $ruta_autorizados, $nuevo_xml);
+                                        // $pdf = new pdf();
+                                        // $pdf->pdfFactura($correo);
+                                        // $func->correos($correo);
+                                    //**********CREAR XML AUTORIZADO Y ENVIAR CORREO ******* */
                             break;
+                            case 'EN PROCESO':
+                                        echo "El comprobante se encuentra EN PROCESO:<br>";
+                                        echo $responseAut['RespuestaAutorizacionComprobante']['autorizaciones']['autorizacion']['estado'] . '<br>';
+                                        $m .= 'El documento se encuentra en proceso<br>';
+                                        $controlError = true;
+                            break;
+                            default:
+                            if ($responseAut['RespuestaAutorizacionComprobante']['numeroComprobantes'] == "0") {
+                                echo 'No autorizado</br>';
+                                echo 'No se encontro informacion del comprobante en el SRI, vuelva an enviarlo.</br>';
+                            } else if ($responseAut['RespuestaAutorizacionComprobante']['numeroComprobantes'] == "1") {
+                                echo $responseAut['RespuestaAutorizacionComprobante']["autorizaciones"]["autorizacion"]["estado"].'</br>';
+                                echo $responseAut['RespuestaAutorizacionComprobante']["autorizaciones"]["autorizacion"]["mensajes"]["mensaje"]["mensaje"].'</br>';
+                                if(isset($responseAut['RespuestaAutorizacionComprobante']["autorizaciones"]["autorizacion"]["mensajes"]["mensaje"]["mensaje"]["informacionAdicional"])){
+                                    echo $responseAut['RespuestaAutorizacionComprobante']["autorizaciones"]["autorizacion"]["mensajes"]["mensaje"]["mensaje"]["informacionAdicional"].'</br>';
+                                    $ms = $responseAut['RespuestaAutorizacionComprobante']["autorizaciones"]["autorizacion"]["mensajes"]["mensaje"]["mensaje"].' => '.
+                                            $responseAut['RespuestaAutorizacionComprobante']["autorizaciones"]["autorizacion"]["mensajes"]["mensaje"]["mensaje"]["informacionAdicional"];
+                                }else{
+                                    $ms = $responseAut['RespuestaAutorizacionComprobante']["autorizaciones"]["autorizacion"]["mensajes"]["mensaje"]["mensaje"];
+                                }
+                                //BORRAR EL VAR_DUMP
+                                echo '<br/><br/>'.var_dump($responseAut).'<br/><br/>';
+                            } else {
+                                echo 'No autorizado<br/>';
+                                echo "Esta es la respuesta de SRI:<br/>";
+                                echo var_dump($responseAut);
+                                echo "<br/>";
+                                echo 'INFORME AL ADMINISTRADOR!</br>';
+                            }
+                        break;
                         }
-
                         break;
 
                     case 'DEVUELTA':
@@ -580,22 +596,21 @@ class Factura extends Model
                                 $controlError = true;
                             break;
 
-                            case  false:
-                            	//echo 'nose';
-                            break;
-                            default:
-                            echo "<br>Se ha producido un problema. Vuelve a intentarlo.<br>";
-                            echo "Esta es la respuesta de SRI:<br/>";
-                            //echo var_dump($response).'<br>';
-                            $m .= var_dump($response).'<br>';
-                            echo "<br><br>";
-                            $controlError = true;
-                            break;
-                }
-            break;
-            default:
-                    echo 'no se puede firmar el doc';
+
+                    default:
+                    echo "<br>Se ha producido un problema. Vuelve a intentarlo.<br>";
+                    echo "Esta es la respuesta de SRI:<br/>";
+                    //echo var_dump($response).'<br>';
+                    $m .= var_dump($response).'<br>';
+                    echo "<br><br>";
+                    $controlError = true;
                     break;
+                }
+                break;
+
+            default:
+                dd('no se puede firmar el doc') ;
+            break;
         }
     }
 
