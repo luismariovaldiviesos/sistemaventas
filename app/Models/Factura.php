@@ -474,25 +474,29 @@ class Factura extends Model
         var_dump($comando);
         var_dump($resp);
 
-        //dd($resp);
+        //dd($claveAcceso);
 
         // *********** DESDE AQUI INICIAMOS CON LA INSTALACION DE LA LIBRERIA ************************
         // *********** LIBRERIA NOSOAP INSTALADA ************************
 
         //
 
-        switch(substr($resp, 0, 7)){
+        $respuesta  =  substr($resp,0,7);
+        ///dd($respuesta);
+        switch($respuesta){
 
             case 'FIRMADO' :
                 $xml_firmado =  file_get_contents($ruta_si_firmados .  $nuevo_xml);
                 //dd($xml_firmado);
                 $data['xml'] =  base64_encode($xml_firmado);
+               // dd($data);
                 try {
                     $client = new nusoap_client($recepcion, true);
                     $client->soap_defencoding = 'utf-8';
                     $client->xml_encoding = 'utf-8';
                     $client->decode_utf8 = false;
                     $response = $client->call('validarComprobante', $data);
+                    //dd($response);
 
 
                 } catch (\Exception $e) {
@@ -502,9 +506,9 @@ class Factura extends Model
                     var_dump($client->debug_str);
                 }
 
-                //$response =  $response["RespuestaRecepcionComprobante"]["estado"];
-                //dd($client->debug_str);
-                switch ($response["RespuestaRecepcionComprobante"]["estado"]) {
+                $response =  $response["RespuestaRecepcionComprobante"]["estado"];
+                //dd($response);
+                switch ($response) {
                     case false:
                         dd("me parece que es error del sri ");
                     break;
