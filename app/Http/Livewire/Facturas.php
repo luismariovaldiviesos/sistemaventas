@@ -252,7 +252,7 @@ class Facturas extends Component
            // dd($this->totalCart);
 
             $factura  =  Factura::create([
-                //dd($this->secuencial, $this->claveAcceso), hasta aqui llega bien secuencial y clave 
+                //dd($this->secuencial, $this->claveAcceso), hasta aqui llega bien secuencial y clave
                 'secuencial' => $this->secuencial,
                 'codDoc' => '01',
                 'claveAcceso' =>   $this->claveAcceso,
@@ -294,7 +294,7 @@ class Facturas extends Component
 
 
             //if ($print) $this->PrintTicket($sale->id);
-            
+
 
 
 
@@ -315,7 +315,7 @@ class Facturas extends Component
                                 $this->totalImpuesto12,$this->totalCart, $this->getContentCart(),
                                 $this->secuencial, $this->claveAcceso
                             );
-        $factura->firmarUltimaFactura();
+       //$factura->firmarUltimaFactura();
 
         $this->clearCart();
         $this->resetUI();
