@@ -315,7 +315,7 @@ class Facturas extends Component
                                 $this->totalImpuesto12,$this->totalCart, $this->getContentCart(),
                                 $this->secuencial, $this->claveAcceso
                             );
-       //$factura->firmarUltimaFactura();
+       $factura->firmarUltimaFactura();
 
         $this->clearCart();
         $this->resetUI();

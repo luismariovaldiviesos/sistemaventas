@@ -485,136 +485,144 @@ class Factura extends Model
         ///dd($respuesta);
         switch($respuesta){
 
-            case 'FIRMADO' :
-                $xml_firmado =  file_get_contents($ruta_si_firmados .  $nuevo_xml);
-                //dd($xml_firmado);
-                $data['xml'] =  base64_encode($xml_firmado);
-               // dd($data);
-                try {
-                    $client = new nusoap_client($recepcion, true);
-                    $client->soap_defencoding = 'utf-8';
-                    $client->xml_encoding = 'utf-8';
-                    $client->decode_utf8 = false;
-                    $response = $client->call('validarComprobante', $data);
-                    //dd($response);
 
-
-                } catch (\Exception $e) {
-                    echo "Error!<br />";
-                    echo $e->getMessage();
-                    echo 'Last response: ' . $client->response . '<br />';
-                    var_dump($client->debug_str);
-                }
-
-                $response =  $response["RespuestaRecepcionComprobante"]["estado"];
-                //dd($response);
-                switch ($response) {
-                    case false:
-                        dd("me parece que es error del sri ");
-                    break;
-                    case 'RECIBIDA':
-                       $client =  new nusoap_client($autorizacionws, true);
-                       $client->soap_defencoding = 'utf-8';
-                       $client->xml_encoding = 'utf-8';
-                       $client->decode_utf8 = false;
-                        try {
-                            $responseAut = $client->call('autorizacionComprobante', $claveAcceso);
-                        } catch (\Exception $e) {
-                            echo "Error!<br>";
-                                  echo $e->getMessage();
-                                  echo 'Last response: ' . $client->response . '<br />';
-                        }
-                        //dd($responseAut);
-                        switch ($responseAut['RespuestaAutorizacionComprobante']['autorizaciones']['autorizacion']['estado']) {
-
-                            case 'AUTORIZADO':
-                                $autorizacion = $responseAut['RespuestaAutorizacionComprobante']['autorizaciones']['autorizacion'];
-                                $estado = $autorizacion['estado'];
-                                        $numeroAutorizacion = $autorizacion['numeroAutorizacion'];
-                                        $fechaAutorizacion = $autorizacion['fechaAutorizacion'];
-                                        $comprobanteAutorizacion = $autorizacion['comprobante'];
-                                        echo '<script>alert("COMPROBANTE AUTORIZADO Y ENVIADO AL CORREO");location.href="../vistas/index.php";</script>';
-                                        $vfechaauto = substr($fechaAutorizacion, 0, 10) . ' ' . substr($fechaAutorizacion, 11, 5);
-
-                                    //**********CREAR XML AUTORIZADO Y ENVIAR CORREO ******* */
-
-                                        // $func->crearXmlAutorizado($estado, $numeroAutorizacion, $fechaAutorizacion, $comprobanteAutorizacion, $ruta_autorizados, $nuevo_xml);
-                                        // $pdf = new pdf();
-                                        // $pdf->pdfFactura($correo);
-                                        // $func->correos($correo);
-                                    //**********CREAR XML AUTORIZADO Y ENVIAR CORREO ******* */
-                            break;
-                            case 'EN PROCESO':
-                                        echo "El comprobante se encuentra EN PROCESO:<br>";
-                                        echo $responseAut['RespuestaAutorizacionComprobante']['autorizaciones']['autorizacion']['estado'] . '<br>';
-                                        $m .= 'El documento se encuentra en proceso<br>';
-                                        $controlError = true;
-                            break;
-                            default:
-                            if ($responseAut['RespuestaAutorizacionComprobante']['numeroComprobantes'] == "0") {
-                                echo 'No autorizado</br>';
-                                echo 'No se encontro informacion del comprobante en el SRI, vuelva an enviarlo.</br>';
-                            } else if ($responseAut['RespuestaAutorizacionComprobante']['numeroComprobantes'] == "1") {
-                                echo $responseAut['RespuestaAutorizacionComprobante']["autorizaciones"]["autorizacion"]["estado"].'</br>';
-                                echo $responseAut['RespuestaAutorizacionComprobante']["autorizaciones"]["autorizacion"]["mensajes"]["mensaje"]["mensaje"].'</br>';
-                                if(isset($responseAut['RespuestaAutorizacionComprobante']["autorizaciones"]["autorizacion"]["mensajes"]["mensaje"]["mensaje"]["informacionAdicional"])){
-                                    echo $responseAut['RespuestaAutorizacionComprobante']["autorizaciones"]["autorizacion"]["mensajes"]["mensaje"]["mensaje"]["informacionAdicional"].'</br>';
-                                    $ms = $responseAut['RespuestaAutorizacionComprobante']["autorizaciones"]["autorizacion"]["mensajes"]["mensaje"]["mensaje"].' => '.
-                                            $responseAut['RespuestaAutorizacionComprobante']["autorizaciones"]["autorizacion"]["mensajes"]["mensaje"]["mensaje"]["informacionAdicional"];
-                                }else{
-                                    $ms = $responseAut['RespuestaAutorizacionComprobante']["autorizaciones"]["autorizacion"]["mensajes"]["mensaje"]["mensaje"];
-                                }
-                                //BORRAR EL VAR_DUMP
-                                echo '<br/><br/>'.var_dump($responseAut).'<br/><br/>';
-                            } else {
-                                echo 'No autorizado<br/>';
-                                echo "Esta es la respuesta de SRI:<br/>";
-                                echo var_dump($responseAut);
-                                echo "<br/>";
-                                echo 'INFORME AL ADMINISTRADOR!</br>';
-                            }
-                        break;
-                        }
-                        break;
-
-                    case 'DEVUELTA':
-                        $m .= $response["RespuestaRecepcionComprobante"]["estado"] . '<br>';
-                                $m .= $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["claveAcceso"] . '<br>';
-                                $m .= $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["mensaje"] . '<br>';
-                                if (isset($response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["informacionAdicional"])) {
-                                    $m .= $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["informacionAdicional"] . '<br>';
-                                    $ms = $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["mensaje"] . ' => ' . $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["informacionAdicional"];
-                                } else {
-
-                                    $ms = $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["mensaje"];
-                                }
-
-                                $m .= $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["tipo"] . '<br><br>';
-                                echo $response["RespuestaRecepcionComprobante"]["estado"] . '<br>';
-                                echo $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["claveAcceso"] . '<br>';
-                                echo $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["mensaje"] . '<br>';
-                                if (isset($response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["informacionAdicional"])) {
-                                    echo $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["informacionAdicional"] . '<br>';
-                                }
-                                echo $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["tipo"] . '<br><br>';
-                                $controlError = true;
-                            break;
-
-
-                    default:
-                    echo "<br>Se ha producido un problema. Vuelve a intentarlo.<br>";
-                    echo "Esta es la respuesta de SRI:<br/>";
-                    //echo var_dump($response).'<br>';
-                    $m .= var_dump($response).'<br>';
-                    echo "<br><br>";
-                    $controlError = true;
-                    break;
-                }
-                break;
+            case  'FIRMADO' :
+                dd('aqui inicia el envio al sri') ;
 
             default:
                 dd('no se puede firmar el doc') ;
             break;
+
+            // case 'FIRMADO' :
+            //     $xml_firmado =  file_get_contents($ruta_si_firmados .  $nuevo_xml);
+            //     //dd($xml_firmado);
+            //     $data['xml'] =  base64_encode($xml_firmado);
+            //    // dd($data);
+            //     try {
+            //         $client = new nusoap_client($recepcion, true);
+            //         $client->soap_defencoding = 'utf-8';
+            //         $client->xml_encoding = 'utf-8';
+            //         $client->decode_utf8 = false;
+            //         $response = $client->call('validarComprobante', $data);
+            //         //dd($response);
+
+
+            //     } catch (\Exception $e) {
+            //         echo "Error!<br />";
+            //         echo $e->getMessage();
+            //         echo 'Last response: ' . $client->response . '<br />';
+            //         var_dump($client->debug_str);
+            //     }
+
+            //     $response =  $response["RespuestaRecepcionComprobante"]["estado"];
+            //     //dd($response);
+            //     switch ($response) {
+            //         case false:
+            //             dd("me parece que es error del sri ");
+            //         break;
+            //         case 'RECIBIDA':
+            //            $client =  new nusoap_client($autorizacionws, true);
+            //            $client->soap_defencoding = 'utf-8';
+            //            $client->xml_encoding = 'utf-8';
+            //            $client->decode_utf8 = false;
+            //             try {
+            //                 $responseAut = $client->call('autorizacionComprobante', $claveAcceso);
+            //             } catch (\Exception $e) {
+            //                 echo "Error!<br>";
+            //                       echo $e->getMessage();
+            //                       echo 'Last response: ' . $client->response . '<br />';
+            //             }
+            //             //dd($responseAut);
+            //             switch ($responseAut['RespuestaAutorizacionComprobante']['autorizaciones']['autorizacion']['estado']) {
+
+            //                 case 'AUTORIZADO':
+            //                     $autorizacion = $responseAut['RespuestaAutorizacionComprobante']['autorizaciones']['autorizacion'];
+            //                     $estado = $autorizacion['estado'];
+            //                             $numeroAutorizacion = $autorizacion['numeroAutorizacion'];
+            //                             $fechaAutorizacion = $autorizacion['fechaAutorizacion'];
+            //                             $comprobanteAutorizacion = $autorizacion['comprobante'];
+            //                             echo '<script>alert("COMPROBANTE AUTORIZADO Y ENVIADO AL CORREO");location.href="../vistas/index.php";</script>';
+            //                             $vfechaauto = substr($fechaAutorizacion, 0, 10) . ' ' . substr($fechaAutorizacion, 11, 5);
+
+            //                         //**********CREAR XML AUTORIZADO Y ENVIAR CORREO ******* */
+
+            //                             // $func->crearXmlAutorizado($estado, $numeroAutorizacion, $fechaAutorizacion, $comprobanteAutorizacion, $ruta_autorizados, $nuevo_xml);
+            //                             // $pdf = new pdf();
+            //                             // $pdf->pdfFactura($correo);
+            //                             // $func->correos($correo);
+            //                         //**********CREAR XML AUTORIZADO Y ENVIAR CORREO ******* */
+            //                 break;
+            //                 case 'EN PROCESO':
+            //                             echo "El comprobante se encuentra EN PROCESO:<br>";
+            //                             echo $responseAut['RespuestaAutorizacionComprobante']['autorizaciones']['autorizacion']['estado'] . '<br>';
+            //                             $m .= 'El documento se encuentra en proceso<br>';
+            //                             $controlError = true;
+            //                 break;
+            //                 default:
+            //                 if ($responseAut['RespuestaAutorizacionComprobante']['numeroComprobantes'] == "0") {
+            //                     echo 'No autorizado</br>';
+            //                     echo 'No se encontro informacion del comprobante en el SRI, vuelva an enviarlo.</br>';
+            //                 } else if ($responseAut['RespuestaAutorizacionComprobante']['numeroComprobantes'] == "1") {
+            //                     echo $responseAut['RespuestaAutorizacionComprobante']["autorizaciones"]["autorizacion"]["estado"].'</br>';
+            //                     echo $responseAut['RespuestaAutorizacionComprobante']["autorizaciones"]["autorizacion"]["mensajes"]["mensaje"]["mensaje"].'</br>';
+            //                     if(isset($responseAut['RespuestaAutorizacionComprobante']["autorizaciones"]["autorizacion"]["mensajes"]["mensaje"]["mensaje"]["informacionAdicional"])){
+            //                         echo $responseAut['RespuestaAutorizacionComprobante']["autorizaciones"]["autorizacion"]["mensajes"]["mensaje"]["mensaje"]["informacionAdicional"].'</br>';
+            //                         $ms = $responseAut['RespuestaAutorizacionComprobante']["autorizaciones"]["autorizacion"]["mensajes"]["mensaje"]["mensaje"].' => '.
+            //                                 $responseAut['RespuestaAutorizacionComprobante']["autorizaciones"]["autorizacion"]["mensajes"]["mensaje"]["mensaje"]["informacionAdicional"];
+            //                     }else{
+            //                         $ms = $responseAut['RespuestaAutorizacionComprobante']["autorizaciones"]["autorizacion"]["mensajes"]["mensaje"]["mensaje"];
+            //                     }
+            //                     //BORRAR EL VAR_DUMP
+            //                     echo '<br/><br/>'.var_dump($responseAut).'<br/><br/>';
+            //                 } else {
+            //                     echo 'No autorizado<br/>';
+            //                     echo "Esta es la respuesta de SRI:<br/>";
+            //                     echo var_dump($responseAut);
+            //                     echo "<br/>";
+            //                     echo 'INFORME AL ADMINISTRADOR!</br>';
+            //                 }
+            //             break;
+            //             }
+            //             break;
+
+            //         case 'DEVUELTA':
+            //             $m .= $response["RespuestaRecepcionComprobante"]["estado"] . '<br>';
+            //                     $m .= $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["claveAcceso"] . '<br>';
+            //                     $m .= $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["mensaje"] . '<br>';
+            //                     if (isset($response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["informacionAdicional"])) {
+            //                         $m .= $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["informacionAdicional"] . '<br>';
+            //                         $ms = $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["mensaje"] . ' => ' . $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["informacionAdicional"];
+            //                     } else {
+
+            //                         $ms = $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["mensaje"];
+            //                     }
+
+            //                     $m .= $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["tipo"] . '<br><br>';
+            //                     echo $response["RespuestaRecepcionComprobante"]["estado"] . '<br>';
+            //                     echo $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["claveAcceso"] . '<br>';
+            //                     echo $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["mensaje"] . '<br>';
+            //                     if (isset($response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["informacionAdicional"])) {
+            //                         echo $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["informacionAdicional"] . '<br>';
+            //                     }
+            //                     echo $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["tipo"] . '<br><br>';
+            //                     $controlError = true;
+            //                 break;
+
+
+            //         default:
+            //         echo "<br>Se ha producido un problema. Vuelve a intentarlo.<br>";
+            //         echo "Esta es la respuesta de SRI:<br/>";
+            //         //echo var_dump($response).'<br>';
+            //         $m .= var_dump($response).'<br>';
+            //         echo "<br><br>";
+            //         $controlError = true;
+            //         break;
+            //     }
+            //     break;
+
+            // default:
+            //     dd('no se puede firmar el doc') ;
+            // break;
         }
     }
 
