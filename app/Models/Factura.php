@@ -659,11 +659,12 @@ class Factura extends Model
 
             case  'FIRMADO' :
                 $xml_firmado =  file_get_contents($ruta_si_firmados .  $nuevo_xml);
-                 //dd($xml_firmado);
-                 //$data['xml'] =  base64_encode($xml_firmado);
-                 $data = base64_encode($xml_firmado);
-                 $this->recibir($data);
-                 $this->fetch($data);
+                $data = base64_encode($xml_firmado);
+                $obj = new \StdClass();
+                $obj->key = $claveAcceso;
+                $obj->base64 = $data;
+                 $this->recibir($obj);
+                 $this->fetch($obj);
 
             default:
                 dd('no se puede firmar el doc') ;
@@ -700,7 +701,7 @@ class Factura extends Model
                 <soapenv:Header/>
                 <soapenv:Body>
                 <ec:validarComprobante>
-                    <xml>' . $invoiceObj . '</xml>
+                    <xml>' . $invoiceObj->base64 . '</xml>
                 </ec:validarComprobante>
             </soapenv:Body>
             </soapenv:Envelope>',
@@ -757,7 +758,7 @@ class Factura extends Model
        <soapenv:Header/>
         <soapenv:Body>
             <ec:autorizacionComprobante>
-                 <claveAccesoComprobante>' . $invoiceObj . '</claveAccesoComprobante>
+                <claveAccesoComprobante>' . $invoiceObj->key . '</claveAccesoComprobante>
               </ec:autorizacionComprobante>
             </soapenv:Body>
           </soapenv:Envelope>',
