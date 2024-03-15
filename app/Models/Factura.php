@@ -89,27 +89,198 @@ class Factura extends Model
 
     public function claveAcceso()
     {
-        //  $ultimaFactura = Factura::latest()->first();
-        // $secuencial = $ultimaFactura->secuencial;
+        // $empresa =  $this->empresa();
+        // $ruc =  $empresa[0]->ruc;  //3
+        // $ambiente  =  $empresa[0]->ambiente;  //4
+        // $establecimiento =  $empresa[0]->estab;
+        // $puntoEmi  =  $empresa[0]->ptoEmi;
+        // $secuencial =  $this->secuencial();
+        // // asociativo
+
+        // $args['fecha'] = Carbon::now()->format('dmY'); //1
+        // $args['tipodoc'] = '01'; //1
+        // $args['ruc'] = $ruc;
+        // $args['ambiente'] = $ambiente;
+        // $args['establecimiento'] = $establecimiento;
+        // $args['punto'] = $puntoEmi;
+        // $args['factura'] = $secuencial;
+        // $args['codigo'] = substr($secuencial,-8);
+        // $args['emision'] = '1';
+        // //dd($args);
+
+        // $claveArray = [];
+        // $claveArray =  $this->generaClave($args);
+        // //var_dump($claveArray);
+        // //dd($claveArray);
+        // $cadena = implode('', $claveArray);
+
+        //dd($cadena);
+
+          $ultimaFactura = Factura::latest()->first();
+         //$secuencial = $ultimaFactura->secuencial;
         //dd($this->secuencial());
-        $fecha =  Carbon::now()->format('dmY'); //1
-        $codigo  = "01"; //2
-        $parteUno = $fecha.$codigo;   //1+2***********
-        $empresa =  $this->empresa();
-        $ruc =  $empresa[0]->ruc;  //3
-        $ambiente  =  $empresa[0]->ambiente;  //4
-        $establecimiento =  $empresa[0]->estab;
-        $puntoEmi  =  $empresa[0]->ptoEmi;
-        $serie  = $establecimiento.$puntoEmi;  //5
-        $parteDos =  $ruc.$ambiente.$serie;  // 3 4 y 5***********
-        $cadenaUNo = $parteUno.$parteDos;   /// 1 al 5 *********************
-        $secuencial =  $this->secuencial(); //6  aqui hay errror por que suma un digito mas al secuencial y la clave acceo en el xml se forma mal
-        $codigoNumerico  = "00000001";  //7
-        $tipoEmi  = "1";   //8
-        $cadenaDos  = $cadenaUNo.$secuencial.$codigoNumerico.$tipoEmi;   // 1 al 8   **********
-        $dig  =  $this->getMod11Dv($cadenaDos);
-        $claveFinal = $cadenaDos.$dig;
+         $fecha =  Carbon::now()->format('dmY'); //1
+         $codigo  = "01"; //2
+         $parteUno = $fecha.$codigo;   //1+2***********
+         $empresa =  $this->empresa();
+         $ruc =  $empresa[0]->ruc;  //3
+         $ambiente  =  $empresa[0]->ambiente;  //4
+         $establecimiento =  $empresa[0]->estab;
+         $puntoEmi  =  $empresa[0]->ptoEmi;
+         $serie  = $establecimiento.$puntoEmi;  //5
+         $parteDos =  $ruc.$ambiente.$serie;  // 3 4 y 5***********
+         $cadenaUNo = $parteUno.$parteDos;   /// 1 al 5 *********************
+         $secuencial =  $this->secuencial(); //6  aqui hay errror por que suma un digito mas al secuencial y la clave acceo en el xml se forma mal
+         $codigoNumerico  =substr($secuencial,-8);  // secuencial 8 desde la derecha
+         $tipoEmi  = "1";   //8
+         $cadenaDos  = $cadenaUNo.$secuencial.$codigoNumerico.$tipoEmi;   // 1 al 8   **********
+         $dig  =  $this->getMod11Dv($cadenaDos);
+         $claveFinal = $cadenaDos.$dig;
         return $claveFinal ;
+       //return $cadena;
+    }
+
+    public function generaClave($param){
+        $claveArray = [];
+        /*
+         * Generar con ceros la tabla de hasta 49 posiciones
+         */
+        for($x=0;$x<49;$x++) {
+          $claveArray[$x] = 0;
+        }
+        /*
+         * Proceso de convertir cada campo en array para adicionar a la array de la clave
+         */
+
+        $args['tabla'] = $param['fecha'];
+        $args['posini'] = 0;
+        $args['posfin'] = 7;
+        $args['claveArray'] = $claveArray;
+        $claveArray = $this->haceArray($args);
+        //echo 'Pasa fecha';
+
+        $args['tabla'] = $param['tipodoc'];
+        $args['posini'] = 8;
+        $args['posfin'] = 9;
+        $args['claveArray'] = $claveArray;
+        $claveArray = $this->haceArray($args);
+        //echo 'Pasa tipo documento';
+
+        $args['tabla'] = $param['ruc'];
+        $args['posini'] = 10;
+        $args['posfin'] = 22;
+        $args['claveArray'] = $claveArray;
+        $claveArray = $this->haceArray($args);
+        //echo 'Pasa ruc';
+
+
+        $args['tabla'] = $param['ambiente'];
+        $args['posini'] = 23;
+        $args['posfin'] = 23;
+        $args['claveArray'] = $claveArray;
+        $claveArray = $this->haceArray($args);
+
+
+
+        $args['tabla'] = $param['establecimiento'];
+        $args['posini'] = 24;
+        $args['posfin'] = 26;
+        $args['claveArray'] = $claveArray;
+        $claveArray = $this->haceArray($args);
+
+
+
+        $args['tabla'] = $param['punto'];
+        $args['posini'] = 27;
+        $args['posfin'] = 29;
+        $args['claveArray'] = $claveArray;
+        $claveArray = $this->haceArray($args);
+
+
+
+        $args['tabla'] = $param['factura'];
+        $args['posini'] = 30;
+        $args['posfin'] = 38;
+        $args['claveArray'] = $claveArray;
+        $claveArray = $this->haceArray($args);
+
+
+
+        $args['tabla'] = $param['codigo'];
+        $args['posini'] = 39;
+        $args['posfin'] = 46;
+        $args['claveArray'] = $claveArray;
+        $claveArray = $this->haceArray($args);
+
+
+
+        $args['tabla'] = $param['emision'];
+        $args['posini'] = 47;
+        $args['posfin'] = 47;
+        $args['claveArray'] = $claveArray;
+        $claveArray = $this->haceArray($args);
+        $digito = $this->poneDigito($claveArray);
+        $claveArray[48] = $digito;
+        return $claveArray;
+
+    }
+
+
+    public function haceArray($param)  {
+
+            //    echo 'Viene ';
+    //    var_dump($param);
+        $paso = str_split($param['tabla']);
+
+        $j = count($paso) - 1;
+        $posini = $param['posini'];
+        $posfin = $param['posfin'];
+        $claveArray = $param['claveArray'];
+        $flag = TRUE;
+        while ($flag)
+        {
+            if($posfin >= $posini){
+    //        echo 'Esto tiene ini ' . $posini . ' Esto tiene fin ' . $posfin;
+            if ($j >= 0) {
+                $claveArray[$posfin] = $paso[$j];
+                $j--;
+            }
+            $posfin--;
+            } else {
+                $flag = FALSE;
+            }
+        }
+        return $claveArray;
+
+    }
+
+    public function poneDigito($param) {
+        $posfin = 47;
+        $flag = TRUE;
+        $j = 2;
+        $suma = 0;
+        while ($flag) {
+            if ($posfin >= 0) {
+                $suma = $suma + ($param[$posfin] * $j);
+    //            echo $suma;
+                $j++;
+                if ($j > 7) {
+                    $j = 2;
+                }
+                $posfin--;
+            } else {
+                $flag = FALSE;
+            }
+        }
+    //    echo 'Esta es la suma ' . $suma;
+        $tienecero = $suma % 11;
+        if ($tienecero == 0){
+            $digito = 0;
+        } else {
+            $digito = 11 - ($suma % 11);
+        }
+    //    echo '<br>Este es el digito verificador ' . $digito;
+        return $digito;
     }
 
 
@@ -174,7 +345,7 @@ class Factura extends Model
      $totalSinImpuesto, $totalDescuento,$subtotaliva12, $totalIva12,$totalFactura, $detalles,$secuencia,$claveAcce)
     {
 
-       // dd($secuencia,$claveAcce); LLEGA BIEN DESDE EL METODO DEL CONTROLLER
+        //dd($secuencia,$claveAcce); //LLEGA BIEN DESDE EL METODO DEL CONTROLLER
         $empresa = $this->empresa();
         //$ultimaFactura = Factura::latest()->first();
         //$secuencial = $ultimaFactura->secuencial;
@@ -487,143 +658,140 @@ class Factura extends Model
 
 
             case  'FIRMADO' :
-                dd('aqui inicia el envio al sri') ;
+                $xml_firmado =  file_get_contents($ruta_si_firmados .  $nuevo_xml);
+                 //dd($xml_firmado);
+                 //$data['xml'] =  base64_encode($xml_firmado);
+                 $data = base64_encode($xml_firmado);
+                 $this->recibir($data);
+                 $this->fetch($data);
 
             default:
                 dd('no se puede firmar el doc') ;
             break;
 
-            // case 'FIRMADO' :
-            //     $xml_firmado =  file_get_contents($ruta_si_firmados .  $nuevo_xml);
-            //     //dd($xml_firmado);
-            //     $data['xml'] =  base64_encode($xml_firmado);
-            //    // dd($data);
-            //     try {
-            //         $client = new nusoap_client($recepcion, true);
-            //         $client->soap_defencoding = 'utf-8';
-            //         $client->xml_encoding = 'utf-8';
-            //         $client->decode_utf8 = false;
-            //         $response = $client->call('validarComprobante', $data);
-            //         //dd($response);
 
-
-            //     } catch (\Exception $e) {
-            //         echo "Error!<br />";
-            //         echo $e->getMessage();
-            //         echo 'Last response: ' . $client->response . '<br />';
-            //         var_dump($client->debug_str);
-            //     }
-
-            //     $response =  $response["RespuestaRecepcionComprobante"]["estado"];
-            //     //dd($response);
-            //     switch ($response) {
-            //         case false:
-            //             dd("me parece que es error del sri ");
-            //         break;
-            //         case 'RECIBIDA':
-            //            $client =  new nusoap_client($autorizacionws, true);
-            //            $client->soap_defencoding = 'utf-8';
-            //            $client->xml_encoding = 'utf-8';
-            //            $client->decode_utf8 = false;
-            //             try {
-            //                 $responseAut = $client->call('autorizacionComprobante', $claveAcceso);
-            //             } catch (\Exception $e) {
-            //                 echo "Error!<br>";
-            //                       echo $e->getMessage();
-            //                       echo 'Last response: ' . $client->response . '<br />';
-            //             }
-            //             //dd($responseAut);
-            //             switch ($responseAut['RespuestaAutorizacionComprobante']['autorizaciones']['autorizacion']['estado']) {
-
-            //                 case 'AUTORIZADO':
-            //                     $autorizacion = $responseAut['RespuestaAutorizacionComprobante']['autorizaciones']['autorizacion'];
-            //                     $estado = $autorizacion['estado'];
-            //                             $numeroAutorizacion = $autorizacion['numeroAutorizacion'];
-            //                             $fechaAutorizacion = $autorizacion['fechaAutorizacion'];
-            //                             $comprobanteAutorizacion = $autorizacion['comprobante'];
-            //                             echo '<script>alert("COMPROBANTE AUTORIZADO Y ENVIADO AL CORREO");location.href="../vistas/index.php";</script>';
-            //                             $vfechaauto = substr($fechaAutorizacion, 0, 10) . ' ' . substr($fechaAutorizacion, 11, 5);
-
-            //                         //**********CREAR XML AUTORIZADO Y ENVIAR CORREO ******* */
-
-            //                             // $func->crearXmlAutorizado($estado, $numeroAutorizacion, $fechaAutorizacion, $comprobanteAutorizacion, $ruta_autorizados, $nuevo_xml);
-            //                             // $pdf = new pdf();
-            //                             // $pdf->pdfFactura($correo);
-            //                             // $func->correos($correo);
-            //                         //**********CREAR XML AUTORIZADO Y ENVIAR CORREO ******* */
-            //                 break;
-            //                 case 'EN PROCESO':
-            //                             echo "El comprobante se encuentra EN PROCESO:<br>";
-            //                             echo $responseAut['RespuestaAutorizacionComprobante']['autorizaciones']['autorizacion']['estado'] . '<br>';
-            //                             $m .= 'El documento se encuentra en proceso<br>';
-            //                             $controlError = true;
-            //                 break;
-            //                 default:
-            //                 if ($responseAut['RespuestaAutorizacionComprobante']['numeroComprobantes'] == "0") {
-            //                     echo 'No autorizado</br>';
-            //                     echo 'No se encontro informacion del comprobante en el SRI, vuelva an enviarlo.</br>';
-            //                 } else if ($responseAut['RespuestaAutorizacionComprobante']['numeroComprobantes'] == "1") {
-            //                     echo $responseAut['RespuestaAutorizacionComprobante']["autorizaciones"]["autorizacion"]["estado"].'</br>';
-            //                     echo $responseAut['RespuestaAutorizacionComprobante']["autorizaciones"]["autorizacion"]["mensajes"]["mensaje"]["mensaje"].'</br>';
-            //                     if(isset($responseAut['RespuestaAutorizacionComprobante']["autorizaciones"]["autorizacion"]["mensajes"]["mensaje"]["mensaje"]["informacionAdicional"])){
-            //                         echo $responseAut['RespuestaAutorizacionComprobante']["autorizaciones"]["autorizacion"]["mensajes"]["mensaje"]["mensaje"]["informacionAdicional"].'</br>';
-            //                         $ms = $responseAut['RespuestaAutorizacionComprobante']["autorizaciones"]["autorizacion"]["mensajes"]["mensaje"]["mensaje"].' => '.
-            //                                 $responseAut['RespuestaAutorizacionComprobante']["autorizaciones"]["autorizacion"]["mensajes"]["mensaje"]["mensaje"]["informacionAdicional"];
-            //                     }else{
-            //                         $ms = $responseAut['RespuestaAutorizacionComprobante']["autorizaciones"]["autorizacion"]["mensajes"]["mensaje"]["mensaje"];
-            //                     }
-            //                     //BORRAR EL VAR_DUMP
-            //                     echo '<br/><br/>'.var_dump($responseAut).'<br/><br/>';
-            //                 } else {
-            //                     echo 'No autorizado<br/>';
-            //                     echo "Esta es la respuesta de SRI:<br/>";
-            //                     echo var_dump($responseAut);
-            //                     echo "<br/>";
-            //                     echo 'INFORME AL ADMINISTRADOR!</br>';
-            //                 }
-            //             break;
-            //             }
-            //             break;
-
-            //         case 'DEVUELTA':
-            //             $m .= $response["RespuestaRecepcionComprobante"]["estado"] . '<br>';
-            //                     $m .= $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["claveAcceso"] . '<br>';
-            //                     $m .= $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["mensaje"] . '<br>';
-            //                     if (isset($response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["informacionAdicional"])) {
-            //                         $m .= $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["informacionAdicional"] . '<br>';
-            //                         $ms = $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["mensaje"] . ' => ' . $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["informacionAdicional"];
-            //                     } else {
-
-            //                         $ms = $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["mensaje"];
-            //                     }
-
-            //                     $m .= $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["tipo"] . '<br><br>';
-            //                     echo $response["RespuestaRecepcionComprobante"]["estado"] . '<br>';
-            //                     echo $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["claveAcceso"] . '<br>';
-            //                     echo $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["mensaje"] . '<br>';
-            //                     if (isset($response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["informacionAdicional"])) {
-            //                         echo $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["informacionAdicional"] . '<br>';
-            //                     }
-            //                     echo $response["RespuestaRecepcionComprobante"]["comprobantes"]["comprobante"]["mensajes"]["mensaje"]["tipo"] . '<br><br>';
-            //                     $controlError = true;
-            //                 break;
-
-
-            //         default:
-            //         echo "<br>Se ha producido un problema. Vuelve a intentarlo.<br>";
-            //         echo "Esta es la respuesta de SRI:<br/>";
-            //         //echo var_dump($response).'<br>';
-            //         $m .= var_dump($response).'<br>';
-            //         echo "<br><br>";
-            //         $controlError = true;
-            //         break;
-            //     }
-            //     break;
-
-            // default:
-            //     dd('no se puede firmar el doc') ;
-            // break;
         }
+    }
+
+    private function recibir($invoiceObj)
+    {
+        //Si es ambiente de desarrollo
+        //Todo: Modificar el código del parametro depende de su sistema.
+        $ambiente = '1';
+        if ($ambiente == '1') {
+            $host = 'https://celcer.sri.gob.ec';
+        } else { //Si es producción
+            $host = 'https://cel.sri.gob.ec';
+        }
+
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $host . '/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ec="http://ec.gob.sri.ws.recepcion">
+                <soapenv:Header/>
+                <soapenv:Body>
+                <ec:validarComprobante>
+                    <xml>' . $invoiceObj . '</xml>
+                </ec:validarComprobante>
+            </soapenv:Body>
+            </soapenv:Envelope>',
+            CURLOPT_HTTPHEADER => array(
+                'Content-Type: text/xml',
+                'Accept: text/xml',
+                'SOAPAction: '
+            ),
+        ));
+
+        $response = curl_exec($curl);
+        file_put_contents("respuesta_sri.xml", $response);
+        $code = curl_getinfo($curl, CURLINFO_RESPONSE_CODE);
+        //dd(curl_close($curl));
+
+
+        if ($code !== 200) {
+            //throw new SriReceiveException('Sri está caido.');
+            dd("sri caido");
+        }
+
+        $simpleXml = new \SimpleXMLElement($response);
+
+        $estado = $simpleXml->xpath('//estado')[0];
+        //dd($estado);
+
+        if ('DEVUELTA' === (string)$estado) {
+            $comprobante = $simpleXml->xpath('//comprobante')[0];
+            //throw new SriReceiveException($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
+            //dd($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
+        }
+    }
+    public function fetch($invoiceObj)
+    {
+        $ambiente = "1";
+        if ($ambiente == "1") {
+            $host = 'https://celcer.sri.gob.ec';
+        } else {
+            $host = 'https://cel.sri.gob.ec';
+        }
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $host . '/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ec="http://ec.gob.sri.ws.autorizacion">
+       <soapenv:Header/>
+        <soapenv:Body>
+            <ec:autorizacionComprobante>
+                 <claveAccesoComprobante>' . $invoiceObj . '</claveAccesoComprobante>
+              </ec:autorizacionComprobante>
+            </soapenv:Body>
+          </soapenv:Envelope>',
+            CURLOPT_HTTPHEADER => array(
+                'Content-Type: text/xml',
+                'Accept: text/xml',
+                'SOAPAction: '
+            ),
+        ));
+
+        $response = curl_exec($curl);
+        file_put_contents("respuesta_sri_fetch.xml", $response);
+        $code = curl_getinfo($curl, CURLINFO_RESPONSE_CODE);
+
+        curl_close($curl);
+
+        if ($code !== 200) {
+            //throw new SriAuthorizeException('Sri está caido.');
+            dd("sri caiido en recuperacion");
+        }
+
+        $simpleXml = new \SimpleXMLElement($response);
+
+        $estado = $simpleXml->xpath('//estado')[0];
+
+        if ('NO AUTORIZADO' === (string)$estado) {
+            $comprobante = $simpleXml->xpath('//autorizacion')[0];
+           // throw new SriAuthorizeException($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
+           dd("algo en recupera");
+        }
+
+        //return $response;
+        $comprobante = $simpleXml->xpath('//autorizacion')[0];
+        dd($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
     }
 
 
