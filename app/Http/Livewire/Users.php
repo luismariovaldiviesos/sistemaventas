@@ -91,8 +91,8 @@ class Users extends Component
     {
         $this->validate(User::rules($this->selected_id), User::$messages);
 
-        $user = User::find($this->selected_id);
-        $user::updateOrCreate(
+        //$user = User::find($this->selected_id);
+        $user =  User::updateOrCreate(
             ['id' => $this->selected_id],
             [
                 'name' =>  $this->name,
