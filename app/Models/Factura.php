@@ -639,7 +639,7 @@ class Factura extends Model
         }
 
         $claveAcces = simplexml_load_file($ruta_si_firmados . $nuevo_xml);
-        $claveAcceso['claveAccesoComprobante'] = substr($claveAcces->infoTributaria[0]->claveAcceso, 0, 49);
+        $claveAcceso = substr($claveAcces->infoTributaria[0]->claveAcceso, 0, 49);
         //dd($claveAcceso);
         var_dump($claveAcceso);
         var_dump($comando);
@@ -661,10 +661,10 @@ class Factura extends Model
                 $xml_firmado =  file_get_contents($ruta_si_firmados .  $nuevo_xml);
                 $data = base64_encode($xml_firmado);
                 $obj = new \StdClass();
-                $obj->key = $claveAcceso;
+                $obj->key = $claveAcceso ;
                 $obj->base64 = $data;
-                 $this->recibir($obj);
-                 $this->fetch($obj);
+                $this->recibir($obj);
+                $this->fetch($obj);
 
             default:
                 dd('no se puede firmar el doc') ;
@@ -770,6 +770,7 @@ class Factura extends Model
         ));
 
         $response = curl_exec($curl);
+        dd($response);
         file_put_contents("respuesta_sri_fetch.xml", $response);
         $code = curl_getinfo($curl, CURLINFO_RESPONSE_CODE);
 
