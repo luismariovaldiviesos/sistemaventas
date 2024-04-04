@@ -120,7 +120,7 @@
                             <select wire:model='ivaporcentaje' class="form-select form-select-lg sm:mr-2" name="" id="">
                                 <option value="elegir">Elegir</option>
                                 <option value="0">0%</option>
-                                <option value="12">12%</option>
+                                <option value="15">15%</option>
 
                              </select>
                         </div>

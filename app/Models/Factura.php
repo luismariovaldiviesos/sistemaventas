@@ -392,7 +392,7 @@ class Factura extends Model
         // iva 12%
 		$xml_tim = $xml->createElement('totalImpuesto');// ok iva 12
 		$xml_tco = $xml->createElement('codigo','2');// ok codi¿go impuesto 2  = iva
-		$xml_cpr = $xml->createElement('codigoPorcentaje','2');// ok codigo porcentaje iva 12 = 2
+		$xml_cpr = $xml->createElement('codigoPorcentaje','4');// ok codigo porcentaje iva 12 = 2  iva al 15 = 4
 		$xml_bas = $xml->createElement('baseImponible',$subtotaliva12); // ok subtotal iva 12
 		$xml_val = $xml->createElement('valor',$totalIva12);// total impuesto 12 %
 
@@ -433,7 +433,7 @@ class Factura extends Model
             $xml_ips = $xml->createElement('impuestos');
             $xml_ipt = $xml->createElement('impuesto');
             $xml_cdg = $xml->createElement('codigo', '2');
-            $xml_cpt = $xml->createElement('codigoPorcentaje', '2');
+            $xml_cpt = $xml->createElement('codigoPorcentaje', '4');
             $xml_trf = $xml->createElement('tarifa', '12');
             $xml_bsi = $xml->createElement('baseImponible',$d['price']);
             $xml_vlr = $xml->createElement('valor', $d['price2']);
@@ -731,7 +731,7 @@ class Factura extends Model
         if ('DEVUELTA' === (string)$estado) {
             $comprobante = $simpleXml->xpath('//comprobante')[0];
             //throw new SriReceiveException($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
-            //dd($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
+            dd($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
         }
     }
     public function fetch($invoiceObj)
