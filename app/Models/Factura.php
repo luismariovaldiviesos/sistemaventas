@@ -345,7 +345,8 @@ class Factura extends Model
      $totalSinImpuesto, $totalDescuento,$subtotaliva12, $totalIva12,$totalFactura, $detalles,$secuencia,$claveAcce)
     {
 
-        //dd($secuencia,$claveAcce); //LLEGA BIEN DESDE EL METODO DEL CONTROLLER
+        //  dd($tipoIdentificadorCli, $razonSocialCli, $identificadorCliente,$direccionCliente,
+        //  $totalSinImpuesto, $totalDescuento,$subtotaliva12, $totalIva12,$totalFactura, $detalles,$secuencia,$claveAcce); //LLEGA BIEN DESDE EL METODO DEL CONTROLLER
         $empresa = $this->empresa();
         //$ultimaFactura = Factura::latest()->first();
         //$secuencial = $ultimaFactura->secuencial;
@@ -394,7 +395,7 @@ class Factura extends Model
 		$xml_tco = $xml->createElement('codigo','2');// ok codi¿go impuesto 2  = iva
 		$xml_cpr = $xml->createElement('codigoPorcentaje','4');// ok codigo porcentaje iva 12 = 2  iva al 15 = 4
 		$xml_bas = $xml->createElement('baseImponible',$subtotaliva12); // ok subtotal iva 12
-		$xml_val = $xml->createElement('valor',$totalIva12);// total impuesto 12 %
+		$xml_val = $xml->createElement('valor', $totalIva12);// total impuesto 12 %  round($amount, 2);
 
         //REVISAR AQUI EL ICE
 
@@ -423,20 +424,19 @@ class Factura extends Model
 
         foreach ($detalles as $d) {
             $xml_det = $xml->createElement('detalle');
-
             $xml_cop = $xml->createElement('codigoPrincipal', $d['id']);
             $xml_dcr = $xml->createElement('descripcion', $d['name']);
             $xml_can = $xml->createElement('cantidad', $d['qty']);
-            $xml_pru = $xml->createElement('precioUnitario', $d['price']);
+            $xml_pru = $xml->createElement('precioUnitario', round($d['price'], 2));
             $xml_dsc = $xml->createElement('descuento', $d['descuento']);
-            $xml_tsm = $xml->createElement('precioTotalSinImpuesto', $d['price']);
+            $xml_tsm = $xml->createElement('precioTotalSinImpuesto', round($d['price'], 2));
             $xml_ips = $xml->createElement('impuestos');
             $xml_ipt = $xml->createElement('impuesto');
             $xml_cdg = $xml->createElement('codigo', '2');
             $xml_cpt = $xml->createElement('codigoPorcentaje', '4');
-            $xml_trf = $xml->createElement('tarifa', '12');
-            $xml_bsi = $xml->createElement('baseImponible',$d['price']);
-            $xml_vlr = $xml->createElement('valor', $d['price2']);
+            $xml_trf = $xml->createElement('tarifa', '15');
+            $xml_bsi = $xml->createElement('baseImponible',round($d['price'], 2));
+            $xml_vlr = $xml->createElement('valor', round($d['price'], 2));
 
             $xml_det->appendChild($xml_cop);
             $xml_det->appendChild($xml_dcr);
@@ -770,7 +770,7 @@ class Factura extends Model
         ));
 
         $response = curl_exec($curl);
-        dd($response);
+        //dd($response);
         file_put_contents("respuesta_sri_fetch.xml", $response);
         $code = curl_getinfo($curl, CURLINFO_RESPONSE_CODE);
 
@@ -782,7 +782,7 @@ class Factura extends Model
         }
 
         $simpleXml = new \SimpleXMLElement($response);
-
+        dd($simpleXml);
         $estado = $simpleXml->xpath('//estado')[0];
 
         if ('NO AUTORIZADO' === (string)$estado) {
@@ -792,8 +792,9 @@ class Factura extends Model
         }
 
         //return $response;
-        $comprobante = $simpleXml->xpath('//autorizacion')[0];
-        dd($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
+        dd($response);
+        //$comprobante = $simpleXml->xpath('//autorizacion')[0];
+        //dd($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
     }
 
 

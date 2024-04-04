@@ -138,7 +138,7 @@ class Cart {
         $amount = $this->cart->sum(function ($product){
             return ($product->price2 * $product->qty);
         });
-        return $amount;
+        return round($amount, 2);
     }
 
     public function totalSinImpuestos()
@@ -146,7 +146,7 @@ class Cart {
         $amount = $this->cart->sum(function ($product){
             return ($product->price * $product->qty);
         });
-        return $amount;
+        return round($amount, 2);
     }
 
     // total del valor que grava 12
@@ -158,7 +158,7 @@ class Cart {
             }
 
         });
-        return $amount;
+        return round($amount, 2);
     }
 
     // total del impuesto 12
@@ -170,7 +170,7 @@ class Cart {
             }
 
         });
-        return $amount;
+        return round($amount, 2);
     }
     public function totalIce()
     {
@@ -180,7 +180,7 @@ class Cart {
             }
 
         });
-        return $amount;
+        return round($amount, 2);
     }
 
     // total del valor que grava 0
@@ -192,7 +192,7 @@ class Cart {
             }
 
         });
-        return $amount;
+        return round($amount, 2);
     }
 
       // total del DESCUENTO
@@ -205,7 +205,7 @@ class Cart {
               }
 
           });
-          return $amount;
+          return round($amount, 2);
       }
 
 
