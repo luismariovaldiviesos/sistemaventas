@@ -664,7 +664,22 @@ class Factura extends Model
                 $obj->key = $claveAcceso ;
                 $obj->base64 = $data;
                 $this->recibir($obj);
-                $this->fetch($obj);
+                sleep(10);
+                $respuestaSRI = $this->fetch($obj);
+                switch ($respuestaSRI['RespuestaAutorizacionComprobante']['autorizaciones']['autorizacion']['estado'])
+                {
+                    case 'AUTORIZADO':
+                        dd('autorizado');
+                        case 'EN PROCESO':
+                            dd('en proceso');
+                            default:
+                            if ($respuestaSRI['RespuestaAutorizacionComprobante']['numeroComprobantes'] == "0")
+                            {dd('no autoriado, no se encontro del comprobante en el sri ');}
+                            else if ($respuestaSRI['RespuestaAutorizacionComprobante']['numeroComprobantes'] == "1"){
+                                dd('estamos en el else if');
+                            }
+                }
+
 
             default:
                 dd('no se puede firmar el doc') ;
@@ -733,6 +748,8 @@ class Factura extends Model
             //throw new SriReceiveException($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
             dd($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
         }
+
+        var_dump('fin de envio ' , $estado);
     }
     public function fetch($invoiceObj)
     {
@@ -780,9 +797,10 @@ class Factura extends Model
             //throw new SriAuthorizeException('Sri está caido.');
             dd("sri caiido en recuperacion");
         }
-
+        //dd( substr($response, 0, 200)); // Imprime los primeros 200 caracteres de $response)
         $simpleXml = new \SimpleXMLElement($response);
-        dd($simpleXml);
+
+        //dd($simpleXml);
         $estado = $simpleXml->xpath('//estado')[0];
 
         if ('NO AUTORIZADO' === (string)$estado) {
