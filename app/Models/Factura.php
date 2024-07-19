@@ -797,7 +797,7 @@ class Factura extends Model
             //throw new SriAuthorizeException('Sri está caido.');
             dd("sri caiido en recuperacion");
         }
-        //dd( substr($response, 0, 200)); // Imprime los primeros 200 caracteres de $response)
+        dd( substr($response, 0, 200)); // Imprime los primeros 200 caracteres de $response)
         $simpleXml = new \SimpleXMLElement($response);
 
         //dd($simpleXml);
