@@ -664,8 +664,9 @@ class Factura extends Model
                 $obj->key = $claveAcceso ;
                 $obj->base64 = $data;
                 $this->recibir($obj);
-                sleep(10);
+                //sleep(10);
                 $respuestaSRI = $this->fetch($obj);
+                //dd($respuestaSRI);
                 switch ($respuestaSRI['RespuestaAutorizacionComprobante']['autorizaciones']['autorizacion']['estado'])
                 {
                     case 'AUTORIZADO':
@@ -788,7 +789,7 @@ class Factura extends Model
 
         $response = curl_exec($curl);
         //dd($response);
-        file_put_contents("respuesta_sri_fetch.xml", $response);
+        file_put_contents("respuesta_sri_fetch.xml", $response);  // aqui iria enviados
         $code = curl_getinfo($curl, CURLINFO_RESPONSE_CODE);
 
         curl_close($curl);
@@ -797,7 +798,7 @@ class Factura extends Model
             //throw new SriAuthorizeException('Sri está caido.');
             dd("sri caiido en recuperacion");
         }
-        dd( substr($response, 0, 200)); // Imprime los primeros 200 caracteres de $response)
+        //dd( substr($response, 0, 200)); // Imprime los primeros 200 caracteres de $response)
         $simpleXml = new \SimpleXMLElement($response);
 
         //dd($simpleXml);
