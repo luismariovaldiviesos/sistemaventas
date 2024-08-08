@@ -799,7 +799,16 @@ class Factura extends Model
             dd("sri caiido en recuperacion");
         }
         //dd( substr($response, 0, 200)); // Imprime los primeros 200 caracteres de $response)
-        $simpleXml = new \SimpleXMLElement($response);
+        // if (simplexml_load_string($response) === false) {
+        //     throw new Exception('La respuesta no es un XML válido');
+        // }
+        try {
+            $response_utf8 = utf8_encode($response);
+            $simpleXml = new \SimpleXMLElement($response_utf8);
+        } catch (\Exception $e) {
+            throw new Exception('Error al parsear el XML: ' . $e->getMessage());
+            dd('Error al parsear el XML: ' . $e->getMessage());
+        }
 
         //dd($simpleXml);
         $estado = $simpleXml->xpath('//estado')[0];
@@ -809,11 +818,19 @@ class Factura extends Model
            // throw new SriAuthorizeException($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
            dd("algo en recupera");
         }
+        if ('AUTORIZADO' === (string)$estado) {
+            $comprobante = $simpleXml->xpath('//autorizacion')[0];
+            $estado = $simpleXml->xpath('//estado')[0];
+            $numeroAutorizacion = $simpleXml->xpath('//numeroAutorizacion')[0];
+            $fechaAutorizacion = $simpleXml->xpath('//fechaAutorizacion')[0];
+            $vfechaauto = substr($fechaAutorizacion, 0, 10) . ' ' . substr($fechaAutorizacion, 11, 5);
+           dd($estado,$numeroAutorizacion,$fechaAutorizacion, $vfechaauto);
+        }
 
         //return $response;
-        dd($response);
-        //$comprobante = $simpleXml->xpath('//autorizacion')[0];
-        //dd($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
+        //dd($response);
+        $comprobante = $simpleXml->xpath('//autorizacion')[0];
+        dd($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
     }
 
 
