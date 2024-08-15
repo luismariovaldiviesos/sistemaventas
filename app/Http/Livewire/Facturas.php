@@ -322,11 +322,15 @@ class Facturas extends Component
                                 $this->secuencial, $this->claveAcceso
                             );
 
-       $factura->firmarUltimaFactura();
-
+       $respuestaFirmaUltimaFActura = $factura->firmarUltimaFactura();
+        // aqui metodo pef
+        dd($respuestaFirmaUltimaFActura);
+        $this->noty('VENTA REGISTRADA CON EXITO ');
         $this->clearCart();
         $this->resetUI();
-       // dd($factura->getLastTicket());
+
+        //dd('aqui metodo pdf');
+        //dd($factura->getLastTicket());
        //dd($this->secuencial);
 
 

@@ -637,11 +637,10 @@ class Factura extends Model
                 $this->recibir($obj);
                 //sleep(10);
                 $respuestaSRI = $this->fetch($obj);
-                if($respuestaSRI){
-                    dd('PDF GENERADO CTM !!!!!!!');
-                }
-
-
+               return($respuestaSRI);
+            break;
+            default:
+            dd('no se firmó el documento');
 
         }
     }
@@ -763,14 +762,11 @@ class Factura extends Model
         try {
             $response_utf8 = utf8_encode($response);
             $simpleXml = new \SimpleXMLElement($response_utf8);
+            $estado = $simpleXml->xpath('//estado')[0];
         } catch (\Exception $e) {
             throw new Exception('Error al parsear el XML: ' . $e->getMessage());
             dd('Error al parsear el XML: ' . $e->getMessage());
         }
-
-        //dd($simpleXml);
-        $estado = $simpleXml->xpath('//estado')[0];
-
         if ('NO AUTORIZADO' === (string)$estado) {
             $comprobante = $simpleXml->xpath('//autorizacion')[0];
            // throw new SriAuthorizeException($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
@@ -786,11 +782,7 @@ class Factura extends Model
             // aqui hay que llamar a la funcion xml autorizado *****************
             $xmlAprobado =    $this->crearXmlAutorizado($estado,$numeroAutorizacion,$vfechaauto,$comprobante,$comprobanteAutorizacion);
             //dd($estado,$numeroAutorizacion,$fechaAutorizacion, $vfechaauto, $comprobanteAutorizacion);
-            if($xmlAprobado){
-                //dd("aqui llamar al metodo para crear el pdf");
-                $this->pdfFactura('luis.valdiviesos@funcionjudicial.gob.ec');
-             }
-
+            return $xmlAprobado;
 
         }
 
