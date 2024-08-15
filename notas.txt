@@ -27,6 +27,12 @@ ojo -->  hay que revisar los totales de la factura, descuadra cuando hay impuest
 https://www.youtube.com/watch?v=b3D57UxlTEw
 
 
+****************************************************
+revisar tambien las de arriba
+
+en el metodo de recepcion del xml hay que generar el nombre del xml autorizado
+
+
 
 
 swich del envio

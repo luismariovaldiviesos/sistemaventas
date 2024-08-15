@@ -829,10 +829,12 @@ class Factura extends Model
             $vfechaauto = substr($fechaAutorizacion, 0, 10) . ' ' . substr($fechaAutorizacion, 11, 5);
             $comprobanteAutorizacion=$simpleXml->xpath('//comprobante')[0];
             // aqui hay que llamar a la funcion xml autorizado *****************
-        $xmlAprobado =    $this->crearXmlAutorizado($estado,$numeroAutorizacion,$vfechaauto,$comprobante,$comprobanteAutorizacion);
-        //dd($estado,$numeroAutorizacion,$fechaAutorizacion, $vfechaauto, $comprobanteAutorizacion);
-        //dd($xmlAprobado);
-        dd("hasta aqui, va todo bien, formar pdf de la factura ahora");
+            $xmlAprobado =    $this->crearXmlAutorizado($estado,$numeroAutorizacion,$vfechaauto,$comprobante,$comprobanteAutorizacion);
+            //dd($estado,$numeroAutorizacion,$fechaAutorizacion, $vfechaauto, $comprobanteAutorizacion);
+            if($xmlAprobado){
+                dd("aqui llamar al metodo para crear el pdf");
+             }
+
 
         }
 
@@ -864,23 +866,6 @@ class Factura extends Model
         //Y se guarda en el nombre del archivo 'achivo.xml', y el obejto nstanciado
         $ms =  Storage::disk('comprobantes/autorizados')->put($factura,$xml_string);
         //dd($this->claveAcceso());
-
-
-
-
-        // dd($xml_string);
-        // $ms = $xml->save($ruta_autorizados . $nuevo_xml);
-
-       // Convertir el DOMDocument a una cadena XML
-        // $xml_string = $xml->saveXML();
-        // dd($xml_string);
-        // Guardar el XML en la ruta especificada usando el sistema de archivos de Laravel
-        //$ms = Storage::disk('comprobantes/autorizados')->put($nuevo_xml,$xml_string);
-        // $ms  = Storage::put($ruta_autorizados . $nuevo_xml, $xml_string);
-
-        //$ms = $xml->save($ruta_autorizados . $nuevo_xml);
-        //dd($ms);
-        //chmod($ruta_autorizados.$nuevo_xml, 0755);
         return $ms;
 
     }
