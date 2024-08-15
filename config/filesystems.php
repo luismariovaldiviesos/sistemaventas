@@ -38,6 +38,10 @@ return [
             'driver' => 'local',
             'root' => storage_path('app/comprobantes/firmados'),
         ],
+        'comprobantes/autorizados' => [
+            'driver' => 'local',
+            'root' => storage_path('app/comprobantes/autorizados'),
+        ],
         'certificados' => [
             'driver' => 'local',
             'root' => storage_path('app/certificados'),

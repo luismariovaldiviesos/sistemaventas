@@ -577,8 +577,9 @@ class Factura extends Model
          // Ruta donde se guardará el archivo firmado
          $ruta_si_firmados =  base_path('storage/app/comprobantes/firmados/');
 
-         //autorizados
-         $ruta_autorizados = base_path('storage/app/comprobantes/autorizados/');
+         // ruta enviados
+         $ruta_enviados =  base_path('storage/app/comprobantes/enviados/');
+
 
          //pdfs
          $pathPdf = base_path('storage/app/comprobantes/pdf/');
@@ -633,12 +634,12 @@ class Factura extends Model
 
         try {
             $resp = shell_exec($comando);
-            //dd($resp);
         } catch (\Exception $e) {
             dd('Error al buscar java: ' . $e->getMessage());
         }
 
         $claveAcces = simplexml_load_file($ruta_si_firmados . $nuevo_xml);
+
         $claveAcceso = substr($claveAcces->infoTributaria[0]->claveAcceso, 0, 49);
         //dd($claveAcceso);
         var_dump($claveAcceso);
@@ -754,6 +755,8 @@ class Factura extends Model
     }
     public function fetch($invoiceObj)
     {
+         //autorizados
+
         $ambiente = "1";
         if ($ambiente == "1") {
             $host = 'https://celcer.sri.gob.ec';
@@ -824,13 +827,62 @@ class Factura extends Model
             $numeroAutorizacion = $simpleXml->xpath('//numeroAutorizacion')[0];
             $fechaAutorizacion = $simpleXml->xpath('//fechaAutorizacion')[0];
             $vfechaauto = substr($fechaAutorizacion, 0, 10) . ' ' . substr($fechaAutorizacion, 11, 5);
-           dd($estado,$numeroAutorizacion,$fechaAutorizacion, $vfechaauto);
+            $comprobanteAutorizacion=$simpleXml->xpath('//comprobante')[0];
+            // aqui hay que llamar a la funcion xml autorizado *****************
+        $xmlAprobado =    $this->crearXmlAutorizado($estado,$numeroAutorizacion,$vfechaauto,$comprobante,$comprobanteAutorizacion);
+        //dd($estado,$numeroAutorizacion,$fechaAutorizacion, $vfechaauto, $comprobanteAutorizacion);
+        //dd($xmlAprobado);
+        dd("hasta aqui, va todo bien, formar pdf de la factura ahora");
+
         }
 
-        //return $response;
-        //dd($response);
-        $comprobante = $simpleXml->xpath('//autorizacion')[0];
-        dd($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
+
+    }
+
+
+    public  function crearXmlAutorizado($estado,$numeroAutorizacion,$fechaAutorizacion,$comprobanteAutorizacion,$nuevo_xml){
+        $ruta_autorizados = 'comprobantes/autorizados/'; // Ruta relativa dentro del storage
+        $xml =  new DOMDocument();
+        $xml_autor = $xml->createElement('autorizacion');
+        $xml_estad = $xml->createElement('estado', $estado);
+        $xml_nauto = $xml->createElement('numeroAutorizacion', $numeroAutorizacion);
+        $xml_fauto = $xml->createElement('fechaAutorizacion', $fechaAutorizacion);
+        $xml_compr = $xml->createElement('comprobante');
+        $xml_autor->appendChild($xml_estad);
+        $xml_autor->appendChild($xml_nauto);
+        $xml_autor->appendChild($xml_fauto);
+        $xml_compr->appendChild($xml->createCDATASection($comprobanteAutorizacion));
+        $xml_autor->appendChild($xml_compr);
+        $xml->appendChild($xml_autor);
+        $xml->preserveWhiteSpace = false;
+        //Se ingresa formato de salida
+        $xml->formatOutput = true;
+        //Se instancia el objeto
+        $xml_string =$xml->saveXML();
+        //nombre del archivo
+        $factura = 'idcliente'.'_'.'seuencia'.'.xml'; // nombre de la imagen
+        //Y se guarda en el nombre del archivo 'achivo.xml', y el obejto nstanciado
+        $ms =  Storage::disk('comprobantes/autorizados')->put($factura,$xml_string);
+        //dd($this->claveAcceso());
+
+
+
+
+        // dd($xml_string);
+        // $ms = $xml->save($ruta_autorizados . $nuevo_xml);
+
+       // Convertir el DOMDocument a una cadena XML
+        // $xml_string = $xml->saveXML();
+        // dd($xml_string);
+        // Guardar el XML en la ruta especificada usando el sistema de archivos de Laravel
+        //$ms = Storage::disk('comprobantes/autorizados')->put($nuevo_xml,$xml_string);
+        // $ms  = Storage::put($ruta_autorizados . $nuevo_xml, $xml_string);
+
+        //$ms = $xml->save($ruta_autorizados . $nuevo_xml);
+        //dd($ms);
+        //chmod($ruta_autorizados.$nuevo_xml, 0755);
+        return $ms;
+
     }
 
 
