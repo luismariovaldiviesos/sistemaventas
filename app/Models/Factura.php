@@ -637,25 +637,10 @@ class Factura extends Model
                 $this->recibir($obj);
                 //sleep(10);
                 $respuestaSRI = $this->fetch($obj);
-                //dd($respuestaSRI);
-                switch ($respuestaSRI['RespuestaAutorizacionComprobante']['autorizaciones']['autorizacion']['estado'])
-                {
-                    case 'AUTORIZADO':
-                        dd('autorizado');
-                        case 'EN PROCESO':
-                            dd('en proceso');
-                            default:
-                            if ($respuestaSRI['RespuestaAutorizacionComprobante']['numeroComprobantes'] == "0")
-                            {dd('no autoriado, no se encontro del comprobante en el sri ');}
-                            else if ($respuestaSRI['RespuestaAutorizacionComprobante']['numeroComprobantes'] == "1"){
-                                dd('estamos en el else if');
-                            }
+                if($respuestaSRI){
+                    dd('PDF GENERADO CTM !!!!!!!');
                 }
 
-
-            default:
-                dd('no se puede firmar el doc') ;
-            break;
 
 
         }
@@ -802,7 +787,8 @@ class Factura extends Model
             $xmlAprobado =    $this->crearXmlAutorizado($estado,$numeroAutorizacion,$vfechaauto,$comprobante,$comprobanteAutorizacion);
             //dd($estado,$numeroAutorizacion,$fechaAutorizacion, $vfechaauto, $comprobanteAutorizacion);
             if($xmlAprobado){
-                dd("aqui llamar al metodo para crear el pdf");
+                //dd("aqui llamar al metodo para crear el pdf");
+                $this->pdfFactura('luis.valdiviesos@funcionjudicial.gob.ec');
              }
 
 

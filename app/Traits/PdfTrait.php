@@ -2,7 +2,7 @@
 
 namespace App\Traits;
 use Codedge\Fpdf\Fpdf\Fpdf;
-
+use Illuminate\Support\Facades\Storage;
 
 trait PdfTrait{
 
@@ -19,7 +19,7 @@ trait PdfTrait{
 		$pdf->SetAutoPageBreak(TRUE);
 		$pdf->SetFont('Arial', '', 7);
 		$pdf->AddPage();
-		$pdf->Image('../img/logo.jpg',35,15,34);
+		//$pdf->Image('../img/logo.jpg',35,15,34);
 		$pdf->SetXY(107, 10);
 		$pdf->Cell(93, 84, '', 1, 1);
 		$pdf->SetXY(10, 54);
@@ -41,8 +41,8 @@ trait PdfTrait{
 		$pdf->SetFont('Arial', 'B', 7);$pdf->SetXY(107, 42);$pdf->Cell(93, 8, 'NUMERO DE AUTORIZACION', 0 , 1, 'C');
 		$pdf->SetFont('Arial', '', 7);$pdf->SetXY(107, 50);$pdf->Cell(93, 10, '2009202001179134544400110010010003971781234567815', 0 , 1, 'C');
 		$pdf->SetFont('Arial', 'B', 7);$pdf->SetXY(107, 66);$pdf->Cell(93, 4, 'CLAVE DE ACCESO', 0 , 1, 'C');
-		new barCodeGenrator('2009202001179134544400110010010003971781234567815', 1, 'barra.gif', 455, 60, false);
-		$pdf->Image('barra.gif', 108, 70, 90, 10);
+		//new barCodeGenrator('2009202001179134544400110010010003971781234567815', 1, 'barra.gif', 455, 60, false);
+		//$pdf->Image('barra.gif', 108, 70, 90, 10);
 		$pdf->SetFont('Arial', 'B', 7);
 		$pdf->SetXY(107, 80);
 		$pdf->Cell(93, 5, '2009202001179134544400110010010003971781234567815', 0 , 1, 'C');
@@ -114,7 +114,12 @@ trait PdfTrait{
 		$pdf->SetFont('Arial', '', 7);$pdf->SetXY(10, $ejey+45);$pdf->Cell(75, 6, 'SIN UTILIZACION DEL SISTEMA FINANCIERON', 'LRB' , 1, 'L');
 		$pdf->SetFont('Arial', '', 7);$pdf->SetXY(85, $ejey+45);$pdf->Cell(30, 6, '152.00', 'RB' , 1, 'L');
 		    //SAVE
-		$pdf->Output('../comprobantes/pdf/prueba.pdf','F');
+		//$pdf->Output('../comprobantes/pdf/prueba.pdf','F');
+        $pdfContent = $pdf->Output('','S');
+        //dd($pdf);
+        //$pdfName = 'aleatorio'.'pdf';
+        Storage::disk('comprobantes/pdfs')->put('PRUEBA.pdf',$pdfContent);
+        //dd('pdf generado ');
 
     }
 
