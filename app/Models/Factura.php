@@ -89,36 +89,6 @@ class Factura extends Model
 
     public function claveAcceso()
     {
-        // $empresa =  $this->empresa();
-        // $ruc =  $empresa[0]->ruc;  //3
-        // $ambiente  =  $empresa[0]->ambiente;  //4
-        // $establecimiento =  $empresa[0]->estab;
-        // $puntoEmi  =  $empresa[0]->ptoEmi;
-        // $secuencial =  $this->secuencial();
-        // // asociativo
-
-        // $args['fecha'] = Carbon::now()->format('dmY'); //1
-        // $args['tipodoc'] = '01'; //1
-        // $args['ruc'] = $ruc;
-        // $args['ambiente'] = $ambiente;
-        // $args['establecimiento'] = $establecimiento;
-        // $args['punto'] = $puntoEmi;
-        // $args['factura'] = $secuencial;
-        // $args['codigo'] = substr($secuencial,-8);
-        // $args['emision'] = '1';
-        // //dd($args);
-
-        // $claveArray = [];
-        // $claveArray =  $this->generaClave($args);
-        // //var_dump($claveArray);
-        // //dd($claveArray);
-        // $cadena = implode('', $claveArray);
-
-        //dd($cadena);
-
-          $ultimaFactura = Factura::latest()->first();
-         //$secuencial = $ultimaFactura->secuencial;
-        //dd($this->secuencial());
          $fecha =  Carbon::now()->format('dmY'); //1
          $codigo  = "01"; //2
          $parteUno = $fecha.$codigo;   //1+2***********
@@ -869,6 +839,8 @@ class Factura extends Model
         return $ms;
 
     }
+
+
 
 
     public function getLastTicket() { // obtiene la ultima factura generada en no_firmados
