@@ -303,19 +303,30 @@ class Facturas extends Component
             //if ($print) $this->PrintTicket($sale->id);
 
             //*********aqui metodo de xml**********
-
+            $startXml = microtime(true);
             $factura->xmlFactura(
                                   $tipeIDenti, $customer->businame,$customer->valueidenti,$customer->address,
                                   $this->subTotSinImpuesto,$this->totalDscto, $this->iva12,
                                   $this->totalImpuesto12,$this->totalCart, $this->getContentCart(),
                                   $this->secuencial, $this->claveAcceso
                               );
+            $endXml = microtime(true);
+            $timeXml = $endXml - $startXml;
+
             //*********aqui metodo factura firma***********
+            $startFirma = microtime(true);
             $factura->firmarUltimaFactura();
-            dd('firmo envio y recibio');
+            $endFirma = microtime(true);
+            $timeFirma = $endFirma - $startFirma;
+            //dd('firmo envio y recibio');
+
             //*********aqui metodo pdf***********
-           // $factura->generaPDF();
-           dd('generado pdf');
+            $startPDF = microtime(true);
+            $factura->generaPDF();
+            $endPDF = microtime(true);
+            $timePDF = $endPDF - $startPDF;
+            dd( $timeXml, $timeFirma, $timePDF );
+          // dd('generado pdf');
             //luego notificar
             $this->noty('VENTA REGISTRADA CON EXITO');
             $this->clearCart();
