@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\FuncionesTrait;
 use App\Traits\PdfTrait;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
@@ -314,9 +315,6 @@ class Factura extends Model
     public function xmlFactura($tipoIdentificadorCli, $razonSocialCli, $identificadorCliente,$direccionCliente,
      $totalSinImpuesto, $totalDescuento,$subtotaliva12, $totalIva12,$totalFactura, $detalles,$secuencia,$claveAcce)
     {
-
-        //  dd($tipoIdentificadorCli, $razonSocialCli, $identificadorCliente,$direccionCliente,
-        //  $totalSinImpuesto, $totalDescuento,$subtotaliva12, $totalIva12,$totalFactura, $detalles,$secuencia,$claveAcce); //LLEGA BIEN DESDE EL METODO DEL CONTROLLER
         $empresa = $this->empresa();
         //$ultimaFactura = Factura::latest()->first();
         //$secuencial = $ultimaFactura->secuencial;
@@ -381,17 +379,7 @@ class Factura extends Model
 		$xml_tot = $xml->createElement('total',$totalFactura);// ok
 		$xml_pla = $xml->createElement('plazo','90');// ok
 		$xml_uti = $xml->createElement('unidadTiempo','dias');// ok
-
-
         $xml_dts = $xml->createElement('detalles');
-
-        // $detalles = array(
-        //     array('producto_id' => 1, 'descripcion' => 'producto uno', 'cantidad' => 2, 'precioUnitario' => 2.00, 'descuento' => 0.00, 'total' => 2.00),
-        //     array('producto_id' => 1, 'descripcion' => 'producto dos', 'cantidad' => 3, 'precioUnitario' => 4.00, 'descuento' => 0.00, 'total' => 12.00),
-        //     array('producto_id' => 3, 'descripcion' => 'producto tres', 'cantidad' => 2, 'precioUnitario' => 2.00, 'descuento' => 0.00, 'total' => 8.00),
-        //     array('producto_id' => 4, 'descripcion' => 'producto cuatro', 'cantidad' => 2, 'precioUnitario' => 8.00, 'descuento' => 0.00, 'total' => 16.00)
-        // );
-
         foreach ($detalles as $d) {
             $xml_det = $xml->createElement('detalle');
             $xml_cop = $xml->createElement('codigoPrincipal', $d['id']);
@@ -432,8 +420,6 @@ class Factura extends Model
 		$xml_cp1 = $xml->createElement('campoAdicional',$empresa[0]->email);// ok
 		$atributo = $xml->createAttribute('nombre');// ******************revisar***************
 		$atributo->value = 'email';// ******************revisar***************
-
-
          //PRIMERA PARTE
 		$xml_inf->appendChild($xml_amb);
 		$xml_inf->appendChild($xml_tip);
@@ -515,6 +501,7 @@ class Factura extends Model
         //dd($this->claveAcceso());
 
 
+
     }
 
     public function firmarUltimaFactura()
@@ -528,7 +515,8 @@ class Factura extends Model
         // }
          // Llamar al método para firmar la factura utilizando el ID obtenido
          $resultadoFirma = $this->firmarFactura($facturaId);
-         return $resultadoFirma;
+         //dd(gettype($resultadoFirma));
+        return $resultadoFirma;
     }
 
     public function firmarFactura($facturaId)
@@ -643,6 +631,10 @@ class Factura extends Model
             dd('no se firmó el documento');
 
         }
+    }
+
+    public  function generaPDF(){
+        $this->pdfFactura('tiburcio@gmail.com');
     }
 
     private function recibir($invoiceObj)

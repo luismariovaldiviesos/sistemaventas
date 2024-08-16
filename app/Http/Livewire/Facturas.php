@@ -297,35 +297,55 @@ class Facturas extends Component
             }
 
             DB::commit();
+            $this->noty('FACTURA GENERADA, INICIAMOS XML');
+
+            // ******para imprimir ticket**********
             //if ($print) $this->PrintTicket($sale->id);
-            //aqui metodo de xml
 
+            //*********aqui metodo de xml**********
 
-            // aqui metodo factura firma
-
-
-
-            //  aqui metodo pdf
-
-
+            $factura->xmlFactura(
+                                  $tipeIDenti, $customer->businame,$customer->valueidenti,$customer->address,
+                                  $this->subTotSinImpuesto,$this->totalDscto, $this->iva12,
+                                  $this->totalImpuesto12,$this->totalCart, $this->getContentCart(),
+                                  $this->secuencial, $this->claveAcceso
+                              );
+            //*********aqui metodo factura firma***********
+            $factura->firmarUltimaFactura();
+            dd('firmo envio y recibio');
+            //*********aqui metodo pdf***********
+           // $factura->generaPDF();
+           dd('generado pdf');
             //luego notificar
-             $this->noty('VENTA REGISTRADA CON EXITO');
+            $this->noty('VENTA REGISTRADA CON EXITO');
             $this->clearCart();
             $this->resetUI();
+            dd('fin del proceso ');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         }
         catch (\Throwable $e) {
             FacadesDB::rollback();
             $this->noty('Error al guardar el pedido: ' . $e->getMessage(), 'noty', 'error');
         }
 
-    //     $factura->xmlFactura(
-    //                             $tipeIDenti, $customer->businame,$customer->valueidenti,$customer->address,
-    //                             $this->subTotSinImpuesto,$this->totalDscto, $this->iva12,
-    //                             $this->totalImpuesto12,$this->totalCart, $this->getContentCart(),
-    //                             $this->secuencial, $this->claveAcceso
-    //                         );
 
-    //    $respuestaFirmaUltimaFActura = $factura->firmarUltimaFactura();
+
+
     //     // aqui metodo pef
     //     dd($respuestaFirmaUltimaFActura);
     //     $this->noty('VENTA REGISTRADA CON EXITO ');
