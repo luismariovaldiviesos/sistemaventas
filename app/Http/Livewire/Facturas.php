@@ -325,13 +325,19 @@ class Facturas extends Component
             $factura->generaPDF();
             $endPDF = microtime(true);
             $timePDF = $endPDF - $startPDF;
-            dd( $timeXml, $timeFirma, $timePDF );
-          // dd('generado pdf');
-            //luego notificar
+
+            $startNoty = microtime(true);
             $this->noty('VENTA REGISTRADA CON EXITO');
             $this->clearCart();
             $this->resetUI();
-            dd('fin del proceso ');
+            $endNoty = microtime(true);
+            $timeNoty = $endNoty - $startNoty;
+
+            dd( $timeXml, $timeFirma, $timePDF, $timeNoty);
+          // dd('generado pdf');
+            //luego notificar
+
+
 
 
 
