@@ -36,56 +36,56 @@ class InicialSeeder extends Seeder
             'user_id' => '1',
         ]);
 
-        $categoria =  Category::create([
-            'name' => 'Comida rápida'
-        ]);
-        $categoria =  Category::create([
-            'name' => 'Bebidas calientes'
-        ]);
-        $categoria =  Category::create([
-            'name' => 'Bebidas frías'
-        ]);
-        $categoria =  Category::create([
-            'name' => 'Cortes'
-        ]);
-        $categoria =  Category::create([
-            'name' => 'Postres'
-        ]);
-        $categoria =  Category::create([
-            'name' => 'Servicios'
-        ]);
-        $categoria =  Category::create([
-            'name' => 'Gaseosas'
-        ]);
+        // $categoria =  Category::create([
+        //     'name' => 'Comida rápida'
+        // ]);
+        // $categoria =  Category::create([
+        //     'name' => 'Bebidas calientes'
+        // ]);
+        // $categoria =  Category::create([
+        //     'name' => 'Bebidas frías'
+        // ]);
+        // $categoria =  Category::create([
+        //     'name' => 'Cortes'
+        // ]);
+        // $categoria =  Category::create([
+        //     'name' => 'Postres'
+        // ]);
+        // $categoria =  Category::create([
+        //     'name' => 'Servicios'
+        // ]);
+        // $categoria =  Category::create([
+        //     'name' => 'Gaseosas'
+        // ]);
 
 
-        //productos
-        $product = Product::create([
-            'category_id' => 3,
-            'code' => 1,
-            'name' => 'Agua',
-            'cost' => 0.25,
-            'price' => 0.75,
-            'iva' => 0.00,
-            'ice' => 0.00,
-            'descuento' => 0.00,
-            'price2' => 0.75,
-            'stock' => 100,
-            'minstock' => 10
-        ]);
-        $product = Product::create([
-            'category_id' => 2,
-            'code' => 2,
-            'name' => 'Americano doble',
-            'cost' => 1.00,
-            'price' => 1.50,
-            'iva' => 0.00,
-            'ice' => 0.00,
-            'descuento' => 0.00,
-            'price2' => 1.50,
-            'stock' => 100,
-            'minstock' => 10
-        ]);
+        // //productos
+        // $product = Product::create([
+        //     'category_id' => 3,
+        //     'code' => 1,
+        //     'name' => 'Agua',
+        //     'cost' => 0.25,
+        //     'price' => 0.75,
+        //     'iva' => 0.00,
+        //     'ice' => 0.00,
+        //     'descuento' => 0.00,
+        //     'price2' => 0.75,
+        //     'stock' => 100,
+        //     'minstock' => 10
+        // ]);
+        // $product = Product::create([
+        //     'category_id' => 2,
+        //     'code' => 2,
+        //     'name' => 'Americano doble',
+        //     'cost' => 1.00,
+        //     'price' => 1.50,
+        //     'iva' => 0.00,
+        //     'ice' => 0.00,
+        //     'descuento' => 0.00,
+        //     'price2' => 1.50,
+        //     'stock' => 100,
+        //     'minstock' => 10
+        // ]);
 
         Setting::create([
             'razonSocial' => 'CHOCHO ORELLANA ANGELA XIMENA',
