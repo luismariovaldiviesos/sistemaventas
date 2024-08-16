@@ -297,37 +297,40 @@ class Facturas extends Component
             }
 
             DB::commit();
-
-
             //if ($print) $this->PrintTicket($sale->id);
+            //aqui metodo de xml
+
+
+            // aqui metodo factura firma
 
 
 
-
-            $this->noty('VENTA REGISTRADA CON EXITO');
-
+            //  aqui metodo pdf
 
 
+            //luego notificar
+             $this->noty('VENTA REGISTRADA CON EXITO');
+            $this->clearCart();
+            $this->resetUI();
         }
         catch (\Throwable $e) {
             FacadesDB::rollback();
             $this->noty('Error al guardar el pedido: ' . $e->getMessage(), 'noty', 'error');
         }
 
+    //     $factura->xmlFactura(
+    //                             $tipeIDenti, $customer->businame,$customer->valueidenti,$customer->address,
+    //                             $this->subTotSinImpuesto,$this->totalDscto, $this->iva12,
+    //                             $this->totalImpuesto12,$this->totalCart, $this->getContentCart(),
+    //                             $this->secuencial, $this->claveAcceso
+    //                         );
 
-        $factura->xmlFactura(
-                                $tipeIDenti, $customer->businame,$customer->valueidenti,$customer->address,
-                                $this->subTotSinImpuesto,$this->totalDscto, $this->iva12,
-                                $this->totalImpuesto12,$this->totalCart, $this->getContentCart(),
-                                $this->secuencial, $this->claveAcceso
-                            );
-
-       $respuestaFirmaUltimaFActura = $factura->firmarUltimaFactura();
-        // aqui metodo pef
-        dd($respuestaFirmaUltimaFActura);
-        $this->noty('VENTA REGISTRADA CON EXITO ');
-        $this->clearCart();
-        $this->resetUI();
+    //    $respuestaFirmaUltimaFActura = $factura->firmarUltimaFactura();
+    //     // aqui metodo pef
+    //     dd($respuestaFirmaUltimaFActura);
+    //     $this->noty('VENTA REGISTRADA CON EXITO ');
+    //     $this->clearCart();
+    //     $this->resetUI();
 
         //dd('aqui metodo pdf');
         //dd($factura->getLastTicket());
