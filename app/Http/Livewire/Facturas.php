@@ -11,6 +11,7 @@ use App\Models\User;
 use Livewire\Component;
 use App\Traits\CartTrait;
 use App\Traits\PrinterTrait;
+use App\Traits\PdfTrait;
 use DB;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -20,7 +21,7 @@ class Facturas extends Component
 {
 
      //traits
-     use CartTrait, PrinterTrait;
+     use CartTrait, PrinterTrait, PdfTrait;
 
      // propiedades generales
     public $search, $cash, $searchCustomer, $searchProduct, $customer_id =null,
@@ -322,7 +323,10 @@ class Facturas extends Component
 
             //*********aqui metodo pdf***********
             $startPDF = microtime(true);
-            $factura->generaPDF();
+            //$razonSocial,$usuarioSistema,$direccionMatriz,$dirrecioSucursal,$rucCliente,$numeroFact,
+            //$fechaAuto,$numeroAutori,$claveAccesoPDF,$customer,$fechaEmision,$customer_id
+            $this->pdfFactura($razonSocial,$usuarioSistema,$direccionMatriz,$dirrecioSucursal,
+                $customer_id,$factura->id,$fechaEmision,'1','calceacceo',$customerSelected,$fechaEmision,$customer_id);
             $endPDF = microtime(true);
             $timePDF = $endPDF - $startPDF;
 
