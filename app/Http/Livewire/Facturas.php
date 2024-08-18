@@ -336,24 +336,6 @@ class Facturas extends Component
             dd( $timeXml, $timeFirma, $timePDF, $timeNoty);
           // dd('generado pdf');
             //luego notificar
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         }
         catch (\Throwable $e) {
             FacadesDB::rollback();
