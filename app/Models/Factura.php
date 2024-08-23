@@ -495,9 +495,9 @@ class Factura extends Model
         //Se instancia el objeto
         $xml_string =$xml->saveXML();
         //nombre del archivo
-        $factura = $identificadorCliente.'_'.$secuencia.'.xml'; // nombre de la imagen
+        $name = $identificadorCliente.'_'.$secuencia.'.xml'; // nombre de la imagen
         //Y se guarda en el nombre del archivo 'achivo.xml', y el obejto nstanciado
-        Storage::disk('comprobantes/no_firmados')->put($factura,$xml_string);
+        Storage::disk('comprobantes/no_firmados')->put($name,$xml_string);
         //dd($this->claveAcceso());
 
 

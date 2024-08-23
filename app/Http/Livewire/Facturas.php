@@ -311,6 +311,11 @@ class Facturas extends Component
                                   $this->totalImpuesto12,$this->totalCart, $this->getContentCart(),
                                   $this->secuencial, $this->claveAcceso
                               );
+            $this->noty('XML GENERADO CORRECTAMENTE !!', 'noty', 'error');
+            $this->clearCart();
+            $this->resetUI();
+            return;
+
             $endXml = microtime(true);
             $timeXml = $endXml - $startXml;
 
