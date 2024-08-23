@@ -762,7 +762,7 @@ class Factura extends Model
         if ('NO AUTORIZADO' === (string)$estado) {
             $comprobante = $simpleXml->xpath('//autorizacion')[0];
            // throw new SriAuthorizeException($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
-           dd("algo en recupera");
+           dd($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
         }
         if ('AUTORIZADO' === (string)$estado) {
             $comprobante = $simpleXml->xpath('//autorizacion')[0];
@@ -802,7 +802,8 @@ class Factura extends Model
         //Se instancia el objeto
         $xml_string =$xml->saveXML();
         //nombre del archivo
-        $factura = 'idcliente'.'_'.'seuencia'.'.xml'; // nombre de la imagen
+        $secuencial =  substr($numeroAutorizacion,30,9);
+        $factura = 'facturaNro'.'_'.$secuencial.'.xml'; // nombre de la imagen
         //Y se guarda en el nombre del archivo 'achivo.xml', y el obejto nstanciado
         $ms =  Storage::disk('comprobantes/autorizados')->put($factura,$xml_string);
         //dd($this->claveAcceso());
