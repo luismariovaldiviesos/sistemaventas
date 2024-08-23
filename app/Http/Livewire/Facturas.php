@@ -311,10 +311,6 @@ class Facturas extends Component
                                   $this->totalImpuesto12,$this->totalCart, $this->getContentCart(),
                                   $this->secuencial, $this->claveAcceso
                               );
-            $this->noty('XML GENERADO CORRECTAMENTE !!', 'noty', 'error');
-            $this->clearCart();
-            $this->resetUI();
-            return;
 
             $endXml = microtime(true);
             $timeXml = $endXml - $startXml;
@@ -336,9 +332,9 @@ class Facturas extends Component
             $timePDF = $endPDF - $startPDF;
 
             $startNoty = microtime(true);
-            $this->noty('VENTA REGISTRADA CON EXITO');
-            $this->clearCart();
-            $this->resetUI();
+            // $this->noty('XML GENERADO CORRECTAMENTE !!', 'noty', 'error');
+            // $this->clearCart();
+            // $this->resetUI();
             $endNoty = microtime(true);
             $timeNoty = $endNoty - $startNoty;
 
