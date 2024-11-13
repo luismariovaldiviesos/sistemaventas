@@ -346,6 +346,7 @@ class Facturas extends Component
 
      public  function pdfController()  {
         //dd('hola pdf');
+        ob_start();
         $pdf = new Fpdf();
         $pdf->SetCreator('ESTEBAN BAHAMONDE');
 		$pdf->SetAuthor('ESTEBAN BAHAMONDE');
@@ -448,6 +449,7 @@ class Facturas extends Component
 		$pdf->SetFont('Arial', '', 7);$pdf->SetXY(85, $ejey+45);$pdf->Cell(30, 6, '152.00', 'RB' , 1, 'L');
         $pdf->Output();
         exit; // Usa die() o exit para evitar cualquier otra salida
+        ob_end_flush();
       }
 
 
