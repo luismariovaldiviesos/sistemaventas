@@ -633,9 +633,9 @@ class Factura extends Model
         }
     }
 
-    public  function generaPDF(){
-        $this->pdfFactura('tiburcio@gmail.com');
-    }
+    // public  function generaPDF(){
+    //     $this->pdfFactura('tiburcio@gmail.com');
+    // }
 
     private function recibir($invoiceObj)
     {

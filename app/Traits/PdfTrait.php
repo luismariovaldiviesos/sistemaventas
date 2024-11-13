@@ -1,8 +1,11 @@
 <?php
 
 namespace App\Traits;
-use Codedge\Fpdf\Fpdf\Fpdf;
+
+//use Codedge\Fpdf\Facades\Fpdf;
+use Codedge\Fpdf\Fpdf\Fpdf ;
 use Illuminate\Support\Facades\Storage;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 trait PdfTrait{
 
@@ -124,4 +127,28 @@ trait PdfTrait{
 
     }
 
+
+    // function pdf() {
+    //     $pdf = new Fpdf();
+    //     \Log::info('Iniciando prueba de FPDF');
+    // $pdf->AddPage();
+    // $pdf->SetFont('Arial', 'B', 16);
+    // $pdf->Cell(40, 10, 'Hello World!');
+    // $pdf->Output('D', 'test.pdf'); // 'D' for download, 'I' for inline view, etc.
+
+    // return response()->download(public_path('test.pdf'));
+    // }
+
+
+function pdf()  {
+    dd('puto pdf');
+    $pdf = Pdf::loadHTML('<h1>¡Hola, este es un PDF de prueba!</h1>');
+    return $pdf->stream('archivo.pdf');
 }
+
+
+
+
+}
+
+

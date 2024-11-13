@@ -16,6 +16,9 @@ use DB;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB as FacadesDB;
+//use Codedge\Fpdf\Facades\Fpdf;
+use Codedge\Fpdf\Fpdf\Fpdf;
+
 
 class Facturas extends Component
 {
@@ -305,6 +308,7 @@ class Facturas extends Component
 
             //*********aqui metodo de xml**********
             $startXml = microtime(true);
+           // $this->pdf();
             $factura->xmlFactura(
                                   $tipeIDenti, $customer->businame,$customer->valueidenti,$customer->address,
                                   $this->subTotSinImpuesto,$this->totalDscto, $this->iva12,
@@ -320,52 +324,36 @@ class Facturas extends Component
             $factura->firmarUltimaFactura();
             $endFirma = microtime(true);
             $timeFirma = $endFirma - $startFirma;
-            //dd('firmo envio y recibio');
 
+           //dd('tiempo del sri enviado y regresado: ', $timeFirma);
             //*********aqui metodo pdf***********
-            $startPDF = microtime(true);
             //$razonSocial,$usuarioSistema,$direccionMatriz,$dirrecioSucursal,$rucCliente,$numeroFact,
             //$fechaAuto,$numeroAutori,$claveAccesoPDF,$customer,$fechaEmision,$customer_id
             //$this->pdfFactura($razonSocial,$usuarioSistema,$direccionMatriz,$dirrecioSucursal,
              //   $customer_id,$factura->id,$fechaEmision,'1','calceacceo',$customerSelected,$fechaEmision,$customer_id);
-            $endPDF = microtime(true);
-            $timePDF = $endPDF - $startPDF;
-
-            $startNoty = microtime(true);
-            // $this->noty('XML GENERADO CORRECTAMENTE !!', 'noty', 'error');
-            // $this->clearCart();
-            // $this->resetUI();
-            $endNoty = microtime(true);
-            $timeNoty = $endNoty - $startNoty;
-
-            dd( $timeXml, $timeFirma, $timePDF, $timeNoty);
-          // dd('generado pdf');
-            //luego notificar
         }
         catch (\Throwable $e) {
             FacadesDB::rollback();
             $this->noty('Error al guardar el pedido: ' . $e->getMessage(), 'noty', 'error');
         }
 
-
-
-
-    //     // aqui metodo pef
-    //     dd($respuestaFirmaUltimaFActura);
-    //     $this->noty('VENTA REGISTRADA CON EXITO ');
-    //     $this->clearCart();
-    //     $this->resetUI();
-
-        //dd('aqui metodo pdf');
-        //dd($factura->getLastTicket());
-       //dd($this->secuencial);
+       // dd('tiempo del sri enviado y regresado: ', $timeFirma);
+        return $this->pdfController();
 
 
       }
 
 
-
-
+     public  function pdfController()  {
+        //dd('hola pdf');
+        $pdf = new Fpdf();
+        $pdf->AddPage();
+        $pdf->SetFont('Arial', 'B', 16);
+        $pdf->Cell(40, 10,'Hola, PDF');
+        // Generar el archivo PDF y forzar la descarga o mostrarlo en el navegador
+        $pdf->Output();
+        exit;
+      }
 
 
 }

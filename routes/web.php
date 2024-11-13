@@ -50,8 +50,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('descuentos', Descuentos::class)->name('descuentos');
     Route::get('facturas', Facturas::class)->name('facturas');
     Route::get('archivop12', Certificados::class)->name('archivop12');
-
-
+    Route::get('/pdf', [Facturas::class, 'pdfController']);
 
 });
 
