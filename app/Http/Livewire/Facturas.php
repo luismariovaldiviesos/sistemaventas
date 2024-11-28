@@ -325,7 +325,9 @@ class Facturas extends Component
             $endFirma = microtime(true);
             $timeFirma = $endFirma - $startFirma;
 
-           //dd('tiempo del sri enviado y regresado: ', $timeFirma);
+
+
+           dd('tiempo del sri enviado y regresado: ', $timeFirma);
             //*********aqui metodo pdf***********
             //$razonSocial,$usuarioSistema,$direccionMatriz,$dirrecioSucursal,$rucCliente,$numeroFact,
             //$fechaAuto,$numeroAutori,$claveAccesoPDF,$customer,$fechaEmision,$customer_id
