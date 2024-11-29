@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PdfController;
 use App\Http\Livewire\Arqueos;
 use App\Http\Livewire\Asignar;
 use App\Http\Livewire\Cajas;
@@ -51,6 +52,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('facturas', Facturas::class)->name('facturas');
     Route::get('archivop12', Certificados::class)->name('archivop12');
     Route::get('/pdf', [Facturas::class, 'pdfController']);
+    Route::get('/descargar-pdf/{factura}', [PdfController::class, 'pdfDowloader'])->name('descargar-pdf');
 
 });
 

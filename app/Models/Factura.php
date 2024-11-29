@@ -831,6 +831,11 @@ class Factura extends Model
 
     }
 
+    public  function detalles (){
+
+        return $this->hasMany(DetalleFactura::class);
+    }
+
 
 
 

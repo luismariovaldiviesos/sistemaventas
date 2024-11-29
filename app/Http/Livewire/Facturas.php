@@ -342,41 +342,48 @@ class Facturas extends Component
         }
 
        // dd('tiempo del sri enviado y regresado: ', $timeFirma);
-      $this->pdfController($timeFirma);
+      //$this->pdfController($timeFirma);
+      //COONSTRUIT LA RUTA PARA EL DPDF
+      //$param = $customer->businame;
+      $url =  route('descargar-pdf', ['factura'=>$factura->id]);
+
       $this->noty('FACTURA GENERADA  CORRECTAMENTE !!!!!!');
+      //dd($factura->id);
+      // Redirigir al navegador para descargar/visualizar el PDF
+        return redirect()->to($url);
 
       }
 
-      public function pdfController($timeFirma)
-    {
-        // Limpiar cualquier salida previa
-        ob_clean();
-        flush();
+    //   public function pdfController($timeFirma)
+    // {
+    //     // Limpiar cualquier salida previa
+    //     ob_clean();
+    //     flush();
 
-        // Crear una nueva instancia de FPDF
-        $pdf = new Fpdf();
+    //     // Crear una nueva instancia de FPDF
+    //     $pdf = new Fpdf();
 
-        // Agregar una página al documento
-        $pdf->AddPage();
+    //     // Agregar una página al documento
+    //     $pdf->AddPage();
 
-        // Establecer el tipo de fuente y tamaño
-        $pdf->SetFont('Arial', 'B', 16);
+    //     // Establecer el tipo de fuente y tamaño
+    //     $pdf->SetFont('Arial', 'B', 16);
 
-        // Agregar contenido al PDF
-        $pdf->Cell(40, 10, 'Factura');
-        $pdf->Ln(); // Salto de línea
-        $pdf->Cell(40, 10, 'Razón Social: ' . $timeFirma);
-        $pdf->Ln();
-        $pdf->Cell(40, 10, 'Fecha: ' . now()->format('Y-m-d H:i:s'));
+    //     // Agregar contenido al PDF
+    //     $pdf->Cell(40, 10, 'Factura');
+    //     $pdf->Ln(); // Salto de línea
+    //     $pdf->Cell(40, 10, 'Razón Social: ' . $timeFirma);
+    //     $pdf->Ln();
+    //     $pdf->Cell(40, 10, 'Fecha: ' . now()->format('Y-m-d H:i:s'));
 
-        // Generar el PDF y enviarlo al navegador
-        return response()->stream(function() use ($pdf) {
-            echo $pdf->Output('S'); // 'S' envía el PDF como un string de salida
-        }, 200, [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="factura-' . $timeFirma . '.pdf"',
-        ]);
-    }
+    //     // Generar el PDF y enviarlo al navegador
+    //     return response()->stream(function() use ($pdf) {
+    //         echo $pdf->Output('S'); // 'S' envía el PDF como un string de salida
+    //     }, 200, [
+    //         'Content-Type' => 'application/pdf',
+    //         'Content-Disposition' => 'inline; filename="factura-' . $timeFirma . '.pdf"',
+    //     ]);
+    // }
 
 
 

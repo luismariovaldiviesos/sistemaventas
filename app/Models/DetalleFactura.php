@@ -13,4 +13,8 @@ class DetalleFactura extends Model
     [      'factura_id','product_id','cantidad','descripcion',
            'precioUnitario','descuento','total'
    ];
+
+   public  function factura(){
+    return  $this->belongsTo(Factura::class);
+   }
 }
