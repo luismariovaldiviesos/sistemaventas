@@ -600,9 +600,9 @@ class Factura extends Model
 
         $claveAcceso = substr($claveAcces->infoTributaria[0]->claveAcceso, 0, 49);
         //dd($claveAcceso);
-        var_dump($claveAcceso);
-        var_dump($comando);
-        var_dump($resp);
+        //var_dump($claveAcceso);
+        //var_dump($comando);
+        //var_dump($resp);
 
         //dd($claveAcceso);
 
@@ -697,7 +697,7 @@ class Factura extends Model
             dd($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
         }
 
-        var_dump('fin de envio ' , $estado);
+        //var_dump('fin de envio ' , $estado);
     }
     public function fetch($invoiceObj)
     {
