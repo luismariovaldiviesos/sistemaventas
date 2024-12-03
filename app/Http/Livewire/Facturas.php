@@ -345,9 +345,11 @@ class Facturas extends Component
       //$this->pdfController($timeFirma);
       //COONSTRUIT LA RUTA PARA EL DPDF
       //$param = $customer->businame;
-      $url =  route('descargar-pdf', ['factura'=>$factura->id]);
-
-      $this->noty('FACTURA GENERADA  CORRECTAMENTE !!!!!!');
+        $factura->fechaAutorizacion =  Carbon::now();
+        $factura->numeroAutorizacion =  $factura->claveAcceso;
+        $factura->save();
+        $url =  route('descargar-pdf', ['factura'=>$factura->id]);
+        $this->noty('FACTURA GENERADA  CORRECTAMENTE !!!!!!');
       //dd($factura->id);
       // Redirigir al navegador para descargar/visualizar el PDF
         return redirect()->to($url);

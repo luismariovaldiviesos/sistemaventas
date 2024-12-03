@@ -15,7 +15,7 @@ class PdfController extends Controller
         $empresa =  Setting::get();
         // Limpia cualquier salida previa
         //dd('hola pdf ctm');
-        dd($factura);
+       // dd($factura);
         ob_end_clean();
         ob_start();
         // foreach($factura->detalles as $detalle){
@@ -42,18 +42,18 @@ class PdfController extends Controller
 		$pdf->Cell(190, 12, '', 1, 1);
 		$pdf->SetXY(10, 114);
 		$pdf->Cell(190, 173, '', 0, 1);
-		$pdf->SetFont('Arial', 'B', 6);$pdf->SetXY(10, 54);$pdf->Cell(93, 10, 'MI EMPRESA COMERCIAL S.A', 0 , 1, 'C');
-		$pdf->SetFont('Arial', '', 6);$pdf->SetXY(10, 59);$pdf->Cell(93, 10, ' QUITO-ECUADOR', 0 , 1, 'L');
-		$pdf->SetFont('Arial', 'B', 7);$pdf->SetXY(10, 68);$pdf->MultiCell(15, 4, 'Direccion Matriz', 0 , 'C');
-		$pdf->SetFont('Arial', '', 6);$pdf->SetXY(25, 68);$pdf->MultiCell(78, 4, 'VIA QUITO', 0 , 'L');
-		$pdf->SetFont('Arial', 'B', 7);$pdf->SetXY(10, 80);$pdf->MultiCell(15, 4, 'Direccion Sucursal', 0 , 'C');
-		$pdf->SetFont('Arial', '', 6);$pdf->SetXY(25, 80);$pdf->MultiCell(78, 4, 'VIA QUITO', 0 , 'L');
-		$pdf->SetFont('Arial', 'B', 9);$pdf->SetXY(107, 10);$pdf->Cell(40, 8, 'RUC: 1791345444001', 0 , 1);
+		$pdf->SetFont('Arial', 'B', 6);$pdf->SetXY(10, 54);$pdf->Cell(93, 10, $empresa[0]->razonSocial, 0 , 1, 'C');
+		 $pdf->SetFont('Arial', '', 6);$pdf->SetXY(10, 59);$pdf->Cell(93, 10, ' MATRIZ', 0 , 1, 'L');
+		$pdf->SetFont('Arial', 'B', 7);$pdf->SetXY(10, 68);$pdf->MultiCell(93, 10, $empresa[0]->dirMatriz, 0 , 'C');
+		$pdf->SetFont('Arial', '', 6);$pdf->SetXY(25, 68);$pdf->MultiCell(78, 4, 'SUCURSAL', 0 , 'L');
+		$pdf->SetFont('Arial', 'B', 7);$pdf->SetXY(10, 80);$pdf->MultiCell(15, 4, $empresa[0]->disSucursal, 0 , 'C');
+		// $pdf->SetFont('Arial', '', 6);$pdf->SetXY(25, 80);$pdf->MultiCell(78, 4, 'VIA QUITO', 0 , 'L');
+		$pdf->SetFont('Arial', 'B', 9);$pdf->SetXY(107, 10);$pdf->Cell(40, 8, 'RUC:'. ' '. $empresa[0]->ruc, 0 , 1);
 		$pdf->SetFont('Arial', '', 9);$pdf->SetXY(107, 18);$pdf->Cell(93, 8, 'FACTURA', 0 , 1);
-		$pdf->SetFont('Arial', '', 9);$pdf->SetXY(107, 26);$pdf->Cell(40, 8, 'No: 001-001-000397201', 0 , 1);
-		$pdf->SetFont('Arial', '', 9);$pdf->SetXY(107, 32);$pdf->Cell(40, 10, 'FECHA AUTORIZACION: 2020-09-20', 0 , 1);
+		$pdf->SetFont('Arial', '', 9);$pdf->SetXY(107, 26);$pdf->Cell(40, 8, 'No: '. $factura->secuencial, 0 , 1);
+		$pdf->SetFont('Arial', '', 9);$pdf->SetXY(107, 32);$pdf->Cell(40, 10, 'FECHA AUTORIZACION:' . '   '. $factura->fechaAutorizacion, 0 , 1);
 		$pdf->SetFont('Arial', 'B', 7);$pdf->SetXY(107, 42);$pdf->Cell(93, 8, 'NUMERO DE AUTORIZACION', 0 , 1, 'C');
-		$pdf->SetFont('Arial', '', 7);$pdf->SetXY(107, 50);$pdf->Cell(93, 10, '2009202001179134544400110010010003971781234567815', 0 , 1, 'C');
+		$pdf->SetFont('Arial', '', 7);$pdf->SetXY(107, 50);$pdf->Cell(93, 10, $factura->numeroAutorizacion, 0 , 1, 'C');
 		$pdf->SetFont('Arial', 'B', 7);$pdf->SetXY(107, 66);$pdf->Cell(93, 4, 'CLAVE DE ACCESO', 0 , 1, 'C');
 		//new barCodeGenrator('2009202001179134544400110010010003971781234567815', 1, 'barra.gif', 455, 60, false);
 		//$pdf->Image('barra.gif', 108, 70, 90, 10);
