@@ -6,6 +6,7 @@ use App\Models\Factura;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 use Codedge\Fpdf\Fpdf\Fpdf;
+use Picqer\Barcode\BarcodeGeneratorPNG;
 
 class PdfController extends Controller
 {
@@ -15,7 +16,7 @@ class PdfController extends Controller
         $empresa =  Setting::get();
         // Limpia cualquier salida previa
         //dd('hola pdf ctm');
-       // dd($factura);
+        //dd($factura);
         ob_end_clean();
         ob_start();
         // foreach($factura->detalles as $detalle){
@@ -55,20 +56,32 @@ class PdfController extends Controller
 		$pdf->SetFont('Arial', 'B', 7);$pdf->SetXY(107, 42);$pdf->Cell(93, 8, 'NUMERO DE AUTORIZACION', 0 , 1, 'C');
 		$pdf->SetFont('Arial', '', 7);$pdf->SetXY(107, 50);$pdf->Cell(93, 10, $factura->numeroAutorizacion, 0 , 1, 'C');
 		$pdf->SetFont('Arial', 'B', 7);$pdf->SetXY(107, 66);$pdf->Cell(93, 4, 'CLAVE DE ACCESO', 0 , 1, 'C');
-		//new barCodeGenrator('2009202001179134544400110010010003971781234567815', 1, 'barra.gif', 455, 60, false);
-		//$pdf->Image('barra.gif', 108, 70, 90, 10);
+
+            $barcodeGenerator = new BarcodeGeneratorPNG();
+
+        // Generar el código de barras
+        $barcodeData = $barcodeGenerator->getBarcode(
+            (string) $factura->numeroAutorizacion,
+            BarcodeGeneratorPNG::TYPE_CODE_128
+        );
+        // Guardar el código de barras como un archivo temporal
+        $barcodeFile = 'barra_temp.png'; // Nombre del archivo temporal
+        file_put_contents($barcodeFile, $barcodeData);
 		$pdf->SetFont('Arial', 'B', 7);
 		$pdf->SetXY(107, 80);
-		$pdf->Cell(93, 5, '2009202001179134544400110010010003971781234567815', 0 , 1, 'C');
+        // Insertar el código de barras exactamente en la posición deseada
+        $pdf->Image($barcodeFile, 108, 70, 90, 10); // Coordenadas X, Y, ancho y alto del código de barras
+		$pdf->Cell(93, 5, $factura->numeroAutorizacion, 0 , 1, 'C');
 
 		$pdf->SetFont('Arial', 'B', 6);$pdf->SetXY(10, 98);$pdf->Cell(30, 3, 'RAZON SOCIAL', 0 , 1, 'C');
 		$pdf->SetXY(10, 101);$pdf->Cell(30, 3, 'NOMBRES Y APELLIDOS', 0 , 0, 'C');
-		$pdf->SetFont('Arial', '', 7);$pdf->SetXY(40, 98);$pdf->MultiCell(160, 3, 'ESTEBAN BAHAMONDE',0,'L');
+		$pdf->SetFont('Arial', '', 7);$pdf->SetXY(40, 98);$pdf->MultiCell(160, 3, $factura->customer->businame,0,'L');
 		$pdf->SetFont('Arial', 'B', 6);$pdf->SetXY(10, 104);$pdf->Cell(30, 6, 'FECHA DE EMISION', 0 , 1, 'C');
-		$pdf->SetFont('Arial', '', 7);$pdf->SetXY(40, 104);$pdf->Cell(100, 6, '2020-09-20', 0 , 1);
+		$pdf->SetFont('Arial', '', 7);$pdf->SetXY(40, 104);$pdf->Cell(100, 6, $factura->fechaAutorizacion, 0 , 1);
 		$pdf->SetFont('Arial', 'B', 7);$pdf->SetXY(140, 104);$pdf->Cell(30, 6, 'IDENTIFICACION', 0 , 1);
-		$pdf->SetFont('Arial', '', 7);$pdf->SetXY(170, 104);$pdf->Cell(30, 6, '9999999999', 0 , 1);
+		$pdf->SetFont('Arial', '', 7);$pdf->SetXY(170, 104);$pdf->Cell(30, 6, $factura->customer->valueidenti, 0 , 1);
 		$pdf->SetFont('Arial', 'B', 7);
+
 		$pdf->SetXY(10, 114);$pdf->Cell(13, 6, false, 1 , 1);
 		$pdf->SetXY(10, 114);$pdf->Cell(13, 3, 'Cod.', 0 , 1, 'C');
 		$pdf->SetXY(10, 117);$pdf->Cell(13, 3, 'Principal', 0 , 1, 'C');
@@ -87,28 +100,31 @@ class PdfController extends Controller
 		//CABECERA KARDEX TOTALES
 
 		$ejey = 120;
-		$pdf->SetXY(10, $ejey);$pdf->Cell(13, 10, 'ASDFQ', 1 , 1, 'C');
+        foreach($factura->detalles as $detalle){
+		$pdf->SetXY(10, $ejey);$pdf->Cell(13, 10, $detalle->product_id, 1 , 1, 'C');  // codigo producto
 		$pdf->SetXY(23, $ejey);$pdf->Cell(13, 10, '', 1 , 1, 'C');
-		$pdf->SetXY(36, $ejey);$pdf->Cell(13, 10, '1.00', 1 , 1, 'C');$pdf->SetFont('Arial', 'B', 5);
+		$pdf->SetXY(36, $ejey);$pdf->Cell(13, 10, $detalle->cantidad, 1 , 1, 'C');$pdf->SetFont('Arial', 'B', 5);  //cantidad
 		$pdf->SetXY(49, $ejey);$pdf->Cell(110, 10, '', 1 , 0);
-		$pdf->SetXY(49, $ejey);$pdf->MultiCell(110, 5,'MESA','L');$pdf->SetFont('Arial', 'B', 7);
-		$pdf->SetXY(159, $ejey);$pdf->Cell(13, 10, '10.00', 1 , 1, 'C');
-		$pdf->SetXY(172, $ejey);$pdf->Cell(15, 10, '0.00', 1 , 1, 'C');
-		$pdf->SetXY(187, $ejey);$pdf->Cell(13, 10, '10.00', 1 , 1, 'C');
+		$pdf->SetXY(49, $ejey);$pdf->MultiCell(110, 5,$detalle->descripcion,'L');$pdf->SetFont('Arial', 'B', 7);  //pridcuto
+		$pdf->SetXY(159, $ejey);$pdf->Cell(13, 10, $detalle->precioUnitario, 1 , 1, 'C');  //precio unitario
+		$pdf->SetXY(172, $ejey);$pdf->Cell(15, 10, $detalle->descuento, 1 , 1, 'C');  //descueto
+		$pdf->SetXY(187, $ejey);$pdf->Cell(13, 10, $detalle->total, 1 , 1, 'C');  //total
+
 		$ejey += 10;
-		$ejey += 4;
-		//KARDEX TOTALES
+		//$ejey += 4;
+    }
+        //KARDEX TOTALES
 		$pdf->SetFont('Arial', 'B', 7);
 		$pdf->SetXY(120, $ejey);$pdf->Cell(50, 4, 'SUBTOTAL', 1 , 1, 'L');
 		$pdf->SetXY(120, $ejey+4);$pdf->Cell(50, 4, 'IVA 0%', 1 , 1, 'L');
 		$pdf->SetXY(120, $ejey+8);$pdf->Cell(50, 4, 'IVA 12%', 1 , 1, 'L');
 		$pdf->SetXY(120, $ejey+12);$pdf->Cell(50, 4, 'DESCUENTO 0.00%', 1 , 1, 'L');
 		$pdf->SetXY(120, $ejey+16);$pdf->Cell(50, 4, 'VALOR TOTAL', 1 , 1, 'L');
-		$pdf->SetXY(170, $ejey);$pdf->Cell(30, 4, '10.00', 1 , 1, 'R');//SUBTOTAL
-		$pdf->SetXY(170, $ejey+4);$pdf->Cell(30, 4, '10.00', 1 , 1, 'R');//IVA 0
-		$pdf->SetXY(170, $ejey+8);$pdf->Cell(30, 4, '0.00', 1 , 1, 'R');//VALOR IVA
-		$pdf->SetXY(170, $ejey+12);$pdf->Cell(30, 4, '0.00', 1 , 1, 'R');//VALOR DESCUENTO
-		$pdf->SetXY(170, $ejey+16);$pdf->Cell(30, 4, '0.00', 1 , 1, 'R');//VALOR CON IVA
+		$pdf->SetXY(170, $ejey);$pdf->Cell(30, 4, $detalle->total, 1 , 1, 'R');//SUBTOTAL
+		$pdf->SetXY(170, $ejey+4);$pdf->Cell(30, 4, $factura->subtotal0, 1 , 1, 'R');//IVA 0
+		$pdf->SetXY(170, $ejey+8);$pdf->Cell(30, 4, $factura->subtotal12, 1 , 1, 'R');//VALOR IVA
+		$pdf->SetXY(170, $ejey+12);$pdf->Cell(30, 4, $factura->descuento, 1 , 1, 'R');//VALOR DESCUENTO
+		$pdf->SetXY(170, $ejey+16);$pdf->Cell(30, 4, $factura->total, 1 , 1, 'R');//VALOR CON IVA
 		//INFO ADICIONAL
 		$pdf->SetFont('Arial', 'B', 8);
 		$pdf->SetXY(10, $ejey);$pdf->Cell(105, 6, 'INFORMACION ADICIONAL', 1 , 1, 'C');
@@ -116,10 +132,10 @@ class PdfController extends Controller
 		$pdf->SetXY(10, $ejey+6);$pdf->Cell(20, 6, 'Email empresa:', 'L' , 1, 'L');
 		$pdf->SetXY(10, $ejey+12);$pdf->Cell(20, 6, 'Email cliente:', 'L' , 1, 'L');
 		$pdf->SetXY(10, $ejey+18);$pdf->Cell(20, 6, 'Telefono cliente:', 'L' , 1, 'L');
-		$pdf->SetXY(30, $ejey+6);$pdf->Cell(85, 6, 'emailempresa@gmail.com', 'R' , 1, 'L');
-		$pdf->SetXY(30, $ejey+12);$pdf->Cell(85, 6, 'ebahamondet@gmail.com', 'R' , 1, 'L');
-		$pdf->SetXY(30, $ejey+18);$pdf->Cell(85, 6, '2421558', 'R' , 1, 'L');
-		$pdf->SetXY(10, $ejey+24);$pdf->MultiCell(105, 10, 'Direccion cliente: av 10 de agosto', 'LRB', 'L');
+		$pdf->SetXY(30, $ejey+6);$pdf->Cell(85, 6, $empresa[0]->email, 'R' , 1, 'L'); //email empresa
+		$pdf->SetXY(30, $ejey+12);$pdf->Cell(85, 6, $factura->customer->email, 'R' , 1, 'L');  // email cliente
+		$pdf->SetXY(30, $ejey+18);$pdf->Cell(85, 6,  $factura->customer->phone, 'R' , 1, 'L');  //telefoo cliente
+		$pdf->SetXY(10, $ejey+24);$pdf->MultiCell(105, 10,  $factura->customer->address, 'LRB', 'L'); //direccio  cliente
 		//FORMA DE PAGO
 
 
