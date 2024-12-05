@@ -200,7 +200,7 @@ class Cart {
       {
           $amount = $this->cart->sum(function ($product){
               if( $product->descuento > 0){
-                $desc = ($product->qty * $product->descuento) /100;
+                $desc = ($product->price * $product->descuento) /100;
                   return $desc;
               }
 

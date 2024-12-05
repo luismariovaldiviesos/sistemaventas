@@ -107,8 +107,8 @@ class PdfController extends Controller
 		$pdf->SetXY(49, $ejey);$pdf->Cell(110, 10, '', 1 , 0);
 		$pdf->SetXY(49, $ejey);$pdf->MultiCell(110, 5,$detalle->descripcion,'L');$pdf->SetFont('Arial', 'B', 7);  //pridcuto
 		$pdf->SetXY(159, $ejey);$pdf->Cell(13, 10, $detalle->precioUnitario, 1 , 1, 'C');  //precio unitario
-		$pdf->SetXY(172, $ejey);$pdf->Cell(15, 10, $detalle->descuento, 1 , 1, 'C');  //descueto
-		$pdf->SetXY(187, $ejey);$pdf->Cell(13, 10, $detalle->total, 1 , 1, 'C');  //total
+		$pdf->SetXY(172, $ejey);$pdf->Cell(15, 10, $detalle->descuento * $detalle->precioUnitario/100 , 1 , 1, 'C');  //descueto
+		$pdf->SetXY(187, $ejey);$pdf->Cell(13, 10, $detalle->total - $detalle->descuento * $detalle->precioUnitario/100, 1 , 1, 'C');  //total
 
 		$ejey += 10;
 		//$ejey += 4;
@@ -118,9 +118,9 @@ class PdfController extends Controller
 		$pdf->SetXY(120, $ejey);$pdf->Cell(50, 4, 'SUBTOTAL', 1 , 1, 'L');
 		$pdf->SetXY(120, $ejey+4);$pdf->Cell(50, 4, 'IVA 0%', 1 , 1, 'L');
 		$pdf->SetXY(120, $ejey+8);$pdf->Cell(50, 4, 'IVA 12%', 1 , 1, 'L');
-		$pdf->SetXY(120, $ejey+12);$pdf->Cell(50, 4, 'DESCUENTO 0.00%', 1 , 1, 'L');
+		$pdf->SetXY(120, $ejey+12);$pdf->Cell(50, 4, 'DESCUENTO $', 1 , 1, 'L');
 		$pdf->SetXY(120, $ejey+16);$pdf->Cell(50, 4, 'VALOR TOTAL', 1 , 1, 'L');
-		$pdf->SetXY(170, $ejey);$pdf->Cell(30, 4, $detalle->total, 1 , 1, 'R');//SUBTOTAL
+		$pdf->SetXY(170, $ejey);$pdf->Cell(30, 4, $factura->total, 1 , 1, 'R');//SUBTOTAL
 		$pdf->SetXY(170, $ejey+4);$pdf->Cell(30, 4, $factura->subtotal0, 1 , 1, 'R');//IVA 0
 		$pdf->SetXY(170, $ejey+8);$pdf->Cell(30, 4, $factura->subtotal12, 1 , 1, 'R');//VALOR IVA
 		$pdf->SetXY(170, $ejey+12);$pdf->Cell(30, 4, $factura->descuento, 1 , 1, 'R');//VALOR DESCUENTO

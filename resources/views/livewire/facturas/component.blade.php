@@ -131,7 +131,7 @@
 
                                                   {{-- TOTAL --}}
                                                 <td class="border-b dark:border-dark-5 text-center">
-                                                {{number_format($item->price * $item->qty,2)}}
+                                                {{number_format($item->price * $item->qty,2) }}
                                                 {{-- <small>{{$this->subTotSinImpuesto}}</small> --}}
                                                 </td>
                                                   {{-- FIN TOTAL --}}
