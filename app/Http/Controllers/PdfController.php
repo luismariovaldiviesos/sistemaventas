@@ -149,8 +149,7 @@ class PdfController extends Controller
 		$pdf->SetFont('Arial', '', 7);$pdf->SetXY(85, $ejey+45);$pdf->Cell(30, 6, '152.00', 'RB' , 1, 'L');
 
         // Salida del PDF
-        return response($pdf->Output('S'))
-            ->header('Content-Type', 'application/pdf')
-            ->header('Content-Disposition', 'inline; filename="archivo.pdf"');
+        return response($pdf->Output('D',$factura->customer->businame.'.pdf'));
+
     }
 }

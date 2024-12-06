@@ -354,6 +354,8 @@ class Facturas extends Component
       //dd($factura->id);
       // Redirigir al navegador para descargar/visualizar el PDF
         return redirect()->to($url);
+            $this->clearCart();
+            $this->resetUI();
 
       }
 
