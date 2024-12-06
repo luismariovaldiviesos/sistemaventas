@@ -108,8 +108,11 @@ class PdfController extends Controller
 		$pdf->SetXY(49, $ejey);$pdf->Cell(110, 10, '', 1 , 0);
 		$pdf->SetXY(49, $ejey);$pdf->MultiCell(110, 5,$detalle->descripcion,'L');$pdf->SetFont('Arial', 'B', 7);  //pridcuto
 		$pdf->SetXY(159, $ejey);$pdf->Cell(13, 10, $detalle->precioUnitario, 1 , 1, 'C');  //precio unitario
-		$pdf->SetXY(172, $ejey);$pdf->Cell(15, 10, ($detalle->descuento * $detalle->precioUnitario/100)*$detalle->cantidad , 1 , 1, 'C');  //descueto
-		$pdf->SetXY(187, $ejey);$pdf->Cell(13, 10, $detalle->total - $detalle->descuento * $detalle->precioUnitario/100, 1 , 1, 'C');  //total
+        $descuento = ($detalle->descuento * $detalle->precioUnitario / 100) * $detalle->cantidad;
+		$pdf->SetXY(172, $ejey);$pdf->Cell(15, 10, number_format($descuento,2), 1 , 1, 'C');  //descueto
+        // Total (precio total menos el descuento aplicado)
+        $total = ($detalle->precioUnitario * $detalle->cantidad) - $descuento;
+		$pdf->SetXY(187, $ejey);$pdf->Cell(13, 10, number_format($total,2), 1 , 1, 'C');  //total
 
 		$ejey += 10;
 		//$ejey += 4;
