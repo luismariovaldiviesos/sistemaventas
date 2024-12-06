@@ -101,13 +101,14 @@ class PdfController extends Controller
 
 		$ejey = 120;
         foreach($factura->detalles as $detalle){
+            //dd($detalle);
 		$pdf->SetXY(10, $ejey);$pdf->Cell(13, 10, $detalle->product_id, 1 , 1, 'C');  // codigo producto
 		$pdf->SetXY(23, $ejey);$pdf->Cell(13, 10, '', 1 , 1, 'C');
 		$pdf->SetXY(36, $ejey);$pdf->Cell(13, 10, $detalle->cantidad, 1 , 1, 'C');$pdf->SetFont('Arial', 'B', 5);  //cantidad
 		$pdf->SetXY(49, $ejey);$pdf->Cell(110, 10, '', 1 , 0);
 		$pdf->SetXY(49, $ejey);$pdf->MultiCell(110, 5,$detalle->descripcion,'L');$pdf->SetFont('Arial', 'B', 7);  //pridcuto
 		$pdf->SetXY(159, $ejey);$pdf->Cell(13, 10, $detalle->precioUnitario, 1 , 1, 'C');  //precio unitario
-		$pdf->SetXY(172, $ejey);$pdf->Cell(15, 10, $detalle->descuento * $detalle->precioUnitario/100 , 1 , 1, 'C');  //descueto
+		$pdf->SetXY(172, $ejey);$pdf->Cell(15, 10, ($detalle->descuento * $detalle->precioUnitario/100)*$detalle->cantidad , 1 , 1, 'C');  //descueto
 		$pdf->SetXY(187, $ejey);$pdf->Cell(13, 10, $detalle->total - $detalle->descuento * $detalle->precioUnitario/100, 1 , 1, 'C');  //total
 
 		$ejey += 10;

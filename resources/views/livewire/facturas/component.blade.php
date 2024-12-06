@@ -71,6 +71,7 @@
                                                 <th class="border-b-2 dark:border-dark-5 whitespace-nowrap font-bold">IVA 12%</th>
                                                 <th class="border-b-2 dark:border-dark-5 whitespace-nowrap font-bold">ICE</th>
                                                 <th class="border-b-2 dark:border-dark-5 whitespace-nowrap font-bold">DSTO</th>
+                                                <th class="border-b-2 dark:border-dark-5 whitespace-nowrap font-bold">PVP</th>
                                                 <th class="border-b-2 dark:border-dark-5 whitespace-nowrap font-bold">SUBTOTAL</th>
 
                                                 <th class="border-b-2 dark:border-dark-5 whitespace-nowrap font-bold"></th>
@@ -126,12 +127,13 @@
 
                                                      {{-- DESCUENTO --}}
 
-                                                     <td class="border-b dark:border-dark-5 text-center">%{{ number_format(  $item->descuento) }}</td>
+                                                     <td class="border-b dark:border-dark-5 text-center">{{number_format( $item->descuento)}}%</td>
+                                                     <td class="border-b dark:border-dark-5 text-center">{{number_format( $item->price2,2)}}</td>
                                                      {{-- FIN DESCUENTO --}}
 
                                                   {{-- TOTAL --}}
                                                 <td class="border-b dark:border-dark-5 text-center">
-                                                {{number_format($item->price * $item->qty,2) }}
+                                                {{number_format($item->price2 * $item->qty,2) }}
                                                 {{-- <small>{{$this->subTotSinImpuesto}}</small> --}}
                                                 </td>
                                                   {{-- FIN TOTAL --}}

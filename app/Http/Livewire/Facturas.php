@@ -86,6 +86,7 @@ class Facturas extends Component
             $this->itemsCart = $this->getItemsCart();
             $this->subTotSinImpuesto =  $this->getTotalSICart();
             $this->contentCart = $this->getContentCart();
+            //dd($this->contentCart);
             $this->iva12 = $this->getIva12();
             $this->iva0 = $this->getIva0();
             $this->totalImpuesto12 = $this->getImpuesto12();
