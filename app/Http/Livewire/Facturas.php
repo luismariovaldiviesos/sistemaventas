@@ -343,13 +343,17 @@ class Facturas extends Component
         $factura->fechaAutorizacion =  Carbon::now();
         $factura->numeroAutorizacion =  $factura->claveAcceso;
         $factura->save();
+        $this->clearCart();
+        $this->resetUI();
+        //refrescar el navegador aqui
+        // enviar mail aqui
+
         $url =  route('descargar-pdf', ['factura'=>$factura->id]);
         $this->noty('FACTURA GENERADA  CORRECTAMENTE !!!!!!');
       //dd($factura->id);
       // Redirigir al navegador para descargar/visualizar el PDF
         return redirect()->to($url);
-            $this->clearCart();
-            $this->resetUI();
+
 
       }
 
