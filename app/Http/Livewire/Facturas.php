@@ -318,15 +318,9 @@ class Facturas extends Component
                                   $this->totalImpuesto12,$this->totalCart, $this->getContentCart(),
                                   $this->secuencial, $this->claveAcceso
                               );
-
-            $endXml = microtime(true);
-            $timeXml = $endXml - $startXml;
-
             //*********aqui metodo factura firma***********
-            $startFirma = microtime(true);
+
             $factura->firmarUltimaFactura();
-            $endFirma = microtime(true);
-            $timeFirma = $endFirma - $startFirma;
 
 
 
