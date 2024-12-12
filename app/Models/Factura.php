@@ -91,7 +91,7 @@ class Factura extends Model
     public function claveAcceso()
     {
          $fecha =  Carbon::now()->format('dmY'); //1
-         $codigo  = "01"; //2
+         $codigo  = "1"; //2
          $parteUno = $fecha.$codigo;   //1+2***********
          $empresa =  $this->empresa();
          $ruc =  $empresa[0]->ruc;  //3

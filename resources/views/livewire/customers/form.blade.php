@@ -23,8 +23,8 @@
                             <label  class="form-label">Tipo</label>
                             <select wire:model='typeidenti' id="typeidenti" class="form-control form-control-lg border-start-0 kioskboard">
                                 <option selected>Elegir</option>
-                                <option value="04">RUC</option>
-                                <option value="05">CI</option>
+                                <option value="ruc">RUC</option>
+                                <option value="ci">CI</option>
                                 <option value="06">PASAPORTE</option>
                               </select>
                             @error('businame')

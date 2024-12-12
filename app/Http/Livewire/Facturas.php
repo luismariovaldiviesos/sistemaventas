@@ -250,7 +250,7 @@ class Facturas extends Component
             {
                 $tipeIDenti = '05';   //cedula
             }
-            else{
+            if ($tipo == 'ruc') {
                 $tipeIDenti = '04';  //ruc
             }
 
@@ -280,6 +280,7 @@ class Facturas extends Component
                 'total' => $this->totalCart,
                 'formaPago' => '01'
             ]);
+           // dd($factura);
 
             if ($factura) {
                 $items =  $this->getContentCart();
@@ -312,6 +313,10 @@ class Facturas extends Component
             //*********aqui metodo de xml**********
             $startXml = microtime(true);
            // $this->pdf();
+        //    dd($tipeIDenti, $customer->businame,$customer->valueidenti,$customer->address,
+        //    $this->subTotSinImpuesto,$this->totalDscto, $this->iva12,
+        //    $this->totalImpuesto12,$this->totalCart, $this->getContentCart(),
+        //    $this->secuencial, $this->claveAcceso);
             $factura->xmlFactura(
                                   $tipeIDenti, $customer->businame,$customer->valueidenti,$customer->address,
                                   $this->subTotSinImpuesto,$this->totalDscto, $this->iva12,
