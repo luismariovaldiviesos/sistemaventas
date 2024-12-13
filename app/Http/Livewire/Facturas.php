@@ -8,6 +8,7 @@ use App\Models\DetalleFactura;
 use App\Models\Factura;
 use App\Models\Product;
 use App\Models\User;
+use App\Models\XmlFactura;
 use Livewire\Component;
 use App\Traits\CartTrait;
 use App\Traits\PrinterTrait;
@@ -323,6 +324,12 @@ class Facturas extends Component
                                   $this->totalImpuesto12,$this->totalCart, $this->getContentCart(),
                                   $this->secuencial, $this->claveAcceso
                               );
+                              //$ruta_no_firmados =  base_path('storage/app/comprobantes/no_firmados/'.$facturaId.'.xml');
+            XmlFactura::create([
+                'factura_id' => $factura->id,
+                'estado' => 'no_firmado',
+                'ruta_archivo' => 'storage/app/comprobantes/no_firmados/'
+            ]);
             //*********aqui metodo factura firma***********
 
             $factura->firmarUltimaFactura();

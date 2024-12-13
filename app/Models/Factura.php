@@ -502,6 +502,7 @@ class Factura extends Model
 
 
 
+
     }
 
     public function firmarUltimaFactura()
@@ -617,6 +618,14 @@ class Factura extends Model
 
 
             case  'FIRMADO' :
+               $ultimoXml = XmlFactura::latest('id')->first(); //registro mas reciente por id
+               if ($ultimoXml) {
+                $ultimoXml->update([
+                    'estado' => 'firmado',
+                    'ruta_archivo' => $ruta_si_firmados
+                ]);
+
+               }
                 $xml_firmado =  file_get_contents($ruta_si_firmados .  $nuevo_xml);
                 $data = base64_encode($xml_firmado);
                 $obj = new \StdClass();
@@ -696,6 +705,10 @@ class Factura extends Model
             //throw new SriReceiveException($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
             dd($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
         }
+
+
+
+
 
         //var_dump('fin de envio ' , $estado);
     }
@@ -839,6 +852,10 @@ class Factura extends Model
 
     public  function customer (){
         return $this->belongsTo(Customer::class);
+    }
+
+    public  function estadoXml (){
+        return $this->belongsTo(XmlFactura::class);
     }
 
 
