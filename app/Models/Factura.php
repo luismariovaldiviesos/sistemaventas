@@ -497,8 +497,13 @@ class Factura extends Model
         //nombre del archivo
         $name = $identificadorCliente.'_'.$secuencia.'.xml'; // nombre de la imagen
         //Y se guarda en el nombre del archivo 'achivo.xml', y el obejto nstanciado
-        Storage::disk('comprobantes/no_firmados')->put($name,$xml_string);
-        //dd($this->claveAcceso());
+       $path = Storage::disk('comprobantes/no_firmados')->put($name,$xml_string);
+        //dd($path);
+        XmlFile::create([
+            'name' => $secuencia,
+            'status' => 'no_fimado',
+            'path' => $path
+        ]);
 
 
 
@@ -515,7 +520,8 @@ class Factura extends Model
         // }
          // Llamar al método para firmar la factura utilizando el ID obtenido
          $resultadoFirma = $this->firmarFactura($facturaId);
-         //dd(gettype($resultadoFirma));
+
+        dd(gettype($resultadoFirma));
         return $resultadoFirma;
     }
 
@@ -585,6 +591,7 @@ class Factura extends Model
 
         //dd($doc);
         $nuevo_xml =  $facturaId . '.xml';
+        $fac =  Factura::findOrFail($facturaId);
         // // Crear un nuevo objeto XMLSecurityKey a partir de la clave privada
         // $argumentos = $ruta_no_firmados . ' ' . $ruta_si_firmados . ' ' . $nuevo_xml . ' ' . $firma . ' ' . $clave;
         $argumentos = $ruta_no_firmados . ' ' . $ruta_si_firmados . ' ' . $nuevo_xml . ' ' . $certPath . ' ' . $certPass;
@@ -592,12 +599,12 @@ class Factura extends Model
 
         try {
             $resp = shell_exec($comando);
+
         } catch (\Exception $e) {
             dd('Error al buscar java: ' . $e->getMessage());
         }
 
         $claveAcces = simplexml_load_file($ruta_si_firmados . $nuevo_xml);
-
         $claveAcceso = substr($claveAcces->infoTributaria[0]->claveAcceso, 0, 49);
         //dd($claveAcceso);
         //var_dump($claveAcceso);
