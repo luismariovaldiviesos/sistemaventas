@@ -1,0 +1,19 @@
+sacar para reportes desde factura y ya no de sales
+desde aqui funciona excelnete el firmado y la genrada del pdf
+12-13-2024
+hace falta :
+* dar seguimiento a los xmls a lo largo de las carpetas (firmados, no firmados etc)
+* enviar mail, configurar todo
+* boorar carrito
+* procesos de reenvio de xml si hay errores en factura
+* eliminar factura, lo que implica nora de venta y regresar stcks
+
+
+
+
+
+
+
+
+
+
