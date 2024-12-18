@@ -76,7 +76,7 @@ class Facturas extends Component
        $this->claveAcceso = $fact->claveAcceso();
        $this->secuencial = $fact->secuencial();
        //dd($this->secuencial);
-       //dd($this->claveAcceso);
+      // dd($this->claveAcceso);
         $this->validaCaja();
         if(strlen($this->searchCustomer) > 0)
             $this->customers =  Customer::where('businame','like',"%{$this->searchCustomer}%")
@@ -314,12 +314,13 @@ class Facturas extends Component
             //if ($print) $this->PrintTicket($sale->id);
 
             //*********aqui metodo de xml**********
-            $startXml = microtime(true);
+           // $startXml = microtime(true);
            // $this->pdf();
         //    dd($tipeIDenti, $customer->businame,$customer->valueidenti,$customer->address,
         //    $this->subTotSinImpuesto,$this->totalDscto, $this->iva12,
         //    $this->totalImpuesto12,$this->totalCart, $this->getContentCart(),
         //    $this->secuencial, $this->claveAcceso);
+
             $factura->xmlFactura(
                                   $tipeIDenti, $customer->businame,$customer->valueidenti,$customer->address,
                                   $this->subTotSinImpuesto,$this->totalDscto, $this->iva12,

@@ -21,6 +21,7 @@ use phpseclib\File\X509;
 use phpseclib\Crypt\RSA;
 use nusoap_client;
 use Exception;
+use Illuminate\Support\Facades\Log;
 use PhpParser\Node\Stmt\Break_;
 //require_once "/vendor/econea/nusoap/src/nusoap.php";
 use soap_server;
@@ -315,6 +316,7 @@ class Factura extends Model
     public function xmlFactura($tipoIdentificadorCli, $razonSocialCli, $identificadorCliente,$direccionCliente,
      $totalSinImpuesto, $totalDescuento,$subtotaliva12, $totalIva12,$totalFactura, $detalles,$secuencia,$claveAcce)
     {
+        //dd($this->claveAcceso, 'desde eme metodo a crear xml');
         $empresa = $this->empresa();
         //$ultimaFactura = Factura::latest()->first();
         //$secuencial = $ultimaFactura->secuencial;
@@ -497,8 +499,18 @@ class Factura extends Model
         //nombre del archivo
         $name = $identificadorCliente.'_'.$secuencia.'.xml'; // nombre de la imagen
         //Y se guarda en el nombre del archivo 'achivo.xml', y el obejto nstanciado
-        Storage::disk('comprobantes/no_firmados')->put($name,$xml_string);
-        //dd($this->claveAcceso());
+        try {
+            Storage::disk('comprobantes/no_firmados')->put($name,$xml_string);
+            if (!Storage::disk('comprobantes/no_firmados')->exists($name)) {
+                throw new Exception("El archivo XML no firmado no fue guardado: $name");
+            }
+        } catch (\Exception $e) {
+            Log::error("Error en la creación del XML: " . $e->getMessage());
+            $this->noty('ERROR AL CREAR EL XML ','noty','error');
+            return false; // Termina el flujo o realiza un rollback.
+        }
+
+       //dd($claveAcce);
 
 
 
@@ -520,10 +532,29 @@ class Factura extends Model
         return $resultadoFirma;
     }
 
+
+    public function getLastTicket() { // obtiene la ultima factura generada en no_firmados
+
+        $archivosNoFirmados = Storage::files('comprobantes\no_firmados');
+        // Verificar si hay archivos en la carpeta
+        if (empty($archivosNoFirmados)) {
+            return 'No hay facturas sin firmar.';
+        }
+        // nombre del ultimo archivo generado
+        $last = end($archivosNoFirmados);
+        // Extraer el ID de la factura del nombre del archivo
+        $rutaInfo = pathinfo($last);
+        $nombreArchivo = $rutaInfo['basename'];
+        $facturaId = substr($nombreArchivo, 0, -4); // Remover la extensión .xml
+        return $facturaId;
+
+    }
+
     public function firmarFactura($facturaId)
     {
 
         // variables generales para autorizar xml sri
+       // dd($facturaId);
         $vtipoambiente=1;
         $wsdls = $this->wsdl($vtipoambiente);
         $recepcion = $wsdls['recepcion'];
@@ -563,7 +594,7 @@ class Factura extends Model
 
         // Contenido del xml
         $factContent = file_get_contents($ruta_no_firmados);
-
+        //dd($factContent);
         // Cargar el certificado digital
         $certStore = openssl_pkcs12_read(file_get_contents($certPath), $certs, $certPass);
         if (!$certStore) {
@@ -593,6 +624,7 @@ class Factura extends Model
 
         try {
             $resp = shell_exec($comando);
+           // dd($resp);
         } catch (\Exception $e) {
             dd('Error al buscar java: ' . $e->getMessage());
         }
@@ -616,6 +648,7 @@ class Factura extends Model
         //dd($respuesta, $claveAcceso);
         switch($respuesta){
             case  'FIRMADO' :
+                //Storage::disk('comprobantes/firmados')->put($nuevo_xml,$xml_firmado);
                 $xml_firmado =  file_get_contents($ruta_si_firmados .  $nuevo_xml);
                 //dd($claveAcceso,$xml_firmado);
                 $data = base64_encode($xml_firmado);
@@ -830,22 +863,6 @@ class Factura extends Model
 
 
 
-    public function getLastTicket() { // obtiene la ultima factura generada en no_firmados
-
-        $archivosNoFirmados = Storage::files('comprobantes\no_firmados');
-        // Verificar si hay archivos en la carpeta
-        if (empty($archivosNoFirmados)) {
-            return 'No hay facturas sin firmar.';
-        }
-        // nombre del ultimo archivo generado
-        $last = end($archivosNoFirmados);
-        // Extraer el ID de la factura del nombre del archivo
-        $rutaInfo = pathinfo($last);
-        $nombreArchivo = $rutaInfo['basename'];
-        $facturaId = substr($nombreArchivo, 0, -4); // Remover la extensión .xml
-        return $facturaId;
-
-    }
 
     public  function detalles (){
 
