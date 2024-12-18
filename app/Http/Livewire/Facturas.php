@@ -327,11 +327,7 @@ class Facturas extends Component
                                   $this->secuencial, $this->claveAcceso
                               );
                               //$ruta_no_firmados =  base_path('storage/app/comprobantes/no_firmados/'.$facturaId.'.xml');
-            XmlFactura::create([
-                'factura_id' => $factura->id,
-                'estado' => 'no_firmado',
-                'ruta_archivo' => 'storage/app/comprobantes/no_firmados/'
-            ]);
+
             //*********aqui metodo factura firma***********
 
             $factura->firmarUltimaFactura();

@@ -91,7 +91,7 @@ class Factura extends Model
     public function claveAcceso()
     {
          $fecha =  Carbon::now()->format('dmY'); //1
-         $codigo  = "1"; //2
+         $codigo  = "01"; //2
          $parteUno = $fecha.$codigo;   //1+2***********
          $empresa =  $this->empresa();
          $ruc =  $empresa[0]->ruc;  //3
@@ -613,27 +613,19 @@ class Factura extends Model
         //
 
         $respuesta  =  substr($resp,0,7);
-        ///dd($respuesta);
+        //dd($respuesta, $claveAcceso);
         switch($respuesta){
-
-
             case  'FIRMADO' :
-               $ultimoXml = XmlFactura::latest('id')->first(); //registro mas reciente por id
-               if ($ultimoXml) {
-                $ultimoXml->update([
-                    'estado' => 'firmado',
-                    'ruta_archivo' => $ruta_si_firmados
-                ]);
-
-               }
                 $xml_firmado =  file_get_contents($ruta_si_firmados .  $nuevo_xml);
+                //dd($claveAcceso,$xml_firmado);
                 $data = base64_encode($xml_firmado);
                 $obj = new \StdClass();
                 $obj->key = $claveAcceso ;
                 $obj->base64 = $data;
-                $this->recibir($obj);
+                $this->recibir($obj, $nuevo_xml, $xml_firmado);
+                //dd('enviado',$claveAcceso,$xml_firmado);
                 //sleep(10);
-                $respuestaSRI = $this->fetch($obj);
+                $respuestaSRI = $this->fetch($obj, $nuevo_xml, $xml_firmado);
                return($respuestaSRI);
             break;
             default:
@@ -646,7 +638,7 @@ class Factura extends Model
     //     $this->pdfFactura('tiburcio@gmail.com');
     // }
 
-    private function recibir($invoiceObj)
+    private function recibir($invoiceObj,$nuevo_xml, $xml_firmado)
     {
         //Si es ambiente de desarrollo
         //Todo: Modificar el código del parametro depende de su sistema.
@@ -685,8 +677,10 @@ class Factura extends Model
         ));
 
         $response = curl_exec($curl);
+        //dd($response);
         file_put_contents("respuesta_sri.xml", $response);
         $code = curl_getinfo($curl, CURLINFO_RESPONSE_CODE);
+
         //dd(curl_close($curl));
 
 
@@ -710,9 +704,10 @@ class Factura extends Model
 
 
 
-        //var_dump('fin de envio ' , $estado);
+        Storage::disk('comprobantes/enviados')->put($nuevo_xml,$xml_firmado);
+        //dd('fin de envio ' , $estado, $nuevo_xml,$xml_firmado);
     }
-    public function fetch($invoiceObj)
+    public function fetch($invoiceObj,$nuevo_xml, $xml_firmado)
     {
          //autorizados
 
@@ -785,9 +780,14 @@ class Factura extends Model
             $vfechaauto = substr($fechaAutorizacion, 0, 10) . ' ' . substr($fechaAutorizacion, 11, 5);
             $comprobanteAutorizacion=$simpleXml->xpath('//comprobante')[0];
             // aqui hay que llamar a la funcion xml autorizado *****************
-            $xmlAprobado =    $this->crearXmlAutorizado($estado,$numeroAutorizacion,$vfechaauto,$comprobante,$comprobanteAutorizacion);
+
+            Storage::disk('comprobantes/autorizados')->put($nuevo_xml,$xml_firmado);
+            //dd('autorizado',$nuevo_xml,$xml_firmado);
+            $xmlAprobado =    $this->crearXmlAutorizado($estado,$numeroAutorizacion,$vfechaauto,$comprobante,
+            $comprobanteAutorizacion, $nuevo_xml,$xml_firmado);
             //dd($estado,$numeroAutorizacion,$fechaAutorizacion, $vfechaauto, $comprobanteAutorizacion);
-            return $xmlAprobado;
+
+           return $xmlAprobado;
 
         }
 
@@ -795,7 +795,8 @@ class Factura extends Model
     }
 
 
-    public  function crearXmlAutorizado($estado,$numeroAutorizacion,$fechaAutorizacion,$comprobanteAutorizacion,$nuevo_xml){
+    public  function crearXmlAutorizado($estado,$numeroAutorizacion,$fechaAutorizacion,
+    $comprobanteAutorizacion,$nuevo_xml, $xml_firmado){
         $ruta_autorizados = 'comprobantes/autorizados/'; // Ruta relativa dentro del storage
         $xml =  new DOMDocument();
         $xml_autor = $xml->createElement('autorizacion');
@@ -817,9 +818,11 @@ class Factura extends Model
         //nombre del archivo
         $secuencial =  substr($numeroAutorizacion,30,9);
         $factura = 'facturaNro'.'_'.$secuencial.'.xml'; // nombre de la imagen
+        $factura = $secuencial.'.xml'; // nombre de la imagen
         //Y se guarda en el nombre del archivo 'achivo.xml', y el obejto nstanciado
-        $ms =  Storage::disk('comprobantes/autorizados')->put($factura,$xml_string);
+        $ms =  Storage::disk('comprobantes/xmlaprobados')->put($factura,$xml_string);
         //dd($this->claveAcceso());
+        //dd($factura,$xml_string);
         return $ms;
 
     }
