@@ -1,12 +1,18 @@
 
-desde aqui funciona excelnete el firmado y la genrada del pdf
-12-13-2024:
-se crea archivo ToDo para lo que falta por hacer, factura ok todo, hasta factura con cliente y consumidor final,
-hasta aqui el sistema es funcional en un 90 %
+factura guarda todos los archivos xml en las carpetas
+hoy 18 de dicembre de 2024 el sistema esta funcional en 85 %
+se tiene un respaldo en C:\laragon\www\respaldo sistea ventas hasta conlicto git guarda todo en carpetas
+hasta el estado actual del sistema
+
+
 
 hace falta :
+* arreglar factura con cliente
+* crear la tabla para dar seguimiento a los xml o a traves de carpetas (ver opciones)
+* guardar los xml cuando hay error al firmar al enviar o no esta aprobada por el sri
+    (no_firmados, no_enviados, rechazadas)
+* arreglar total en el pdf
 *sacar para reportes desde factura y ya no de sales
-* dar seguimiento a los xmls a lo largo de las carpetas (firmados, no firmados etc)
 * enviar mail, configurar todo
 * boorar carrito
 * procesos de reenvio de xml si hay errores en factura
