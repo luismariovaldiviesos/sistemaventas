@@ -38,9 +38,17 @@ return [
             'driver' => 'local',
             'root' => storage_path('app/comprobantes/firmados'),
         ],
+        'comprobantes/enviados' => [
+            'driver' => 'local',
+            'root' => storage_path('app/comprobantes/enviados'),
+        ],
         'comprobantes/autorizados' => [
             'driver' => 'local',
             'root' => storage_path('app/comprobantes/autorizados'),
+        ],
+        'comprobantes/xmlaprobados' => [
+            'driver' => 'local',
+            'root' => storage_path('app/comprobantes/xmlaprobados'),
         ],
         'comprobantes/pdfs' => [
             'driver' => 'local',

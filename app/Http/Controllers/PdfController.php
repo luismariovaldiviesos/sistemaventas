@@ -6,6 +6,7 @@ use App\Models\Factura;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 use Codedge\Fpdf\Fpdf\Fpdf;
+use Illuminate\Support\Facades\Storage;
 use Picqer\Barcode\BarcodeGeneratorPNG;
 
 class PdfController extends Controller
@@ -149,6 +150,9 @@ class PdfController extends Controller
 		$pdf->SetFont('Arial', '', 7);$pdf->SetXY(85, $ejey+45);$pdf->Cell(30, 6, '152.00', 'RB' , 1, 'L');
 
         // Salida del PDF
+        $pdfContent = $pdf->Output('S');
+        $fileName = $factura->customer->businame . '.pdf';
+        Storage::disk('comprobantes/pdfs')->put($fileName, $pdfContent);
         return response($pdf->Output('D',$factura->customer->businame.'.pdf'));
 
     }

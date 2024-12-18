@@ -283,6 +283,8 @@ class Facturas extends Component
             ]);
            // dd($factura);
 
+
+
             if ($factura) {
                 $items =  $this->getContentCart();
                 //dd($items);
