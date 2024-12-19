@@ -514,45 +514,13 @@ class Factura extends Model
 
        //debemos llamar al metodo aqui y pasarle el nombre del archivo
       $nombre_fact_xml =  substr($nombre_fact_xml, 0, -4); // Remover la extensión .xml
-
         //dd($nombre_fact_xml);
 
         $this->firmarFactura($nombre_fact_xml);
 
     }
 
-    public function firmarUltimaFactura()
-    {
-        //obtener el id de la ultima factura
-        $facturaId = $this->getLastTicket();
-        // dd($facturaId);
-        // Verificar si hay facturas sin firmar
-        // if (!$facturaId) {
-        //     return 'No hay facturas sin firmar.';
-        // }
-         // Llamar al método para firmar la factura utilizando el ID obtenido
-         $resultadoFirma = $this->firmarFactura($facturaId);
-         //dd(gettype($resultadoFirma));
-        return $resultadoFirma;
-    }
 
-
-    public function getLastTicket() { // obtiene la ultima factura generada en no_firmados
-
-        $archivosNoFirmados = Storage::files('comprobantes\no_firmados');
-        // Verificar si hay archivos en la carpeta
-        if (empty($archivosNoFirmados)) {
-            return 'No hay facturas sin firmar.';
-        }
-        // nombre del ultimo archivo generado
-        $last = end($archivosNoFirmados);
-        // Extraer el ID de la factura del nombre del archivo
-        $rutaInfo = pathinfo($last);
-        $nombreArchivo = $rutaInfo['basename'];
-        $facturaId = substr($nombreArchivo, 0, -4); // Remover la extensión .xml
-        return $facturaId;
-
-    }
 
     public function firmarFactura($nombre_fact_xml)
     {
@@ -570,20 +538,6 @@ class Factura extends Model
         //dd('procedemos a firmar : '. ' ' .$archivo_x_firmar);
          // Ruta donde se guardará el archivo firmado
          $ruta_si_firmados =  base_path('storage/app/comprobantes/firmados/');
-
-         // ruta enviados
-         $ruta_enviados =  base_path('storage/app/comprobantes/enviados/');
-
-
-         //pdfs
-         $pathPdf = base_path('storage/app/comprobantes/pdf/');
-
-         //varaiblers varias
-        $tipo='FV';
-        $controlError = false;
-        $m = '';
-        $show = '';
-
 
 
 
@@ -636,17 +590,6 @@ class Factura extends Model
         $claveAcces = simplexml_load_file($ruta_si_firmados . $nombre_fact_xml_firmada);
         //dd($claveAcces);
         $claveAcceso = substr($claveAcces->infoTributaria[0]->claveAcceso, 0, 49);
-        //dd($claveAcceso);
-        //var_dump($claveAcceso);
-        //var_dump($comando);
-        //var_dump($resp);
-
-        //dd($claveAcceso);
-
-        // *********** DESDE AQUI INICIAMOS CON LA INSTALACION DE LA LIBRERIA ************************
-        // *********** LIBRERIA NOSOAP INSTALADA ************************
-
-        //
 
         $respuesta  =  substr($resp,0,7);
         //dd($respuesta, $claveAcceso);
@@ -671,9 +614,7 @@ class Factura extends Model
         }
     }
 
-    // public  function generaPDF(){
-    //     $this->pdfFactura('tiburcio@gmail.com');
-    // }
+
 
     private function recibir($invoiceObj,$nombre_fact_xml_firmada, $archivo_xml_firmado)
     {

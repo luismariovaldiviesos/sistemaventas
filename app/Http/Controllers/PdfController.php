@@ -151,7 +151,7 @@ class PdfController extends Controller
 
         // Salida del PDF
         $pdfContent = $pdf->Output('S');
-        $fileName = $factura->customer->businame . $factura->secuencial .'.pdf';
+        $fileName = $factura->customer->businame .'_'.$factura->secuencial .'.pdf';
         Storage::disk('comprobantes/pdfs')->put($fileName, $pdfContent);
         return response($pdf->Output('D',$factura->customer->businame.'.pdf'));
 
