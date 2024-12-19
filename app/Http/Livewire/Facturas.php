@@ -256,6 +256,9 @@ class Facturas extends Component
             }
 
 
+           // dd('verificacion de cliente ',  $customer->businame, $customer->typeidenti, $tipeIDenti);
+
+
 
             //dd($this->getContentCart());
         // //    dd(
