@@ -495,14 +495,14 @@ class Factura extends Model
         //Se ingresa formato de salida
         $xml->formatOutput = true;
         //Se instancia el objeto
-        $xml_string =$xml->saveXML();
+        $archivo_factura_xml =$xml->saveXML();
         //nombre del archivo
-        $name = $identificadorCliente.'_'.$secuencia.'.xml'; // nombre de la imagen
+        $nombre_fact_xml = $identificadorCliente.'_'.$secuencia.'.xml'; // nombre de la imagen
         //Y se guarda en el nombre del archivo 'achivo.xml', y el obejto nstanciado
         try {
-            Storage::disk('comprobantes/no_firmados')->put($name,$xml_string);
-            if (!Storage::disk('comprobantes/no_firmados')->exists($name)) {
-                throw new Exception("El archivo XML no firmado no fue guardado: $name");
+            Storage::disk('comprobantes/no_firmados')->put($nombre_fact_xml,$archivo_factura_xml);
+            if (!Storage::disk('comprobantes/no_firmados')->exists($nombre_fact_xml)) {
+                throw new Exception("El archivo XML no firmado no fue guardado: $nombre_fact_xml");
             }
         } catch (\Exception $e) {
             Log::error("Error en la creación del XML: " . $e->getMessage());
@@ -510,7 +510,9 @@ class Factura extends Model
             return false; // Termina el flujo o realiza un rollback.
         }
 
-       //dd($claveAcce);
+       //dd('creado archivo xml ', $nombre_fact_xml, $archivo_factura_xml);
+
+       //debemos llamar al metodo aqui y pasarle el nombre del archivo
 
 
 
