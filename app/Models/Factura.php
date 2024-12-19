@@ -817,11 +817,11 @@ class Factura extends Model
             // aqui hay que llamar a la funcion xml autorizado *****************
 
             Storage::disk('comprobantes/autorizados')->put($nombre_fact_xml_firmada,$archivo_xml_firmado);
-            //dd('autorizado:', $nombre_fact_xml_firmada,$archivo_xml_firmado);
-            $xmlAprobado =    $this->crearXmlAutorizado($estado,$numeroAutorizacion,$vfechaauto,$comprobante,
-            $comprobanteAutorizacion, $nombre_fact_xml_firmada);
+           // dd('autorizado:', $nombre_fact_xml_firmada,$archivo_xml_firmado);
+           $this->crearXmlAutorizado($estado,$numeroAutorizacion,$vfechaauto,$comprobante,
+            $comprobanteAutorizacion);
             //dd($estado,$numeroAutorizacion,$fechaAutorizacion, $vfechaauto, $comprobanteAutorizacion);
-           return $xmlAprobado;
+          // return $xmlAprobado;
 
         }
 
@@ -830,8 +830,8 @@ class Factura extends Model
 
 
     public  function crearXmlAutorizado($estado,$numeroAutorizacion,$fechaAutorizacion,
-    $comprobanteAutorizacion, $nombre_fact_xml_firmada){
-       dd( $nombre_fact_xml_firmada);
+    $comprobanteAutorizacion){
+       //dd( $nombre_fact_xml_firmada);
         $xml =  new DOMDocument();
         $xml_autor = $xml->createElement('autorizacion');
         $xml_estad = $xml->createElement('estado', $estado);

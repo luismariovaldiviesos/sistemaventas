@@ -334,7 +334,7 @@ class Facturas extends Component
 
             //*********aqui metodo factura firma***********
 
-            $factura->firmarUltimaFactura();
+            //$factura->firmarUltimaFactura();
 
 
 
@@ -361,7 +361,7 @@ class Facturas extends Component
         $this->resetUI();
         //refrescar el navegador aqui
         // enviar mail aqui
-
+        //dd('vemaos');
         $url =  route('descargar-pdf', ['factura'=>$factura->id]);
         $this->noty('FACTURA GENERADA  CORRECTAMENTE !!!!!!');
       //dd($factura->id);
