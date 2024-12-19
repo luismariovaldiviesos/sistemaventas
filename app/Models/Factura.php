@@ -744,7 +744,7 @@ class Factura extends Model
     public function fetch($invoiceObj,$nombre_fact_xml_firmada,$archivo_xml_firmado)
     {
          //autorizados
-        dd('vamos a recupearar del srl ',$nombre_fact_xml_firmada,$archivo_xml_firmado);
+        //dd('vamos a recupearar del srl ',$nombre_fact_xml_firmada,$archivo_xml_firmado);
         $ambiente = "1";
         if ($ambiente == "1") {
             $host = 'https://celcer.sri.gob.ec';
@@ -817,7 +817,7 @@ class Factura extends Model
             // aqui hay que llamar a la funcion xml autorizado *****************
 
             Storage::disk('comprobantes/autorizados')->put($nombre_fact_xml_firmada,$archivo_xml_firmado);
-            //dd('autorizado',$nuevo_xml,$xml_firmado);
+            //dd('autorizado:', $nombre_fact_xml_firmada,$archivo_xml_firmado);
             $xmlAprobado =    $this->crearXmlAutorizado($estado,$numeroAutorizacion,$vfechaauto,$comprobante,
             $comprobanteAutorizacion, $nombre_fact_xml_firmada);
             //dd($estado,$numeroAutorizacion,$fechaAutorizacion, $vfechaauto, $comprobanteAutorizacion);
