@@ -513,9 +513,11 @@ class Factura extends Model
        //dd('creado archivo xml ', $nombre_fact_xml, $archivo_factura_xml);
 
        //debemos llamar al metodo aqui y pasarle el nombre del archivo
+      $nombre_fact_xml =  substr($nombre_fact_xml, 0, -4); // Remover la extensión .xml
 
+        //dd($nombre_fact_xml);
 
-
+        $this->firmarFactura($nombre_fact_xml);
 
     }
 
@@ -552,7 +554,7 @@ class Factura extends Model
 
     }
 
-    public function firmarFactura($facturaId)
+    public function firmarFactura($nombre_fact_xml)
     {
 
         // variables generales para autorizar xml sri
@@ -564,8 +566,8 @@ class Factura extends Model
 
         //RUTAS PARA LOS ARCHIVOS XML
         //ruta de la factura
-        $ruta_no_firmados =  base_path('storage/app/comprobantes/no_firmados/'.$facturaId.'.xml');
-        //dd($ruta_no_firmados);
+        $archivo_x_firmar =  base_path('storage/app/comprobantes/no_firmados/'.$nombre_fact_xml.'.xml');
+        //dd('procedemos a firmar : '. ' ' .$archivo_x_firmar);
          // Ruta donde se guardará el archivo firmado
          $ruta_si_firmados =  base_path('storage/app/comprobantes/firmados/');
 
@@ -595,7 +597,7 @@ class Factura extends Model
 
 
         // Contenido del xml
-        $factContent = file_get_contents($ruta_no_firmados);
+        $factContent = file_get_contents($archivo_x_firmar);
         //dd($factContent);
         // Cargar el certificado digital
         $certStore = openssl_pkcs12_read(file_get_contents($certPath), $certs, $certPass);
@@ -618,10 +620,10 @@ class Factura extends Model
         $doc->loadXML($factContent);
 
         //dd($doc);
-        $nuevo_xml =  $facturaId . '.xml';
+        $nombre_fact_xml_firmada =  $nombre_fact_xml . '.xml';
         // // Crear un nuevo objeto XMLSecurityKey a partir de la clave privada
-        // $argumentos = $ruta_no_firmados . ' ' . $ruta_si_firmados . ' ' . $nuevo_xml . ' ' . $firma . ' ' . $clave;
-        $argumentos = $ruta_no_firmados . ' ' . $ruta_si_firmados . ' ' . $nuevo_xml . ' ' . $certPath . ' ' . $certPass;
+        // $argumentos = $archivo_x_firmar . ' ' . $ruta_si_firmados . ' ' . $nuevo_xml . ' ' . $firma . ' ' . $clave;
+        $argumentos = $archivo_x_firmar . ' ' . $ruta_si_firmados . ' ' . $nombre_fact_xml_firmada . ' ' . $certPath . ' ' . $certPass;
         $comando = ('java -jar C:\\Comprobantes\\firmaComprobanteElectronico\\dist\\firmaComprobanteElectronico.jar ' . $argumentos);
 
         try {
@@ -631,8 +633,8 @@ class Factura extends Model
             dd('Error al buscar java: ' . $e->getMessage());
         }
 
-        $claveAcces = simplexml_load_file($ruta_si_firmados . $nuevo_xml);
-
+        $claveAcces = simplexml_load_file($ruta_si_firmados . $nombre_fact_xml_firmada);
+        //dd($claveAcces);
         $claveAcceso = substr($claveAcces->infoTributaria[0]->claveAcceso, 0, 49);
         //dd($claveAcceso);
         //var_dump($claveAcceso);
@@ -651,16 +653,16 @@ class Factura extends Model
         switch($respuesta){
             case  'FIRMADO' :
                 //Storage::disk('comprobantes/firmados')->put($nuevo_xml,$xml_firmado);
-                $xml_firmado =  file_get_contents($ruta_si_firmados .  $nuevo_xml);
-                //dd($claveAcceso,$xml_firmado);
-                $data = base64_encode($xml_firmado);
+                $archivo_xml_firmado =  file_get_contents($ruta_si_firmados .  $nombre_fact_xml_firmada);
+                //dd($claveAcceso,$archivo_xml_firmado);
+                $data = base64_encode($archivo_xml_firmado);
                 $obj = new \StdClass();
                 $obj->key = $claveAcceso ;
                 $obj->base64 = $data;
-                $this->recibir($obj, $nuevo_xml, $xml_firmado);
+                $this->recibir($obj, $nombre_fact_xml_firmada, $archivo_xml_firmado);
                 //dd('enviado',$claveAcceso,$xml_firmado);
                 //sleep(10);
-                $respuestaSRI = $this->fetch($obj, $nuevo_xml, $xml_firmado);
+                $respuestaSRI = $this->fetch($obj, $nombre_fact_xml_firmada, $archivo_xml_firmado);
                return($respuestaSRI);
             break;
             default:
@@ -673,9 +675,10 @@ class Factura extends Model
     //     $this->pdfFactura('tiburcio@gmail.com');
     // }
 
-    private function recibir($invoiceObj,$nuevo_xml, $xml_firmado)
+    private function recibir($invoiceObj,$nombre_fact_xml_firmada, $archivo_xml_firmado)
     {
         //Si es ambiente de desarrollo
+        //dd($nombre_fact_xml_firmada,$archivo_xml_firmado);
         //Todo: Modificar el código del parametro depende de su sistema.
         $ambiente = '1';
         if ($ambiente == '1') {
@@ -734,18 +737,14 @@ class Factura extends Model
             //throw new SriReceiveException($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
             dd($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
         }
-
-
-
-
-
-        Storage::disk('comprobantes/enviados')->put($nuevo_xml,$xml_firmado);
-        //dd('fin de envio ' , $estado, $nuevo_xml,$xml_firmado);
+        Storage::disk('comprobantes/enviados')->put($nombre_fact_xml_firmada,$archivo_xml_firmado);
+        //dd('fin de envio ' , $estado, $nombre_fact_xml_firmada,$archivo_xml_firmado);
     }
-    public function fetch($invoiceObj,$nuevo_xml, $xml_firmado)
+
+    public function fetch($invoiceObj,$nombre_fact_xml_firmada,$archivo_xml_firmado)
     {
          //autorizados
-
+        dd('vamos a recupearar del srl ',$nombre_fact_xml_firmada,$archivo_xml_firmado);
         $ambiente = "1";
         if ($ambiente == "1") {
             $host = 'https://celcer.sri.gob.ec';
@@ -798,6 +797,7 @@ class Factura extends Model
             $response_utf8 = utf8_encode($response);
             $simpleXml = new \SimpleXMLElement($response_utf8);
             $estado = $simpleXml->xpath('//estado')[0];
+            //dd('estado del archivo recuperado del sri : ',$estado, $nombre_fact_xml_firmada);
         } catch (\Exception $e) {
             throw new Exception('Error al parsear el XML: ' . $e->getMessage());
             dd('Error al parsear el XML: ' . $e->getMessage());
@@ -816,12 +816,11 @@ class Factura extends Model
             $comprobanteAutorizacion=$simpleXml->xpath('//comprobante')[0];
             // aqui hay que llamar a la funcion xml autorizado *****************
 
-            Storage::disk('comprobantes/autorizados')->put($nuevo_xml,$xml_firmado);
+            Storage::disk('comprobantes/autorizados')->put($nombre_fact_xml_firmada,$archivo_xml_firmado);
             //dd('autorizado',$nuevo_xml,$xml_firmado);
             $xmlAprobado =    $this->crearXmlAutorizado($estado,$numeroAutorizacion,$vfechaauto,$comprobante,
-            $comprobanteAutorizacion, $nuevo_xml,$xml_firmado);
+            $comprobanteAutorizacion, $nombre_fact_xml_firmada);
             //dd($estado,$numeroAutorizacion,$fechaAutorizacion, $vfechaauto, $comprobanteAutorizacion);
-
            return $xmlAprobado;
 
         }
@@ -831,8 +830,8 @@ class Factura extends Model
 
 
     public  function crearXmlAutorizado($estado,$numeroAutorizacion,$fechaAutorizacion,
-    $comprobanteAutorizacion,$nuevo_xml, $xml_firmado){
-        $ruta_autorizados = 'comprobantes/autorizados/'; // Ruta relativa dentro del storage
+    $comprobanteAutorizacion, $nombre_fact_xml_firmada){
+       dd( $nombre_fact_xml_firmada);
         $xml =  new DOMDocument();
         $xml_autor = $xml->createElement('autorizacion');
         $xml_estad = $xml->createElement('estado', $estado);
