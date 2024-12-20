@@ -325,7 +325,7 @@ class Facturas extends Component
         //    $this->secuencial, $this->claveAcceso);
 
             $factura->xmlFactura(
-                                  $tipeIDenti, $customer->businame,$customer->valueidenti,$customer->address,
+                                 $factura->id, $tipeIDenti, $customer->businame,$customer->valueidenti,$customer->address,
                                   $this->subTotSinImpuesto,$this->totalDscto, $this->iva12,
                                   $this->totalImpuesto12,$this->totalCart, $this->getContentCart(),
                                   $this->secuencial, $this->claveAcceso

@@ -5,18 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class XmlFactura extends Model
+class XmlFile extends Model
 {
     use HasFactory;
-
     protected $fillable = [
         'factura_id',
+        'secuencial',
+        'cliente',
+        'directorio',
         'estado',
-        'ruta_archivo',
     ];
 
-
-    public function factura()  {
+    // Relación con la factura
+    public function factura()
+    {
         return $this->belongsTo(Factura::class);
     }
 }

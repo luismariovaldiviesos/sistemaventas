@@ -313,7 +313,7 @@ class Factura extends Model
 
     // public function xmlFactura($fecha,$correo,$secuencial,$codigo,$cantidad,$descripcion,
     //                          $preciou,$descuento,$preciot,$subtotal,$iva12,$total)
-    public function xmlFactura($tipoIdentificadorCli, $razonSocialCli, $identificadorCliente,$direccionCliente,
+    public function xmlFactura($factura_id,$tipoIdentificadorCli, $razonSocialCli, $identificadorCliente,$direccionCliente,
      $totalSinImpuesto, $totalDescuento,$subtotaliva12, $totalIva12,$totalFactura, $detalles,$secuencia,$claveAcce)
     {
         //dd($this->claveAcceso, 'desde eme metodo a crear xml');
@@ -471,22 +471,11 @@ class Factura extends Model
 		$xml_pag->appendChild($xml_tot);
 		$xml_pag->appendChild($xml_pla);
 		$xml_pag->appendChild($xml_uti);
-
-
-
 		$xml_fac->appendChild($xml_dts);
 		$xml_dts->appendChild($xml_det);
-
-
-
 		$xml_fac->appendChild($xml_ifa);
 		$xml_ifa->appendChild($xml_cp1);
 		$xml_cp1->appendChild($atributo);
-
-
-
-
-
 		$xml_fac->appendChild($cabecera);
 		$xml_fac->appendChild($cabecerav);
 		$xml->appendChild($xml_fac);
@@ -501,6 +490,13 @@ class Factura extends Model
         //Y se guarda en el nombre del archivo 'achivo.xml', y el obejto nstanciado
         try {
             Storage::disk('comprobantes/no_firmados')->put($nombre_fact_xml,$archivo_factura_xml);
+            XmlFile::create([
+                'factura_id' => $factura_id,
+            'secuencial' => $secuencia,
+            'cliente'    => $razonSocialCli,
+            'directorio' => 'comprobantes/no_firmados',
+            'estado'     => 'creado',
+            ]);
             if (!Storage::disk('comprobantes/no_firmados')->exists($nombre_fact_xml)) {
                 throw new Exception("El archivo XML no firmado no fue guardado: $nombre_fact_xml");
             }
@@ -516,13 +512,13 @@ class Factura extends Model
       $nombre_fact_xml =  substr($nombre_fact_xml, 0, -4); // Remover la extensión .xml
         //dd($nombre_fact_xml);
 
-        $this->firmarFactura($nombre_fact_xml);
+        $this->firmarFactura($nombre_fact_xml, $factura_id);
 
     }
 
 
 
-    public function firmarFactura($nombre_fact_xml)
+    public function firmarFactura($nombre_fact_xml, $factura_id)
     {
 
         // variables generales para autorizar xml sri
@@ -596,16 +592,21 @@ class Factura extends Model
         switch($respuesta){
             case  'FIRMADO' :
                 //Storage::disk('comprobantes/firmados')->put($nuevo_xml,$xml_firmado);
+                $xmlFile = XmlFile::where('factura_id', $factura_id)->firstOrFail();
+                $xmlFile->update([
+                    'directorio' => 'comprobantes/firmados',
+                    'estado'     => 'firmado',
+                ]);
                 $archivo_xml_firmado =  file_get_contents($ruta_si_firmados .  $nombre_fact_xml_firmada);
                 //dd($claveAcceso,$archivo_xml_firmado);
                 $data = base64_encode($archivo_xml_firmado);
                 $obj = new \StdClass();
                 $obj->key = $claveAcceso ;
                 $obj->base64 = $data;
-                $this->recibir($obj, $nombre_fact_xml_firmada, $archivo_xml_firmado);
+                $this->recibir($obj, $nombre_fact_xml_firmada, $archivo_xml_firmado, $factura_id);
                 //dd('enviado',$claveAcceso,$xml_firmado);
                 //sleep(10);
-                $respuestaSRI = $this->fetch($obj, $nombre_fact_xml_firmada, $archivo_xml_firmado);
+                $respuestaSRI = $this->fetch($obj, $nombre_fact_xml_firmada, $archivo_xml_firmado, $factura_id);
                return($respuestaSRI);
             break;
             default:
@@ -616,7 +617,7 @@ class Factura extends Model
 
 
 
-    private function recibir($invoiceObj,$nombre_fact_xml_firmada, $archivo_xml_firmado)
+    private function recibir($invoiceObj,$nombre_fact_xml_firmada, $archivo_xml_firmado, $factura_id)
     {
         //Si es ambiente de desarrollo
         //dd($nombre_fact_xml_firmada,$archivo_xml_firmado);
@@ -679,10 +680,15 @@ class Factura extends Model
             dd($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
         }
         Storage::disk('comprobantes/enviados')->put($nombre_fact_xml_firmada,$archivo_xml_firmado);
-        //dd('fin de envio ' , $estado, $nombre_fact_xml_firmada,$archivo_xml_firmado);
+        //dd('hasta aqui lelga todo ');
+        $xmlFile = XmlFile::where('factura_id', $factura_id)->firstOrFail();
+        $xmlFile->update([
+            'directorio' => 'comprobantes/enviados',
+            'estado' => 'enviado'
+        ]);
     }
 
-    public function fetch($invoiceObj,$nombre_fact_xml_firmada,$archivo_xml_firmado)
+    public function fetch($invoiceObj,$nombre_fact_xml_firmada,$archivo_xml_firmado, $factura_id)
     {
          //autorizados
         //dd('vamos a recupearar del srl ',$nombre_fact_xml_firmada,$archivo_xml_firmado);
@@ -759,8 +765,13 @@ class Factura extends Model
 
             Storage::disk('comprobantes/autorizados')->put($nombre_fact_xml_firmada,$archivo_xml_firmado);
            // dd('autorizado:', $nombre_fact_xml_firmada,$archivo_xml_firmado);
+           $xmlFile = XmlFile::where('factura_id', $factura_id)->firstOrFail();
+           $xmlFile->update([
+               'directorio' => 'comprobantes/autorizados',
+               'estado' => 'autorizado'
+           ]);
            $this->crearXmlAutorizado($estado,$numeroAutorizacion,$vfechaauto,$comprobante,
-            $comprobanteAutorizacion);
+            $comprobanteAutorizacion, $factura_id);
             //dd($estado,$numeroAutorizacion,$fechaAutorizacion, $vfechaauto, $comprobanteAutorizacion);
           // return $xmlAprobado;
 
@@ -771,7 +782,7 @@ class Factura extends Model
 
 
     public  function crearXmlAutorizado($estado,$numeroAutorizacion,$fechaAutorizacion,
-    $comprobanteAutorizacion){
+    $comprobanteAutorizacion, $factura_id){
        //dd( $nombre_fact_xml_firmada);
         $xml =  new DOMDocument();
         $xml_autor = $xml->createElement('autorizacion');
@@ -798,6 +809,11 @@ class Factura extends Model
         $ms =  Storage::disk('comprobantes/xmlaprobados')->put($factura,$xml_string);
         //dd($this->claveAcceso());
         //dd($factura,$xml_string);
+        $xmlFile = XmlFile::where('factura_id', $factura_id)->firstOrFail();
+        $xmlFile->update([
+            'directorio' => 'comprobantes/xmlaprobados',
+            'estado' => 'xmlaprobado'
+        ]);
         return $ms;
 
     }
