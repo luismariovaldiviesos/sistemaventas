@@ -19,6 +19,7 @@ use App\Http\Livewire\Sales;
 use App\Http\Livewire\Settings;
 use App\Http\Livewire\Users;
 use App\Http\Livewire\Roles;
+use App\Http\Livewire\XmlFiles;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -53,6 +54,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('archivop12', Certificados::class)->name('archivop12');
     Route::get('/pdf', [Facturas::class, 'pdfController']);
     Route::get('/descargar-pdf/{factura}', [PdfController::class, 'pdfDowloader'])->name('descargar-pdf');
+    Route::get('reprocesar', XmlFiles::class)->name('reprocesar');
 
 });
 
