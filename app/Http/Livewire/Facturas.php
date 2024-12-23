@@ -26,6 +26,8 @@ use PhpParser\Node\Stmt\Return_;
 class Facturas extends Component
 {
 
+    protected $listeners = ['archivoNoFirmadoNoGuardado'];
+
      //traits
      use CartTrait, PrinterTrait, PdfTrait;
 

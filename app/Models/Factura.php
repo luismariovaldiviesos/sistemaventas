@@ -522,7 +522,7 @@ class Factura extends Model
     {
 
         // variables generales para autorizar xml sri
-       // dd($facturaId);
+        //dd($nombre_fact_xml, $factura_id);
         $vtipoambiente=1;
         $wsdls = $this->wsdl($vtipoambiente);
         $recepcion = $wsdls['recepcion'];
@@ -534,18 +534,11 @@ class Factura extends Model
         //dd('procedemos a firmar : '. ' ' .$archivo_x_firmar);
          // Ruta donde se guardará el archivo firmado
          $ruta_si_firmados =  base_path('storage/app/comprobantes/firmados/');
-
-
-
         //ruta del certifixcado
         // Ruta del certificado digital (archivo .pfx o .p12)
         $certPath = base_path('storage/app/certificados/P0000119207.p12');
-
         // Contraseña del certificado digital
         $certPass = 'Okz9UqnjX1';
-
-
-
         // Contenido del xml
         $factContent = file_get_contents($archivo_x_firmar);
         //dd($factContent);
@@ -557,11 +550,9 @@ class Factura extends Model
         // Extraer la clave privada y el certificado del almacenamiento
         $key = openssl_pkey_get_private($certs['pkey']);
         $cert = openssl_x509_read($certs['cert']);
-
        // dd($key,$cert);
        // Crear el objeto XMLSecurityDSig
         $xmlSecDSig = new XMLSecurityDSig();
-
         // Cargar el contenido del XML a firmar
         $xmlSecDSig->sigNode = $xmlSecDSig->createNewSignNode('signature', 'nodonuevo');
         $xmlSecDSig->idKeys = ['wsu:Id'];
@@ -617,7 +608,7 @@ class Factura extends Model
 
 
 
-    private function recibir($invoiceObj,$nombre_fact_xml_firmada, $archivo_xml_firmado, $factura_id)
+    public function recibir($invoiceObj,$nombre_fact_xml_firmada, $archivo_xml_firmado, $factura_id)
     {
         //Si es ambiente de desarrollo
         //dd($nombre_fact_xml_firmada,$archivo_xml_firmado);
