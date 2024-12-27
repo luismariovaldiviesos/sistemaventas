@@ -41,7 +41,18 @@
 
                                         <td class="text-center font-medium">{{ $product->secuencial }}</td>
                                         <td class="text-center font-medium">{{ $product->cliente}}</td>
-                                        <td class="text-center font-medium">{{ $product->estado}}</td>
+                                        <td class="text-center font-medium">
+                                            @if ($product->estado === 'enviado')
+                                                Recuperar del SRI
+                                            @elseif ($product->estado === 'firmado')
+                                                Reenviar al SRI
+                                            @elseif ($product->estado === 'creado')
+                                                Pendiente de firmar
+                                            @else
+                                                {{ ucfirst($product->estado) }} <!-- Muestra el estado por defecto si no coincide -->
+                                            @endif
+                                        </td>
+
                                          <td class="dark:border-dark-5 text-center">
                                             <div class="d-flex justify-content-center">
                                                 {{-- @if ($product->sales->count() < 1)

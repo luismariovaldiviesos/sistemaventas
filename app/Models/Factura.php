@@ -492,11 +492,11 @@ class Factura extends Model
             Storage::disk('comprobantes/no_firmados')->put($nombre_fact_xml,$archivo_factura_xml);
             XmlFile::create([
                 'factura_id' => $factura_id,
-            'secuencial' => $secuencia,
-            'cliente'    => $razonSocialCli,
-            'directorio' => 'comprobantes/no_firmados',
-            'estado'     => 'creado',
-            ]);
+                'secuencial' => $secuencia,
+                'cliente'    => $razonSocialCli,
+                'directorio' => 'comprobantes/no_firmados',
+                'estado'     => 'creado',
+                ]);
             if (!Storage::disk('comprobantes/no_firmados')->exists($nombre_fact_xml)) {
                 throw new Exception("El archivo XML no firmado no fue guardado: $nombre_fact_xml");
             }
@@ -683,6 +683,7 @@ class Factura extends Model
     {
          //autorizados
         //dd('vamos a recupearar del srl ',$nombre_fact_xml_firmada,$archivo_xml_firmado);
+       //dd($invoiceObj->key);
         $ambiente = "1";
         if ($ambiente == "1") {
             $host = 'https://celcer.sri.gob.ec';
@@ -774,7 +775,7 @@ class Factura extends Model
 
     public  function crearXmlAutorizado($estado,$numeroAutorizacion,$fechaAutorizacion,
     $comprobanteAutorizacion, $factura_id){
-       //dd( $nombre_fact_xml_firmada);
+       //dd( $factura_id);
         $xml =  new DOMDocument();
         $xml_autor = $xml->createElement('autorizacion');
         $xml_estad = $xml->createElement('estado', $estado);

@@ -46,10 +46,12 @@ class XmlFiles extends Component
     public function retry(XmlFile $xml){
 
 
-
+        //dd($xml);
         $factura =  new Factura();
         $fac = Factura::where('id', '=', $xml->factura_id)->first();
          $nombre_fact_xml = $fac->customer->valueidenti.'_'.$fac->secuencial;
+         $claveAccesoFactura =  $fac->claveAcceso;
+         //dd($claveAccesoFactura);
          $estado = strtolower(trim($xml->estado));
         //dd($estado);
         //para el envio de la factura de neuv
@@ -64,12 +66,13 @@ class XmlFiles extends Component
             if ($estado === 'creado')
              {
                 //$archivo_xml_x_firmar =  file_get_contents($ruta_creados .  $nombre_fact_xml);
+                dd('firmar de nuevo ');
                 $factura->firmarFactura($nombre_fact_xml, $fac->id);
-            //dd('firmar de nuevo ');
+
             }
             elseif ($estado === 'firmado') {
             //$this->reenviarFactura($fac->id);
-            //dd('enviar de nuevo ');
+            dd('enviar de nuevo ');
             $archivo_xml_firmado =  file_get_contents($ruta_si_firmados .  $nombre_fact_xml_firmada);
             $data = base64_encode($archivo_xml_firmado);
             $obj = new \StdClass();
@@ -78,11 +81,15 @@ class XmlFiles extends Component
 
             }
             elseif ($estado === 'enviado') {
-                $archivo_xml_enviado =  file_get_contents($ruta_enviados .  $nombre_fact_xml_firmada);
-                $data = base64_encode($archivo_xml_enviado);
-                $obj = new \StdClass();
-                $obj->base64 = $data;
-                $fac->fetch($obj, $nombre_fact_xml_firmada, $archivo_xml_enviado, $xml->factura_id);
+                // //dd('enviar de nuevo ');
+                // $archivo_xml_enviado =  file_get_contents($ruta_enviados .  $nombre_fact_xml_firmada);
+                // $data = base64_encode($archivo_xml_enviado);
+                // $obj = new \StdClass;
+                // $obj->base64 = $data;
+                // //dd($obj);
+                // $fac->fetch($obj, $nombre_fact_xml_firmada, $archivo_xml_enviado, $xml->factura_id);
+
+                dd('lamar aqui al metodo de recuperar del sri');
 
                 }
 
@@ -109,5 +116,9 @@ class XmlFiles extends Component
 
         //if($reset) $this->resetUI();
     }
+
+
+    // necesitamos crear aqi el metodo de  recuperar del sri fetch y pasarle directo la clave de acceso .
+
 
 }
