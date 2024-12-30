@@ -509,10 +509,10 @@ class Factura extends Model
        //dd('creado archivo xml ', $nombre_fact_xml, $archivo_factura_xml);
 
        //debemos llamar al metodo aqui y pasarle el nombre del archivo
-      $nombre_fact_xml =  substr($nombre_fact_xml, 0, -4); // Remover la extensión .xml
-        //dd($nombre_fact_xml);
+        $nombre_fact_xml =  substr($nombre_fact_xml, 0, -4); // Remover la extensión .xml
+        dd($nombre_fact_xml);
 
-        $this->firmarFactura($nombre_fact_xml, $factura_id);
+       // $this->firmarFactura($nombre_fact_xml, $factura_id);
 
     }
 
@@ -665,12 +665,20 @@ class Factura extends Model
         $estado = $simpleXml->xpath('//estado')[0];
         //dd($estado);
 
-        if ('DEVUELTA' === (string)$estado) {
+        if ('DEVUELTA' === (string)$estado)
+         {
             $comprobante = $simpleXml->xpath('//comprobante')[0];
             //throw new SriReceiveException($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
-            dd($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
-        }
-        Storage::disk('comprobantes/enviados')->put($nombre_fact_xml_firmada,$archivo_xml_firmado);
+            //dd($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
+                $xmlFile = XmlFile::where('factura_id', $factura_id)->firstOrFail();
+                $xmlFile->update([
+                    'directorio' => 'comprobantes/enviados',
+                    'estado' => 'enviado'
+                ]);
+                dd('Devuelta, ya se envió el comprobante al SRI, estado del XML');
+            }
+
+            Storage::disk('comprobantes/enviados')->put($nombre_fact_xml_firmada,$archivo_xml_firmado);
         //dd('hasta aqui lelga todo ');
         $xmlFile = XmlFile::where('factura_id', $factura_id)->firstOrFail();
         $xmlFile->update([
@@ -801,11 +809,11 @@ class Factura extends Model
         $ms =  Storage::disk('comprobantes/xmlaprobados')->put($factura,$xml_string);
         //dd($this->claveAcceso());
         //dd($factura,$xml_string);
-        $xmlFile = XmlFile::where('factura_id', $factura_id)->firstOrFail();
-        $xmlFile->update([
-            'directorio' => 'comprobantes/xmlaprobados',
-            'estado' => 'xmlaprobado'
-        ]);
+        // $xmlFile = XmlFile::where('factura_id', $factura_id)->firstOrFail();
+        // $xmlFile->update([
+        //     'directorio' => 'comprobantes/xmlaprobados',
+        //     'estado' => 'xmlaprobado'
+        // ]);
         return $ms;
 
     }

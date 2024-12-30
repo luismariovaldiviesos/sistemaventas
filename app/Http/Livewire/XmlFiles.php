@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\Factura;
 use App\Models\XmlFile;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
@@ -65,14 +66,15 @@ class XmlFiles extends Component
         try {
             if ($estado === 'creado')
              {
-                //$archivo_xml_x_firmar =  file_get_contents($ruta_creados .  $nombre_fact_xml);
-                dd('firmar de nuevo ');
                 $factura->firmarFactura($nombre_fact_xml, $fac->id);
+                $this->updateFact($fac);
 
             }
             elseif ($estado === 'firmado') {
             //$this->reenviarFactura($fac->id);
-            dd('enviar de nuevo ');
+            dd('aqui deberiamos llamar a recibir de factura que es el
+            metodo que envia al sri y aqui tambien deberiamos llamar a fetch
+            para que termine el proceso y actualizar fac  ');
             $archivo_xml_firmado =  file_get_contents($ruta_si_firmados .  $nombre_fact_xml_firmada);
             $data = base64_encode($archivo_xml_firmado);
             $obj = new \StdClass();
@@ -81,15 +83,7 @@ class XmlFiles extends Component
 
             }
             elseif ($estado === 'enviado') {
-                // //dd('enviar de nuevo ');
-                // $archivo_xml_enviado =  file_get_contents($ruta_enviados .  $nombre_fact_xml_firmada);
-                // $data = base64_encode($archivo_xml_enviado);
-                // $obj = new \StdClass;
-                // $obj->base64 = $data;
-                // //dd($obj);
-                // $fac->fetch($obj, $nombre_fact_xml_firmada, $archivo_xml_enviado, $xml->factura_id);
-
-                dd('lamar aqui al metodo de recuperar del sri');
+                dd('fetch y actualizar factura');
 
                 }
 
@@ -107,6 +101,16 @@ class XmlFiles extends Component
         }
 
 
+    }
+
+
+    public function updateFact(Factura $factura) {
+        $factura->fechaAutorizacion =  Carbon::now();
+        $factura->numeroAutorizacion =  $factura->claveAcceso;
+        $factura->save();
+        $url  =  route('descargar-pdf',['factura' => $factura->id]);
+        $this->noty('FACTURA GENERADA  CORRECTAMENTE !!!!!!');
+        return redirect()->to($url);
     }
 
 
