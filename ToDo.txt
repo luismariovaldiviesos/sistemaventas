@@ -1,16 +1,12 @@
 
-desde aqui funciona excelnete el firmado y la genrada del pdf
-12-13-2024:
-se crea archivo ToDo para lo que falta por hacer, factura ok todo, hasta factura con cliente y consumidor final,
-hasta aqui el sistema es funcional en un 90 %
-
 hace falta :
-*sacar para reportes desde factura y ya no de sales
-* dar seguimiento a los xmls a lo largo de las carpetas (firmados, no firmados etc)
 * enviar mail, configurar todo
-* boorar carrito
-* procesos de reenvio de xml si hay errores en factura
-* eliminar factura, lo que implica nora de venta y regresar stcks
+* listado de facturas para visualizar los pdf, descargar los xml etc
+* boorar carrito desde factura
+* eliminar factura, lo que implica nora de venta y regresar stcks (me parece que se puyede hacer desde la pag del sri )
+*sacar para reportes desde factura y ya no de sales
+*revisar inventario en prductos si reuiqre ono
+
 
 
 
