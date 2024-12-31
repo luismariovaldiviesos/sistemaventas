@@ -18,24 +18,55 @@ class InvoiceList extends Component
     protected $paginationTheme='tailwind';
 
     public function render()
-    {
-        if (strlen($this->search) > 0) {
-            $info = Factura::where('secuencial', 'like', "%{$this->search}%")
-                ->orWhereHas('customer', function ($query) {
-                    $query->where('businame', 'like', "%{$this->search}%"); // Filtrar por nombre del cliente
-                })
-                ->where('numeroAutorizacion', '!=', null)
-                ->orderBy('fechaAutorizacion', 'desc') // Ordenar por la fecha de creación descendente
-                ->paginate($this->pagination);
-        } else {
-            $info = Factura::where('numeroAutorizacion', '!=', null)
-                ->orderBy('fechaAutorizacion', 'desc') // Ordenar por la fecha de creación descendente
-                ->paginate($this->pagination);
-        }
-
-
-
-        return view('livewire.listadofacturas.component', ['facturas' => $info])
-            ->layout('layouts.theme.app');
+{
+    // Si hay un término de búsqueda, se filtra por secuencial o cliente.
+    if (strlen($this->search) > 0) {
+        $info = Factura::where('secuencial', 'like', "%{$this->search}%")
+            ->orWhereHas('customer', function ($query) {
+                $query->where('businame', 'like', "%{$this->search}%"); // Filtrar por nombre del cliente
+            })
+            ->where('numeroAutorizacion', '!=', null)
+            ->orderBy('fechaAutorizacion', 'desc') // Ordenar por la fecha de autorización descendente
+            ->paginate($this->pagination);  // Paginación
+    } else {
+        // Si no hay término de búsqueda, se cargan todas las facturas con número de autorización.
+        $info = Factura::where('numeroAutorizacion', '!=', null)
+            ->orderBy('fechaAutorizacion', 'desc') // Ordenar por la fecha de autorización descendente
+            ->paginate($this->pagination); // Paginación
     }
+
+    // Devuelve las facturas al componente de Livewire para la vista.
+    return view('livewire.listadofacturas.component', ['facturas' => $info])
+        ->layout('layouts.theme.app');
+}
+
+
+
+
+    function retry(Factura $factura)  {
+
+        dd('reenviar pdf de ', $factura->secuencial);
+
+    }
+
+    function downloadFiles(Factura $factura)  {
+
+        dd('descargar archivos  de ', $factura->secuencial);
+
+    }
+
+    function delete(Factura $factura)  {
+
+        dd('eliminar ', $factura->secuencial);
+
+    }
+
+    function show(Factura $factura)  {
+
+        dd('ver ', $factura->secuencial);
+
+    }
+
+
+
 }
