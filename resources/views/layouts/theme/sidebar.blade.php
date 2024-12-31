@@ -56,7 +56,11 @@
         <li>
             <a href="{{ route('reprocesar') }}" class="side-menu">
                 <div class="side-menu__icon"> <i data-feather="edit"></i> </div>
-                <div class="side-menu__title"> REPROCESAR  </div>
+                <div class="side-menu__title"> REPROCESAR
+                <span class="badge badge-danger ml-2">
+                    {{ \App\Models\XmlFile::where('estado', '!=', 'autorizado')->count() }}
+                </span>
+                </div>
             </a>
         </li>
         <li>
