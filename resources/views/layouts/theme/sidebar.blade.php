@@ -59,6 +59,12 @@
                 <div class="side-menu__title"> REPROCESAR  </div>
             </a>
         </li>
+        <li>
+            <a href="{{ route('listadofacturas') }}" class="side-menu">
+                <div class="side-menu__icon"> <i data-feather="eye"></i> </div>
+                <div class="side-menu__title">FACTURAS</div>
+            </a>
+        </li>
 
         <div class="side-nav__devider my-6"></div>
 

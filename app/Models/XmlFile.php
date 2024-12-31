@@ -19,6 +19,6 @@ class XmlFile extends Model
     // Relación con la factura
     public function factura()
     {
-        return $this->belongsTo(Factura::class);
+        return $this->belongsTo(Factura::class, 'factura_id');
     }
 }

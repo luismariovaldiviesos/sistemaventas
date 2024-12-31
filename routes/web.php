@@ -12,6 +12,7 @@ use App\Http\Livewire\Descuentos;
 use App\Http\Livewire\Diario;
 use App\Http\Livewire\Facturas;
 use App\Http\Livewire\Impuestos;
+use App\Http\Livewire\InvoiceList;
 use App\Http\Livewire\Permisos;
 use App\Http\Livewire\Products;
 use App\Http\Livewire\Reports;
@@ -55,6 +56,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/pdf', [Facturas::class, 'pdfController']);
     Route::get('/descargar-pdf/{factura}', [PdfController::class, 'pdfDowloader'])->name('descargar-pdf');
     Route::get('reprocesar', XmlFiles::class)->name('reprocesar');
+    Route::get('listadofacturas', InvoiceList::class)->name('listadofacturas');
+
 
 });
 

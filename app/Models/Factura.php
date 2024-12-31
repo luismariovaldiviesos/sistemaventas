@@ -832,8 +832,9 @@ class Factura extends Model
         return $this->belongsTo(Customer::class);
     }
 
-    public  function estadoXml (){
-        return $this->belongsTo(XmlFactura::class);
+    public function xmlFile()
+    {
+        return $this->hasOne(XmlFile::class, 'factura_id');
     }
 
 
