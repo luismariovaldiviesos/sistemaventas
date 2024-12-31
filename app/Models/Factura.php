@@ -510,9 +510,9 @@ class Factura extends Model
 
        //debemos llamar al metodo aqui y pasarle el nombre del archivo
         $nombre_fact_xml =  substr($nombre_fact_xml, 0, -4); // Remover la extensión .xml
-        dd($nombre_fact_xml);
+       // dd($nombre_fact_xml);
 
-       // $this->firmarFactura($nombre_fact_xml, $factura_id);
+        $this->firmarFactura($nombre_fact_xml, $factura_id);
 
     }
 
