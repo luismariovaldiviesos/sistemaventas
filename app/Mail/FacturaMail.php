@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\Setting;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -28,10 +29,11 @@ class FacturaMail extends Mailable
     public function build()
     {
         $body = "Estimado cliente, adjuntamos su factura. Gracias por su preferencia.";
+        $empresa = Setting::first();
 
         return $this
             ->subject("Factura N° {$this->factura->secuencial}")
-            ->from('khipusistemas@gmail.com', 'Nombre de tu empresa')
+            ->from($empresa->email, $empresa->razonSocial)
             ->to($this->factura->customer->email)
             ->html($body) // Aquí defines el contenido del correo
             ->attach($this->pdfPath, [
