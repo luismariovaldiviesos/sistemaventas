@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\FacturaMail;
 use App\Models\Factura;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 use Codedge\Fpdf\Fpdf\Fpdf;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Picqer\Barcode\BarcodeGeneratorPNG;
 
@@ -153,7 +155,35 @@ class PdfController extends Controller
         $pdfContent = $pdf->Output('S');
         $fileName = $factura->customer->businame .'_'.$factura->secuencial .'.pdf';
         Storage::disk('comprobantes/pdfs')->put($fileName, $pdfContent);
+        $this->enviarFacturea($factura);
         return response($pdf->Output('D',$factura->customer->businame.'.pdf'));
+
+    }
+
+
+
+
+    public function enviarFacturea(Factura $factura)  {
+
+        //dd($factura);
+         // Rutas de los archivos
+         $pdf_name =  $factura->customer->businame.'_'.$factura->secuencial;
+         $xml_name =  $factura->customer->valueidenti.'_'.$factura->secuencial;
+        //dd($pdf_name,$xml_name);
+         //$archivo_x_firmar =  base_path('storage/app/comprobantes/no_firmados/'.$nombre_fact_xml.'.xml');
+        //$pdfPath = base_path("storage/app/comprobantes/pdfs/{$pdf_name}.pdf");
+        $pdfPath = base_path('storage/app/comprobantes/pdfs/'.$pdf_name.'.pdf');
+        $xmlPath = base_path('storage/app/comprobantes/autorizados/'.$xml_name.'.xml');
+        //dd($pdfPath, $xmlPath);
+        //$pdf_enviar =  file_get_contents($pdfPath);
+        //dd($pdf_enviar);
+        if (!file_exists($pdfPath) || !file_exists($xmlPath)) {
+           // return back()->with('error', 'Los archivos necesarios no existen.');
+           dd('no se encuentran los archivos');
+        }
+        else{
+            Mail::to($factura->customer->email)->send(new FacturaMail($factura, $pdfPath, $xmlPath));
+        }
 
     }
 }
