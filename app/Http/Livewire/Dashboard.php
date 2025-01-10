@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use DateTime;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
@@ -21,6 +22,8 @@ class Dashboard extends Component
 
     public function render()
     {
+        // $empresa  =  Cache::get('settings');
+        // dd($empresa);
 
         $this->listYears =[];
         $currentYear =  date('Y') -1;
