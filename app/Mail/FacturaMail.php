@@ -9,6 +9,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Cache;
 
 class FacturaMail extends Mailable
 {
@@ -28,12 +29,15 @@ class FacturaMail extends Mailable
 
     public function build()
     {
+        $settings =  Cache::get('settings');
         $body = "Estimado cliente, adjuntamos su factura. Gracias por su preferencia.";
-        $empresa = Setting::first();
+        //$empresa = Setting::first();
+        $email =  $settings['email'];
+        $razonSocial = $settings['razonSocial'];
 
         return $this
             ->subject("Factura N° {$this->factura->secuencial}")
-            ->from($empresa->email, $empresa->razonSocial)
+            ->from($email, $razonSocial)
             ->to($this->factura->customer->email)
             ->html($body) // Aquí defines el contenido del correo
             ->attach($this->pdfPath, [
