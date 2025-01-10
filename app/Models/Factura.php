@@ -842,4 +842,7 @@ class Factura extends Model
 
 
 
+
+
+
 }

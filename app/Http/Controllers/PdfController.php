@@ -151,18 +151,17 @@ class PdfController extends Controller
 		$pdf->SetFont('Arial', 'B', 7);$pdf->SetXY(10, $ejey+39);$pdf->Cell(75, 6, 'Forma de pago', 1 , 1, 'C');
 		$pdf->SetFont('Arial', 'B', 7);$pdf->SetXY(85, $ejey+39);$pdf->Cell(30, 6, 'Valor', 1 , 1, 'C');
 		$pdf->SetFont('Arial', '', 7);$pdf->SetXY(10, $ejey+45);$pdf->Cell(75, 6, 'SIN UTILIZACION DEL SISTEMA FINANCIERON', 'LRB' , 1, 'L');
-		$pdf->SetFont('Arial', '', 7);$pdf->SetXY(85, $ejey+45);$pdf->Cell(30, 6, '152.00', 'RB' , 1, 'L');
+		$pdf->SetFont('Arial', '', 7);$pdf->SetXY(85, $ejey+45);$pdf->Cell(30, 6, $factura->total, 'RB' , 1, 'L');
 
         // Salida del PDF
         $pdfContent = $pdf->Output('S');
         $fileName = $factura->customer->businame .'_'.$factura->secuencial .'.pdf';
         Storage::disk('comprobantes/pdfs')->put($fileName, $pdfContent);
         $this->enviarFacturea($factura);
+        //$this->noty('PDF CREADO   CORRECTAMENTE !!!!!!');
         return response($pdf->Output('D',$factura->customer->businame.'.pdf'));
 
     }
-
-
 
 
     public function enviarFacturea(Factura $factura)  {
@@ -185,6 +184,7 @@ class PdfController extends Controller
         }
         else{
             Mail::to($factura->customer->email)->send(new FacturaMail($factura, $pdfPath, $xmlPath));
+
         }
 
     }

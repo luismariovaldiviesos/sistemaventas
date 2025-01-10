@@ -2,7 +2,9 @@
 
 namespace App\Traits;
 
+use App\Models\Product;
 use App\Services\Cart;
+use Illuminate\Support\Facades\Log;
 
 trait CartTrait {
 
@@ -136,6 +138,23 @@ trait CartTrait {
     {
         $cart = new Cart;
         $cart->clear();
+    }
+
+
+    public function restoreStockFromFacturas($factura){
+        dd($factura->detalles);
+        foreach($factura->detalles  as $detalle){
+            foreach ($factura->detalles as $detalle) {
+                $product = Product::find($detalle->product_id);
+
+                if ($product) {
+                    $product->stock += $detalle->cantidad;
+                    $product->save();
+                } else {
+                    Log::warning("Producto con ID {$detalle->product_id} no encontrado al actualizar stock.");
+                }
+            }
+        }
     }
 
 }

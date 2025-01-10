@@ -2,15 +2,19 @@
 
 namespace App\Http\Livewire;
 
+use App\Http\Controllers\PdfController;
 use App\Models\Factura;
+use App\Models\Product;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+use App\Traits\CartTrait;
 
 class InvoiceList extends Component
 {
     use WithPagination;
     use WithFileUploads;
+    use CartTrait;
 
     public $fact_id='', $secuencial ='', $customer='', $directorio='', $estado;
     public $action = 'Listado', $componentName='LISTADO DE FACTURAS', $search, $form = false;
@@ -40,24 +44,43 @@ class InvoiceList extends Component
         ->layout('layouts.theme.app');
 }
 
+public function noty($msg, $eventName= 'noty', )
+{
+    $this->dispatchBrowserEvent($eventName, ['msg' => $msg, 'type' => 'success']);
+}
+
+
 
 
 
     function retry(Factura $factura)  {
 
-        dd('reenviar pdf de ', $factura->secuencial);
+        //dd('reenviar pdf de ', $factura->secuencial);
+        $pdfcontroller  =  New PdfController();
+        $pdfcontroller->enviarFacturea($factura);
+        $this->noty('PDF FACTURA REENVIADA  CORRECTAMENTE !!!!!!');
 
     }
 
     function downloadFiles(Factura $factura)  {
 
-        dd('descargar archivos  de ', $factura->secuencial);
+        $pdf_name =  $factura->customer->businame.'_'.$factura->secuencial;
+        $pdfPath = base_path('storage/app/comprobantes/pdfs/'.$pdf_name.'.pdf');
+        return response()->download($pdfPath);
 
     }
 
     function delete(Factura $factura)  {
 
-        dd('eliminar ', $factura->secuencial);
+        $this->restoreStockFromFacturas($factura);// metotdo que esta enn  el trait CartTrait
+
+        // foreach($factura->detalles  as $detalle){
+        //     dd($detalle->product_id, $detalle->cantidad);
+        //      //**********  actualizamos stock */
+        //      $product = Product::find($detalle->product_id);
+        //      $product->stock = $product->stock + $detalle->cantidad;
+        //      $product->save();
+        // }
 
     }
 
