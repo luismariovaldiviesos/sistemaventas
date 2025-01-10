@@ -2,6 +2,8 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\DetalleFactura;
+use App\Models\Factura;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use DateTime;
@@ -26,7 +28,7 @@ class Dashboard extends Component
         // dd($empresa);
 
         $this->listYears =[];
-        $currentYear =  date('Y') -1;
+        $currentYear =  date('Y') -2;
         for ($i=1; $i < 7 ; $i++) {
             array_push($this->listYears, $currentYear +$i);
         }
@@ -41,12 +43,12 @@ class Dashboard extends Component
     public function getTop5 ()
     {
 
-        $this->top5Data = OrderDetail::join('products as p', 'order_details.product_id','p.id')
+        $this->top5Data = DetalleFactura::join('products as p', 'detalle_facturas.product_id','p.id')
         ->select(
-            DB::raw("p.name as product, sum(order_details.quantity * p.price) as total")
-        )->whereYear('order_details.created_at', $this->year)
+            DB::raw("p.name as product, sum(detalle_facturas.cantidad * p.price) as total")
+        )->whereYear('detalle_facturas.created_at', $this->year)
         ->groupBy('p.name')
-        ->orderBy(DB::raw("sum(order_details.quantity * p.price)"), 'desc')
+        ->orderBy(DB::raw("sum(detalle_facturas.cantidad * p.price)"), 'desc')
         ->get()->take(5)->toArray();
 
         $contDif = ( 5 - count($this->top5Data)); // si la consulta devuelve 5 productos o menos
@@ -80,7 +82,7 @@ class Dashboard extends Component
             $finishDate = substr_replace($finishDate, $this->year, 0, 4);
 
 
-            $wsale = Order::whereBetween('created_at', [$startDate, $finishDate])->sum('total');
+            $wsale = Factura::whereBetween('created_at', [$startDate, $finishDate])->sum('total');
 
             array_push($this->weekSales_Data, $wsale);
 
@@ -95,8 +97,13 @@ class Dashboard extends Component
 
         $salesByMonth = DB::select(
             DB::raw("SELECT coalesce(total,0)as total
-                FROM (SELECT 'january' AS month UNION SELECT 'february' AS month UNION SELECT 'march' AS month UNION SELECT 'april' AS month UNION SELECT 'may' AS month UNION SELECT 'june' AS month UNION SELECT 'july' AS month UNION SELECT 'august' AS month UNION SELECT 'september' AS month UNION SELECT 'october' AS month UNION SELECT 'november' AS month UNION SELECT 'december' AS month ) m LEFT JOIN (SELECT MONTHNAME(created_at) AS MONTH, COUNT(*) AS orders, SUM(total)AS total
-                FROM orders WHERE year(created_at)= $this->year
+                FROM (SELECT 'january' AS month UNION SELECT 'february' AS month UNION SELECT 'march'
+                AS month UNION SELECT 'april' AS month UNION SELECT 'may'
+                AS month UNION SELECT 'june' AS month UNION SELECT 'july' AS month UNION SELECT 'august'
+                 AS month UNION SELECT 'september' AS month UNION SELECT 'october'
+                  AS month UNION SELECT 'november' AS month UNION SELECT 'december' AS month )
+                  m LEFT JOIN (SELECT MONTHNAME(created_at) AS MONTH, COUNT(*) AS orders, SUM(total)AS total
+                FROM facturas WHERE year(created_at)= $this->year
                 GROUP BY MONTHNAME(created_at),MONTH(created_at)
                 ORDER BY MONTH(created_at)) c ON m.MONTH =c.MONTH;")
         );
