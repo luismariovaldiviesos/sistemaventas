@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\Setting;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -19,7 +20,8 @@ class Settings extends Component
 
     public function mount()
     {
-        $info =  Setting::first();
+        //$info =  Setting::first();
+        $info =  Cache::get('settings');
         //dd($info);
 
         if($info){

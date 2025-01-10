@@ -1,6 +1,17 @@
 <div class="top-bar">
     <!-- BEGIN: Breadcrumb -->
-    <div class="-intro-x breadcrumb mr-auto hidden sm:flex"> <a href="https://khipuweb.herokuapp.com/">Ir Sitio web</a> <i data-feather="chevron-right" class="breadcrumb__icon"></i> <a href="" class="breadcrumb--active"> Usuario:  {{Auth()->user()->name}}</a> </div>
+    <div class="-intro-x breadcrumb mr-auto hidden sm:flex"> <a href="https://khipuweb.herokuapp.com/">Ir Sitio web</a>
+        <i data-feather="chevron-right" class="breadcrumb__icon"></i> <a href="" class="breadcrumb--active">
+            Usuario:  {{Auth()->user()->name}}</a>
+    </div>
+    <div class="-intro-x breadcrumb mr-auto hidden sm:flex">
+       @php
+            $empresa =  Cache::get('settings');
+       @endphp
+    <div class="empresa-info">
+        <span>{{ $empresa->razonSocial }} {{ $empresa->ruc }} {{ $empresa->dirMatriz }}</span>
+    </div>
+    </div>
     <!-- END: Breadcrumb -->
     <!-- BEGIN: Search -->
     <!--
@@ -18,6 +29,7 @@
     <!-- END: Notifications -->
     <!-- BEGIN: Account Menu -->
     <div class="intro-x dropdown w-8 h-8">
+
         <div class="dropdown-toggle w-8 h-8 rounded-full overflow-hidden shadow-lg image-fit zoom-in" role="button" aria-expanded="false">
             <img src="{{ Auth()->user()->avatar }}">
         </div>

@@ -21,6 +21,7 @@ use phpseclib\File\X509;
 use phpseclib\Crypt\RSA;
 use nusoap_client;
 use Exception;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use PhpParser\Node\Stmt\Break_;
 //require_once "/vendor/econea/nusoap/src/nusoap.php";
@@ -85,7 +86,7 @@ class Factura extends Model
 
     public function empresa ()
     {
-        $empresa =  Setting::get();
+        $empresa =  Cache::get('settings');
         return $empresa;
     }
 
@@ -95,10 +96,10 @@ class Factura extends Model
          $codigo  = "01"; //2
          $parteUno = $fecha.$codigo;   //1+2***********
          $empresa =  $this->empresa();
-         $ruc =  $empresa[0]->ruc;  //3
-         $ambiente  =  $empresa[0]->ambiente;  //4
-         $establecimiento =  $empresa[0]->estab;
-         $puntoEmi  =  $empresa[0]->ptoEmi;
+         $ruc =  $empresa->ruc;  //3
+         $ambiente  =  $empresa->ambiente;  //4
+         $establecimiento =  $empresa->estab;
+         $puntoEmi  =  $empresa->ptoEmi;
          $serie  = $establecimiento.$puntoEmi;  //5
          $parteDos =  $ruc.$ambiente.$serie;  // 3 4 y 5***********
          $cadenaUNo = $parteUno.$parteDos;   /// 1 al 5 *********************
@@ -329,27 +330,27 @@ class Factura extends Model
 		$cabecerav = $xml->createAttribute('version');
 		$cabecerav->value = '1.0.0';
 		$xml_inf = $xml->createElement('infoTributaria');
-		$xml_amb = $xml->createElement('ambiente',$empresa[0]->ambiente);
-		$xml_tip = $xml->createElement('tipoEmision',$empresa[0]->tipoEmision);
-		$xml_raz = $xml->createElement('razonSocial',$empresa[0]->razonSocial);
-		$xml_nom = $xml->createElement('nombreComercial',$empresa[0]->nombreComercial);
-		$xml_ruc = $xml->createElement('ruc',$empresa[0]->ruc);
+		$xml_amb = $xml->createElement('ambiente',$empresa->ambiente);
+		$xml_tip = $xml->createElement('tipoEmision',$empresa->tipoEmision);
+		$xml_raz = $xml->createElement('razonSocial',$empresa->razonSocial);
+		$xml_nom = $xml->createElement('nombreComercial',$empresa->nombreComercial);
+		$xml_ruc = $xml->createElement('ruc',$empresa->ruc);
 		//$fechasf=date('dmY'); /// ******************revisar***************
 		// $dig = new modulo();
 		// $clave_acceso=$fechasf.'01010376784400110010010000'.$secuencial.'123456781';
 		$xml_cla = $xml->createElement('claveAcceso',$claveAcce);
 		$xml_doc = $xml->createElement('codDoc','01');  ///simpre va a ser 01 porque es fact
-		$xml_est = $xml->createElement('estab',$empresa[0]->estab);
-		$xml_emi = $xml->createElement('ptoEmi',$empresa[0]->ptoEmi);
+		$xml_est = $xml->createElement('estab',$empresa->estab);
+		$xml_emi = $xml->createElement('ptoEmi',$empresa->ptoEmi);
 		$xml_sec = $xml->createElement('secuencial',$secuencia);
-		$xml_dir = $xml->createElement('dirMatriz',$empresa[0]->dirMatriz);
+		$xml_dir = $xml->createElement('dirMatriz',$empresa->dirMatriz);
 
 
         $xml_def = $xml->createElement('infoFactura');
 		$xml_fec = $xml->createElement('fechaEmision',date('d/m/Y'));
-		$xml_des = $xml->createElement('dirEstablecimiento',$empresa[0]->dirEstablecimiento);
-		$xml_con = $xml->createElement('contribuyenteEspecial',$empresa[0]->contribuyenteEspecial);
-		$xml_obl = $xml->createElement('obligadoContabilidad',$empresa[0]->obligadoContabilidad);
+		$xml_des = $xml->createElement('dirEstablecimiento',$empresa->dirEstablecimiento);
+		$xml_con = $xml->createElement('contribuyenteEspecial',$empresa->contribuyenteEspecial);
+		$xml_obl = $xml->createElement('obligadoContabilidad',$empresa->obligadoContabilidad);
 		$xml_ide = $xml->createElement('tipoIdentificacionComprador', $tipoIdentificadorCli);
 		$xml_rco = $xml->createElement('razonSocialComprador', $razonSocialCli);
 		$xml_idc = $xml->createElement('identificacionComprador', $identificadorCliente);
@@ -419,7 +420,7 @@ class Factura extends Model
         // Finalmente, agregar el elemento 'detalles' al XML
         $xml->appendChild($xml_dts);
         $xml_ifa = $xml->createElement('infoAdicional');//ok
-		$xml_cp1 = $xml->createElement('campoAdicional',$empresa[0]->email);// ok
+		$xml_cp1 = $xml->createElement('campoAdicional',$empresa->email);// ok
 		$atributo = $xml->createAttribute('nombre');// ******************revisar***************
 		$atributo->value = 'email';// ******************revisar***************
          //PRIMERA PARTE

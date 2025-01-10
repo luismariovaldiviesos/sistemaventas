@@ -7,6 +7,7 @@ use App\Models\Factura;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 use Codedge\Fpdf\Fpdf\Fpdf;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Picqer\Barcode\BarcodeGeneratorPNG;
@@ -16,20 +17,21 @@ class PdfController extends Controller
 
     public  function pdfDowloader (Factura $factura){
 
-        $empresa =  Setting::get();
+        //$empresa =  Setting::get();
         // Limpia cualquier salida previa
         //dd('hola pdf ctm');
         //dd($factura);
+        $empresa =  Cache::get('settings');
         ob_end_clean();
         ob_start();
         // foreach($factura->detalles as $detalle){
         //     dd($detalle);
         // };
-        //dd($empresa[0]->razonSocial, $factura->detalles);
+        //dd($empresa->razonSocial, $factura->detalles);
         // Crear el PDF con FPDF
         $pdf = new Fpdf();
-        $pdf->SetCreator($empresa[0]->razonSocial);
-		$pdf->SetAuthor($empresa[0]->razonSocial);
+        $pdf->SetCreator($empresa->razonSocial);
+		$pdf->SetAuthor($empresa->razonSocial);
 		$pdf->SetTitle('factura');
 		$pdf->SetSubject('PDF');
 		$pdf->SetKeywords('FPDF, PDF, cheque, impresion, guia');
@@ -46,13 +48,13 @@ class PdfController extends Controller
 		$pdf->Cell(190, 12, '', 1, 1);
 		$pdf->SetXY(10, 114);
 		$pdf->Cell(190, 173, '', 0, 1);
-		$pdf->SetFont('Arial', 'B', 6);$pdf->SetXY(10, 54);$pdf->Cell(93, 10, $empresa[0]->razonSocial, 0 , 1, 'C');
+		$pdf->SetFont('Arial', 'B', 6);$pdf->SetXY(10, 54);$pdf->Cell(93, 10, $empresa->razonSocial, 0 , 1, 'C');
 		 $pdf->SetFont('Arial', '', 6);$pdf->SetXY(10, 59);$pdf->Cell(93, 10, ' MATRIZ', 0 , 1, 'L');
-		$pdf->SetFont('Arial', 'B', 7);$pdf->SetXY(10, 68);$pdf->MultiCell(93, 10, $empresa[0]->dirMatriz, 0 , 'C');
+		$pdf->SetFont('Arial', 'B', 7);$pdf->SetXY(10, 68);$pdf->MultiCell(93, 10, $empresa->dirMatriz, 0 , 'C');
 		$pdf->SetFont('Arial', '', 6);$pdf->SetXY(25, 68);$pdf->MultiCell(78, 4, 'SUCURSAL', 0 , 'L');
-		$pdf->SetFont('Arial', 'B', 7);$pdf->SetXY(10, 80);$pdf->MultiCell(15, 4, $empresa[0]->disSucursal, 0 , 'C');
+		$pdf->SetFont('Arial', 'B', 7);$pdf->SetXY(10, 80);$pdf->MultiCell(15, 4, $empresa->disSucursal, 0 , 'C');
 		// $pdf->SetFont('Arial', '', 6);$pdf->SetXY(25, 80);$pdf->MultiCell(78, 4, 'VIA QUITO', 0 , 'L');
-		$pdf->SetFont('Arial', 'B', 9);$pdf->SetXY(107, 10);$pdf->Cell(40, 8, 'RUC:'. ' '. $empresa[0]->ruc, 0 , 1);
+		$pdf->SetFont('Arial', 'B', 9);$pdf->SetXY(107, 10);$pdf->Cell(40, 8, 'RUC:'. ' '. $empresa->ruc, 0 , 1);
 		$pdf->SetFont('Arial', '', 9);$pdf->SetXY(107, 18);$pdf->Cell(93, 8, 'FACTURA', 0 , 1);
 		$pdf->SetFont('Arial', '', 9);$pdf->SetXY(107, 26);$pdf->Cell(40, 8, 'No: '. $factura->secuencial, 0 , 1);
 		$pdf->SetFont('Arial', '', 9);$pdf->SetXY(107, 32);$pdf->Cell(40, 10, 'FECHA AUTORIZACION:' . '   '. $factura->fechaAutorizacion, 0 , 1);
@@ -139,7 +141,7 @@ class PdfController extends Controller
 		$pdf->SetXY(10, $ejey+6);$pdf->Cell(20, 6, 'Email empresa:', 'L' , 1, 'L');
 		$pdf->SetXY(10, $ejey+12);$pdf->Cell(20, 6, 'Email cliente:', 'L' , 1, 'L');
 		$pdf->SetXY(10, $ejey+18);$pdf->Cell(20, 6, 'Telefono cliente:', 'L' , 1, 'L');
-		$pdf->SetXY(30, $ejey+6);$pdf->Cell(85, 6, $empresa[0]->email, 'R' , 1, 'L'); //email empresa
+		$pdf->SetXY(30, $ejey+6);$pdf->Cell(85, 6, $empresa->email, 'R' , 1, 'L'); //email empresa
 		$pdf->SetXY(30, $ejey+12);$pdf->Cell(85, 6, $factura->customer->email, 'R' , 1, 'L');  // email cliente
 		$pdf->SetXY(30, $ejey+18);$pdf->Cell(85, 6,  $factura->customer->phone, 'R' , 1, 'L');  //telefoo cliente
 		$pdf->SetXY(10, $ejey+24);$pdf->MultiCell(105, 10,  $factura->customer->address, 'LRB', 'L'); //direccio  cliente

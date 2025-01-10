@@ -46,6 +46,7 @@
     <!-- END: Head -->
     <body class="main">
             <!-- BEGIN: Mobile Menu -->
+
                 @include('layouts.theme.mobile-menu')
             <!-- END: Mobile Menu -->
             <div class="flex">
