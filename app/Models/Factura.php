@@ -21,6 +21,7 @@ use phpseclib\File\X509;
 use phpseclib\Crypt\RSA;
 use nusoap_client;
 use Exception;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use PhpParser\Node\Stmt\Break_;
@@ -33,8 +34,11 @@ class Factura extends Model
     use WithFileUploads;
     use FuncionesTrait;
     use PdfTrait;
+    use SoftDeletes;
 
     //const $PASSCERTIFICADO =  Certificado::first('pass');
+
+    protected $dates = ['deleted_at']; // Indica que deleted_at es una fecha
 
     protected $fillable = ['secuencial','numeroAutorizacion','fechaAutorizacion','codDoc','claveAcceso','customer_id',
                             'user_id','subtotal','subtotal0','subtotal12','ice','descuento','iva12','total','formaPago'

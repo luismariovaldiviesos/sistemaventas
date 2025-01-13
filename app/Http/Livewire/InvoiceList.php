@@ -73,14 +73,10 @@ public function noty($msg, $eventName= 'noty', )
     function delete(Factura $factura)  {
 
         $this->restoreStockFromFacturas($factura);// metotdo que esta enn  el trait CartTrait
+        $this->noty('STOCK RESTABLECIDO !!!!!!');
 
-        // foreach($factura->detalles  as $detalle){
-        //     dd($detalle->product_id, $detalle->cantidad);
-        //      //**********  actualizamos stock */
-        //      $product = Product::find($detalle->product_id);
-        //      $product->stock = $product->stock + $detalle->cantidad;
-        //      $product->save();
-        // }
+
+
 
     }
 

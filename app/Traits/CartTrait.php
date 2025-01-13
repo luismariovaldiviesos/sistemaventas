@@ -142,7 +142,7 @@ trait CartTrait {
 
 
     public function restoreStockFromFacturas($factura){
-        dd($factura->detalles);
+        //dd($factura->detalles);
         foreach($factura->detalles  as $detalle){
             foreach ($factura->detalles as $detalle) {
                 $product = Product::find($detalle->product_id);
