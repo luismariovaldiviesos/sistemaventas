@@ -26,12 +26,12 @@
             </a>
         </li>
 
-        <li>
+        {{-- <li>
             <a href="{{ route('sales') }}" class="side-menu">
                 <div class="side-menu__icon"> <i data-feather="dollar-sign"></i> </div>
                 <div class="side-menu__title"> sales  </div>
             </a>
-        </li>
+        </li> --}}
         <li>
             <a href="{{ route('facturas') }}" class="side-menu">
                 <div class="side-menu__icon"> <i data-feather="dollar-sign"></i> </div>
@@ -66,15 +66,15 @@
         <li>
             <a href="{{ route('listadofacturas') }}" class="side-menu">
                 <div class="side-menu__icon"> <i data-feather="eye"></i> </div>
-                <div class="side-menu__title">FACTURAS</div>
+                <div class="side-menu__title">FACTURAS EMITIDAS</div>
             </a>
         </li>
         <li>
             <a href="{{ route('deletedlist') }}" class="side-menu">
                 <div class="side-menu__icon"> <i data-feather="eye"></i> </div>
-                <div class="side-menu__title">ELIMINAR
+                <div class="side-menu__title">FACTURAS EIMINADAS
                     <span class="badge badge-danger ml-2">
-                        {{ \App\Models\DeletedFactura::where('estado', '!=', 'pendiente')->count() }}
+                        {{ \App\Models\DeletedFactura::where('estado', '!=', 'ELIMINADO')->count() }}
                     </span>
                 </div>
             </a>
