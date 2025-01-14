@@ -3,12 +3,14 @@
 namespace App\Http\Livewire;
 
 use App\Http\Controllers\PdfController;
+use App\Models\DeletedFactura;
 use App\Models\Factura;
 use App\Models\Product;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use App\Traits\CartTrait;
+use Illuminate\Support\Facades\DB;
 
 class InvoiceList extends Component
 {
@@ -28,7 +30,7 @@ class InvoiceList extends Component
         $info = Factura::where('secuencial', 'like', "%{$this->search}%")
             ->orWhereHas('customer', function ($query) {
                 $query->where('businame', 'like', "%{$this->search}%"); // Filtrar por nombre del cliente
-            })
+            })->orWhereDate('fechaAutorizacion','like', "%{$this->search}%" ) // Filtrar por fecha exacta
             ->where('numeroAutorizacion', '!=', null)
             ->orderBy('fechaAutorizacion', 'desc') // Ordenar por la fecha de autorización descendente
             ->paginate($this->pagination);  // Paginación
@@ -72,11 +74,25 @@ public function noty($msg, $eventName= 'noty', )
 
     function delete(Factura $factura)  {
 
-        $this->restoreStockFromFacturas($factura);// metotdo que esta enn  el trait CartTrait
-        $this->noty('STOCK RESTABLECIDO !!!!!!');
+        try {
+            $this->restoreStockFromFacturas($factura);// metotdo que esta enn  el trait CartTrait
+            DB::transaction(function () use ($factura) {
+                DeletedFactura::create([
+                    'factura_id' => $factura->id,
+                'secuencial' => $factura->secuencial,
+                'cliente'    => $factura->customer->businame,
+                'ruc_cliente' => $factura->customer->valueidenti,
+                'correo_cliente' => $factura->customer->email,
+                'fecha_emision' => $factura->created_at,
+                'clave_acceso' => $factura->claveAcceso
+                ]);
+                $factura->delete();  //soft cascade
 
-
-
+            });
+        } catch (\Throwable $th) {
+            $this->noty('NO SE PUDO ELIMINAR LA FACTURA !!!!!!');
+        }
+        $this->noty('FACTURA ELIMINADO CON EXITO  !!!!!!');
 
     }
 
