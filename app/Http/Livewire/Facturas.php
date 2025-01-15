@@ -73,6 +73,9 @@ class Facturas extends Component
 
     public function render()
     {
+
+
+       // dd($jarPath);
         $fact  = new Factura();
         $this->fechaFactura =  Carbon::now()->format('d-m-Y');
        $this->claveAcceso = $fact->claveAcceso();

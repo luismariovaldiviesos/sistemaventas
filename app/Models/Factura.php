@@ -570,8 +570,10 @@ class Factura extends Model
         // // Crear un nuevo objeto XMLSecurityKey a partir de la clave privada
         // $argumentos = $archivo_x_firmar . ' ' . $ruta_si_firmados . ' ' . $nuevo_xml . ' ' . $firma . ' ' . $clave;
         $argumentos = $archivo_x_firmar . ' ' . $ruta_si_firmados . ' ' . $nombre_fact_xml_firmada . ' ' . $certPath . ' ' . $certPass;
-        $comando = ('java -jar C:\\Comprobantes\\firmaComprobanteElectronico\\dist\\firmaComprobanteElectronico.jar ' . $argumentos);
-
+        //$comando = ('java -jar C:\\Comprobantes\\firmaComprobanteElectronico\\dist\\firmaComprobanteElectronico.jar ' . $argumentos);
+        //$comando = ('java -jar C:\\Comprobantes\\firmaComprobanteElectronico\\dist\\firmaComprobanteElectronico.jar ' . $argumentos);
+        $jarPath =  base_path('storage/jar/dist/firmaComprobanteElectronico.jar');
+        $comando = "java -jar \"$jarPath\" $argumentos";
         try {
             $resp = shell_exec($comando);
            // dd($resp);
@@ -584,7 +586,7 @@ class Factura extends Model
         $claveAcceso = substr($claveAcces->infoTributaria[0]->claveAcceso, 0, 49);
 
         $respuesta  =  substr($resp,0,7);
-        //dd($respuesta, $claveAcceso);
+        //dd($respuesta);
         switch($respuesta){
             case  'FIRMADO' :
                 //Storage::disk('comprobantes/firmados')->put($nuevo_xml,$xml_firmado);
