@@ -178,14 +178,18 @@ class PdfController extends Controller
         //dd($pdfPath, $xmlPath);
         //$pdf_enviar =  file_get_contents($pdfPath);
         //dd($pdf_enviar);
-        if (!file_exists($pdfPath) || !file_exists($xmlPath)) {
-           // return back()->with('error', 'Los archivos necesarios no existen.');
-           dd('no se encuentran los archivos');
-        }
-        else{
-            Mail::to($factura->customer->email)->send(new FacturaMail($factura, $pdfPath, $xmlPath));
-
-        }
+		if (!file_exists($pdfPath) || !file_exists($xmlPath)) {
+		   // return back()->with('error', 'Los archivos necesarios no existen.');
+		   dd('no se encuentran los archivos');
+		}
+		else {
+			try {
+				Mail::to($factura->customer->email)->send(new FacturaMail($factura, $pdfPath, $xmlPath));
+			} catch (\Exception $e) {
+				// Handle the error
+				dd('Error al enviar el correo: ' . $e->getMessage());
+			}
+		}
 
     }
 }

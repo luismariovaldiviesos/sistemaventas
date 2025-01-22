@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\Arqueo;
 use App\Models\Caja;
+use App\Models\Factura;
 use App\Models\Order;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
@@ -89,7 +90,7 @@ class Arqueos extends Component
         $fechaIni = $arqueo->created_at;
         $fechaFin =  Carbon::now();
         // y ventas del usuario de caja sea igual al usuario que cierra caja
-        $totalVenta = Order::where('user_id', Auth()->user()->id)
+        $totalVenta = Factura::where('user_id', Auth()->user()->id)
         ->whereBetween('created_at', [$fechaIni,$fechaFin])->sum('total');
         return ( [ 'totalVenta' => $totalVenta, 'caja_id' => $arqueo->caja_id  ]);
         //dd(Arr::add($data, $totalVenta, $arqueo->caja_id ));
