@@ -261,18 +261,6 @@ class Facturas extends Component
             }
 
 
-           // dd('verificacion de cliente ',  $customer->businame, $customer->typeidenti, $tipeIDenti);
-
-
-
-            //dd($this->getContentCart());
-        // //    dd(
-        // //     $tipeidenti, $customer->businame,$customer->valueidenti,$customer->address,
-        // //     $this->subtotsinimpuesto,$this->totaldscto, $this->iva12,
-        // //     $this->totalimpuesto12,  $this->totalcart, $this->getcontentcart(),
-        // //     $this->secuencial, $this->claveacceso
-        // // );
-
             $factura  =  Factura::create([
                 //dd($this->secuencial, $this->claveAcceso), hasta aqui llega bien secuencial y clave
                 'secuencial' => $this->secuencial,
@@ -318,95 +306,35 @@ class Facturas extends Component
             DB::commit();
 
 
-            // ******para imprimir ticket**********
-            //if ($print) $this->PrintTicket($sale->id);
 
-            //*********aqui metodo de xml**********
-           // $startXml = microtime(true);
-           // $this->pdf();
-        //    dd($tipeIDenti, $customer->businame,$customer->valueidenti,$customer->address,
-        //    $this->subTotSinImpuesto,$this->totalDscto, $this->iva12,
-        //    $this->totalImpuesto12,$this->totalCart, $this->getContentCart(),
-        //    $this->secuencial, $this->claveAcceso);
-
+            //********** crea xml , firma, envia y devuelve del sri  */
             $factura->xmlFactura(
-                                 $factura->id, $tipeIDenti, $customer->businame,$customer->valueidenti,$customer->address,
-                                  $this->subTotSinImpuesto,$this->totalDscto, $this->iva12,
-                                  $this->totalImpuesto12,$this->totalCart, $this->getContentCart(),
-                                  $this->secuencial, $this->claveAcceso
-                              );
-                              //$ruta_no_firmados =  base_path('storage/app/comprobantes/no_firmados/'.$facturaId.'.xml');
-
-            //*********aqui metodo factura firma***********
-
-            //$factura->firmarUltimaFactura();
+                $factura->id, $tipeIDenti, $customer->businame, $customer->valueidenti, $customer->address,
+                $this->subTotSinImpuesto, $this->totalDscto, $this->iva12,
+                $this->totalImpuesto12, $this->totalCart, $this->getContentCart(),
+                $this->secuencial, $this->claveAcceso
+            );
 
 
 
-           //dd('tiempo del sri enviado y regresado: ', $timeFirma);
-            //*********aqui metodo pdf***********
-            //$razonSocial,$usuarioSistema,$direccionMatriz,$dirrecioSucursal,$rucCliente,$numeroFact,
-            //$fechaAuto,$numeroAutori,$claveAccesoPDF,$customer,$fechaEmision,$customer_id
-            //$this->pdfFactura($razonSocial,$usuarioSistema,$direccionMatriz,$dirrecioSucursal,
-             //   $customer_id,$factura->id,$fechaEmision,'1','calceacceo',$customerSelected,$fechaEmision,$customer_id);
         }
         catch (\Throwable $e) {
             FacadesDB::rollback();
             $this->noty('Error al guardar el pedido: ' . $e->getMessage(), 'noty', 'error');
         }
 
-       // dd('tiempo del sri enviado y regresado: ', $timeFirma);
-      //$this->pdfController($timeFirma);
-      //COONSTRUIT LA RUTA PARA EL DPDF
-      //$param = $customer->businame;
+        // actualiza la factura con la fecha de autorizacion
         $factura->fechaAutorizacion =  Carbon::now();
         $factura->numeroAutorizacion =  $factura->claveAcceso;
         $factura->save();
         $this->clearCart();
         $this->resetUI();
-        //refrescar el navegador aqui
-        // enviar mail aqui
-        //dd('vemaos');
         $url =  route('descargar-pdf', ['factura'=>$factura->id]);
         $this->noty('FACTURA GENERADA  CORRECTAMENTE !!!!!!');
-      //dd($factura->id);
-      // Redirigir al navegador para descargar/visualizar el PDF
         return redirect()->to($url);
 
 
       }
-
-    //   public function pdfController($timeFirma)
-    // {
-    //     // Limpiar cualquier salida previa
-    //     ob_clean();
-    //     flush();
-
-    //     // Crear una nueva instancia de FPDF
-    //     $pdf = new Fpdf();
-
-    //     // Agregar una página al documento
-    //     $pdf->AddPage();
-
-    //     // Establecer el tipo de fuente y tamaño
-    //     $pdf->SetFont('Arial', 'B', 16);
-
-    //     // Agregar contenido al PDF
-    //     $pdf->Cell(40, 10, 'Factura');
-    //     $pdf->Ln(); // Salto de línea
-    //     $pdf->Cell(40, 10, 'Razón Social: ' . $timeFirma);
-    //     $pdf->Ln();
-    //     $pdf->Cell(40, 10, 'Fecha: ' . now()->format('Y-m-d H:i:s'));
-
-    //     // Generar el PDF y enviarlo al navegador
-    //     return response()->stream(function() use ($pdf) {
-    //         echo $pdf->Output('S'); // 'S' envía el PDF como un string de salida
-    //     }, 200, [
-    //         'Content-Type' => 'application/pdf',
-    //         'Content-Disposition' => 'inline; filename="factura-' . $timeFirma . '.pdf"',
-    //     ]);
-    // }
-
 
 
 
