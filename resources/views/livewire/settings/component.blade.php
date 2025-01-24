@@ -131,6 +131,21 @@
                 <x-alert msg="{{ $message }}" />
                 @enderror
             </div>
+            <div class="col-span-4">
+                <label  class="form-label">Archivo PKC</label>
+                <input wire:model="cert_file" accept=".p12" class="form-control" type="file">
+                @error('cert_file')
+                    <x-alert msg="{{ $message }}" />
+                    @enderror
+            </div>
+            <div class="col-span-4">
+                <label  class="form-label">Contraseña PKC</label>
+                <input wire:model="cert_password"  id="cert_password" type="password"
+                class="form-control  kioskboard" />
+                @error('cert_password')
+                <x-alert msg="{{ $message }}" />
+                @enderror
+            </div>
 
             <div class="col-span-4">
                 <label  class="form-label">Imágen (Logo Tickets)</label>

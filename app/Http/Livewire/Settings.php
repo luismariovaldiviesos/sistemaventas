@@ -15,6 +15,7 @@ class Settings extends Component
 
     public $razonSocial, $nombreComercial, $ruc,$estab,$ptoEmi,$dirMatriz,$dirEstablecimiento,
     $telefono, $email, $ambiente,$tipoEmision,$contribuyenteEspecial,$obligadoContabilidad,
+    $cert_file, $cert_password,
     $logo, $leyend, $printer, $selected_id, $logoPreview;
 
 
@@ -42,6 +43,8 @@ class Settings extends Component
             $this->logoPreview = $info->logo;
             $this->leyend = $info->leyend;
             $this->printer = $info->printer;
+            $this->cert_file = $info->cert_file;
+            $this->cert_password = $info->cert_password;
         }
     }
 
@@ -100,6 +103,12 @@ class Settings extends Component
         $this->validate($rules, $messages);
 
     sleep(2);
+
+    if($this->cert_file){
+        $fileName =  $this->cert_file->getclientOriginalName();
+        $this->cert_file->storeAs('certificados', $fileName);
+
+    }
         //guardamos temporalmente el logo
     $tempLogo = Setting::first()->logo ?? null;
         //eliminamos info de la tabla
@@ -121,6 +130,8 @@ class Settings extends Component
             'tipoEmision' => $this->tipoEmision,
             'contribuyenteEspecial' => $this->contribuyenteEspecial,
             'obligadoContabilidad' => $this->obligadoContabilidad,
+            'cert_file' => $fileName ?? null,
+            'cert_password' => $this->cert_password,
             'logo' => $this->logo,
             'leyend' => $this->leyend,
             'printer' => $this->printer,
