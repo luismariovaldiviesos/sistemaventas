@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Setting;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Schema;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,10 +26,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // verifica si no esta en cache
-        if(!Cache::has('settings')){
-            $settings  =  Setting::first();
+        // Verifica si la tabla 'settings' existe antes de consultarla
+    if (Schema::hasTable('settings')) {
+        if (!Cache::has('settings')) {
+            $settings = Setting::first();
             Cache::forever('settings', $settings);
         }
+    }
     }
 }
