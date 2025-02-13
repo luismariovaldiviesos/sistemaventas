@@ -73,7 +73,7 @@
 
                                                 <!-- Botón para eliminar -->
                                                 <button class="btn btn-danger text-white border-0 ml-3"
-                                                        wire:click.prevent="delete({{ $factura->id }})"
+                                                        wire:click="confirmDelete({{ $factura->id }})"
                                                         type="button"
                                                         title="Eliminar Factura">
                                                     <i class="fas fa-trash-alt f-2x"></i>
@@ -104,6 +104,15 @@
 
         {{-- @include('livewire.$facturas.panel')
         @include('livewire.sales.keyboard') --}}
+
+
+        <script>
+            window.addEventListener('swal:confirm', $event => {
+                if(confirm('¿Estás seguro de que quieres eliminar esta factura?')){
+                    Livewire.emit('delete', $event.detail.facturaId);
+                }
+            })
+        </script>
 
 
     {{-- para el buscador  --}}

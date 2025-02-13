@@ -72,6 +72,15 @@ public function noty($msg, $eventName= 'noty', )
 
     }
 
+    public  function confirmDelete(Factura $factura){
+        //dd($factura->id);
+        $this->dispatchBrowserEvent('swal:confirm',[
+                'facturaId' => $factura->id
+        ]);
+    }
+
+    protected $listeners = ['delete' => 'delete'];
+
     function delete(Factura $factura)  {
 
         dd($factura);
