@@ -1,12 +1,12 @@
 pdfController linea 160 editada para enviar mail
 
 hace falta :
-* enviar mail, configurar todo
-* listado de facturas para visualizar los pdf, descargar los xml etc
+* visualizar facturas en lsitado de facturas, alerta de que se va a eliminar la factua
 * boorar carrito desde factura
-* eliminar factura, lo que implica nora de venta y regresar stcks (me parece que se puyede hacer desde la pag del sri )
-*sacar para reportes desde factura y ya no de sales
+* nota de venta ?? al eliminar factura (me parece que se puyede hacer desde la pag del sri )
 *revisar inventario en prductos si reuiqre ono
+
+* tenenat
 
 
 
