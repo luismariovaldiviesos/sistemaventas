@@ -74,6 +74,8 @@ public function noty($msg, $eventName= 'noty', )
 
     function delete(Factura $factura)  {
 
+        dd($factura);
+
         try {
             $this->restoreStockFromFacturas($factura);// metotdo que esta enn  el trait CartTrait
             DB::transaction(function () use ($factura) {
