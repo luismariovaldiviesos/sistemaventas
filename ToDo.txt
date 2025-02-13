@@ -7,6 +7,8 @@ hace falta :
 *revisar inventario en prductos si reuiqre ono
 
 * tenenat
+*docker
+
 
 
 
