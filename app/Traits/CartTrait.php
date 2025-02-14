@@ -150,6 +150,7 @@ trait CartTrait {
                 if ($product) {
                     $product->stock += $detalle->cantidad;
                     $product->save();
+                    //dd('restaurado');
                 } else {
                     Log::warning("Producto con ID {$detalle->product_id} no encontrado al actualizar stock.");
                 }

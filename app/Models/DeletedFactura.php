@@ -12,7 +12,7 @@ class DeletedFactura extends Model
         'factura_id',
         'secuencial',
         'cliente',
-        'ruc_cleinte',
+        'ruc_cliente',
         'correo_cliente',
         'fecha_emision',
         'clave_acceso',

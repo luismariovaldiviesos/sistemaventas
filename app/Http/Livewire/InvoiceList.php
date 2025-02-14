@@ -81,30 +81,39 @@ public function noty($msg, $eventName= 'noty', )
 
     protected $listeners = ['delete' => 'delete'];
 
-    function delete(Factura $factura)  {
-
-        dd($factura);
-
+    function delete(Factura $factura)
+    {
+        //dd($factura->id,$factura->secuencial,$factura->customer->businame,
+        //$factura->customer->valueidenti, $factura->customer->email);
         try {
-            $this->restoreStockFromFacturas($factura);// metotdo que esta enn  el trait CartTrait
             DB::transaction(function () use ($factura) {
+                // Restaurar stock antes de eliminar la factura
+                $this->restoreStockFromFacturas($factura);
+
+                // Registrar la factura eliminada
                 DeletedFactura::create([
                     'factura_id' => $factura->id,
-                'secuencial' => $factura->secuencial,
-                'cliente'    => $factura->customer->businame,
-                'ruc_cliente' => $factura->customer->valueidenti,
-                'correo_cliente' => $factura->customer->email,
-                'fecha_emision' => $factura->created_at,
-                'clave_acceso' => $factura->claveAcceso
+                    'secuencial' => $factura->secuencial,
+                    'cliente' => $factura->customer->businame,
+                    'ruc_cliente' => $factura->customer->valueidenti,
+                    'correo_cliente' => $factura->customer->email,
+                    'fecha_emision' => $factura->created_at->toDateString(),
+                    'clave_acceso' => $factura->claveAcceso,
                 ]);
-                $factura->delete();  //soft cascade
 
+                // Soft delete de la factura
+                $factura->delete();
             });
-        } catch (\Throwable $th) {
-            $this->noty('NO SE PUDO ELIMINAR LA FACTURA !!!!!!');
-        }
-        $this->noty('FACTURA ELIMINADO CON EXITO  !!!!!!');
 
+            // Notificar éxito
+            $this->noty('Factura eliminada con éxito');
+        } catch (\Throwable $th) {
+            // Registrar error para depuración
+            //\Log::error('Error al eliminar la factura: ' . $th->getMessage());
+
+            // Notificar fallo
+            $this->noty('No se pudo eliminar la factura. Revisa los logs para más detalles.' . $th->getMessage());
+        }
     }
 
     function show(Factura $factura)  {

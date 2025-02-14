@@ -107,12 +107,25 @@
 
 
         <script>
-            window.addEventListener('swal:confirm', $event => {
-                if(confirm('¿Estás seguro de que quieres eliminar esta factura?')){
-                    Livewire.emit('delete', $event.detail.facturaId);
-                }
-            })
+            window.addEventListener('swal:confirm', event => {
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: "Esta acción no se puede deshacer.",
+                    type: 'warning',  // Si tu versión no soporta 'icon', usa 'type'
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'Cancelar'
+                }).then(function (result) {
+                    if (result.value) {  // En versiones antiguas de SweetAlert2, se usa 'value' en vez de 'isConfirmed'
+                       // console.log("Emitir evento Livewire: delete, con ID:", event.detail.facturaId);
+                        Livewire.emit('delete', event.detail.facturaId);
+                    }
+                });
+            });
         </script>
+
 
 
     {{-- para el buscador  --}}
