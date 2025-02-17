@@ -1,11 +1,12 @@
 pdfController linea 160 editada para enviar mail
 
 hace falta :
-* visualizar facturas en lsitado de facturas, alerta de que se va a eliminar la factua
+* visualizar facturas en lsitado de facturas
+* hay un bug en una de las facturas de reprocesar
 * boorar carrito desde factura
 * nota de venta ?? al eliminar factura (me parece que se puyede hacer desde la pag del sri )
 *revisar inventario en prductos si reuiqre ono
-
+* no se peude eliminar facturas despues del 15  dias de emitidas en el sri
 * tenenat
 *docker
 
