@@ -71,13 +71,29 @@
                                             <i class="fas fa-download f-2x text-white"></i>
                                             </button>
 
-                                                <!-- Botón para eliminar -->
+                                            @php
+
+                                                $fechaEmision = \Carbon\Carbon::parse($factura->fechaAutorizacion); // Convertir a Carbon
+                                                $fechaLimite = $fechaEmision->addDays($annulmentDays);
+                                            @endphp
+                                            @if (now()->lessThanOrEqualTo($fechaLimite))
+                                                <!-- Botón para anular factura -->
                                                 <button class="btn btn-danger text-white border-0 ml-3"
-                                                        wire:click="confirmDelete({{ $factura->id }})"
-                                                        type="button"
-                                                        title="Eliminar Factura">
-                                                    <i class="fas fa-trash-alt f-2x"></i>
-                                                </button>
+                                                wire:click="confirmDelete({{ $factura->id }})"
+                                                type="button"
+                                                title="Anular Factura">
+                                            <i class="fas fa-trash-alt f-2x"></i>
+                                        </button>
+                                            @else
+                                             <!-- Botón para emitir nota de crédito -->
+                                            <button class="btn btn-warning text-white border-0 ml-3"
+                                                wire:click="confirmNC({{ $factura->id }})"
+                                                type="button"
+                                                title="Emitir Nota de Crédito">
+                                                <i class="fas fa-file-invoice-dollar f-2x"></i>
+                                            </button>
+                                            @endif
+
                                       </div>
                                         </td>
                                     </tr>
@@ -109,12 +125,12 @@
         <script>
             window.addEventListener('swal:confirm', event => {
                 Swal.fire({
-                    title: '¿Estás seguro?',
+                    title: '¿Estás seguro de anular la factura?',
                     text: "Esta acción no se puede deshacer.",
                     type: 'warning',  // Si tu versión no soporta 'icon', usa 'type'
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
-                    cancelButtonColor: '#3085d6',
+                    cancelButtonColor: '#FFC107',
                     confirmButtonText: 'Sí, eliminar',
                     cancelButtonText: 'Cancelar'
                 }).then(function (result) {
@@ -124,6 +140,31 @@
                     }
                 });
             });
+
+
+
+            window.addEventListener('swal:nc', event => {
+                Swal.fire({
+                    title: '¿Estás seguro de emitir la nota de credito?',
+                    text: "Esta acción no se puede deshacer.",
+                    type: 'warning',  // Si tu versión no soporta 'icon', usa 'type'
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#FFC107',
+                    confirmButtonText: 'Sí, emitir NC',
+                    cancelButtonText: 'Cancelar'
+                }).then(function (result) {
+                    if (result.value) {  // En versiones antiguas de SweetAlert2, se usa 'value' en vez de 'isConfirmed'
+                       // console.log("Emitir evento Livewire: delete, con ID:", event.detail.facturaId);
+                        Livewire.emit('nc', event.detail.facturaId);
+                    }
+                });
+            });
+
+
+
+
+
         </script>
 
 

@@ -13,7 +13,6 @@ class Setting extends Model
 
         'razonSocial','nombreComercial','ruc','estab','ptoEmi','dirMatriz',
         'dirEstablecimiento','telefono','email','ambiente','tipoEmision',
-        'contribuyenteEspecial','obligadoContabilidad', 'cert_file','cert_password','logo','leyend','printer'
-
-            ];
+        'contribuyenteEspecial','obligadoContabilidad', 'cert_file','cert_password','logo','leyend',
+        'printer','annulment_days' ];
 }

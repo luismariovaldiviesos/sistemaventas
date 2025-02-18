@@ -16,14 +16,14 @@ class Settings extends Component
     public $razonSocial, $nombreComercial, $ruc,$estab,$ptoEmi,$dirMatriz,$dirEstablecimiento,
     $telefono, $email, $ambiente,$tipoEmision,$contribuyenteEspecial,$obligadoContabilidad,
     $cert_file, $cert_password,
-    $logo, $leyend, $printer, $selected_id, $logoPreview;
+    $logo, $leyend, $printer, $selected_id, $logoPreview, $annulment_days;
 
 
     public function mount()
     {
         //$info =  Setting::first();
         $info =  Cache::get('settings');
-        //dd($info);
+        dd(Cache::get('settings'));
 
         if($info){
             $this->selected_id = $info->id;
@@ -43,6 +43,7 @@ class Settings extends Component
             $this->logoPreview = $info->logo;
             $this->leyend = $info->leyend;
             $this->printer = $info->printer;
+            $this->annulment_days = $info->annulment_days;
             $this->cert_file = $info->cert_file;
             $this->cert_password = $info->cert_password;
         }
@@ -135,6 +136,7 @@ class Settings extends Component
             'logo' => $this->logo,
             'leyend' => $this->leyend,
             'printer' => $this->printer,
+            'annulment_days' => $this->annulment_days
         ]
     );
 

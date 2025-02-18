@@ -154,6 +154,15 @@
                     <x-alert msg="{{ $message }}" />
                     @enderror
             </div>
+
+            <div class="col-span-4">
+                <label  class="form-label">Días para anular</label>
+                <input wire:model="annulment_days"  type="text"
+                class="form-control  kioskboard" />
+                @error('annulment_days')
+                <x-alert msg="{{ $message }}" />
+                @enderror
+            </div>
             <div class="col-span-4">
                 <label  class="form-label">Leyenda:</label>
                 <input wire:model="leyend"  id="leyend" type="text"

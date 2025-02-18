@@ -6,6 +6,7 @@ use App\Http\Controllers\PdfController;
 use App\Models\DeletedFactura;
 use App\Models\Factura;
 use App\Models\Product;
+use App\Models\Setting;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -18,10 +19,16 @@ class InvoiceList extends Component
     use WithFileUploads;
     use CartTrait;
 
-    public $fact_id='', $secuencial ='', $customer='', $directorio='', $estado;
+    public $fact_id='', $secuencial ='', $customer='', $directorio='', $estado, $annulmentDays;
     public $action = 'Listado', $componentName='LISTADO DE FACTURAS', $search, $form = false;
     private $pagination =20;
     protected $paginationTheme='tailwind';
+
+
+    public function mount()
+    {
+        $this->annulmentDays = Setting::first()?->annulment_days ?? 15;
+    }
 
     public function render()
 {
@@ -32,11 +39,13 @@ class InvoiceList extends Component
                 $query->where('businame', 'like', "%{$this->search}%"); // Filtrar por nombre del cliente
             })->orWhereDate('fechaAutorizacion','like', "%{$this->search}%" ) // Filtrar por fecha exacta
             ->where('numeroAutorizacion', '!=', null)
+            ->where('codDoc', '01') // Filtrar solo facturas
             ->orderBy('fechaAutorizacion', 'desc') // Ordenar por la fecha de autorización descendente
             ->paginate($this->pagination);  // Paginación
     } else {
         // Si no hay término de búsqueda, se cargan todas las facturas con número de autorización.
         $info = Factura::where('numeroAutorizacion', '!=', null)
+            ->where('codDoc', '01') // Filtrar solo facturas
             ->orderBy('fechaAutorizacion', 'desc') // Ordenar por la fecha de autorización descendente
             ->paginate($this->pagination); // Paginación
     }
@@ -79,18 +88,34 @@ public function noty($msg, $eventName= 'noty', )
         ]);
     }
 
-    protected $listeners = ['delete' => 'delete'];
+    public  function confirmNC(Factura $factura){
+        //dd('vamos a emitir nc');
+        $this->dispatchBrowserEvent('swal:nc',[
+                'facturaId' => $factura->id
+        ]);
+    }
+
+    protected $listeners =
+        [
+            'delete' => 'delete',
+            'nc' => 'nc'
+        ];
+
+    function nc (Factura $factura){
+
+        $factura->codDoc = '04'; //nota de credito
+        $factura->save();
+        $this->noty('Nota de Crédito emitida con éxito');
+    }
 
     function delete(Factura $factura)
     {
-        //dd($factura->id,$factura->secuencial,$factura->customer->businame,
-        //$factura->customer->valueidenti, $factura->customer->email);
+
         try {
             DB::transaction(function () use ($factura) {
-                // Restaurar stock antes de eliminar la factura
-                $this->restoreStockFromFacturas($factura);
 
-                // Registrar la factura eliminada
+                // Restaurar stock antes de eliminar la factura
+               $this->restoreStockFromFacturas($factura);
                 DeletedFactura::create([
                     'factura_id' => $factura->id,
                     'secuencial' => $factura->secuencial,
@@ -110,7 +135,6 @@ public function noty($msg, $eventName= 'noty', )
         } catch (\Throwable $th) {
             // Registrar error para depuración
             //\Log::error('Error al eliminar la factura: ' . $th->getMessage());
-
             // Notificar fallo
             $this->noty('No se pudo eliminar la factura. Revisa los logs para más detalles.' . $th->getMessage());
         }
