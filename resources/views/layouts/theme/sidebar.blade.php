@@ -72,10 +72,18 @@
         <li>
             <a href="{{ route('deletedlist') }}" class="side-menu">
                 <div class="side-menu__icon"> <i data-feather="eye"></i> </div>
-                <div class="side-menu__title">FACTURAS EIMINADAS
+                <div class="side-menu__title">FACTURAS ANULADAS
                     <span class="badge badge-danger ml-2">
                         {{ \App\Models\DeletedFactura::where('estado', '!=', 'ELIMINADO')->count() }}
                     </span>
+                </div>
+            </a>
+        </li>
+
+        <li>
+            <a href="{{ route('notascredito') }}" class="side-menu">
+                <div class="side-menu__icon"> <i data-feather="eye"></i> </div>
+                <div class="side-menu__title">NOTAS DE CRÉDITO
                 </div>
             </a>
         </li>

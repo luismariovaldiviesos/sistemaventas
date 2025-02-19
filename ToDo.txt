@@ -1,10 +1,10 @@
 pdfController linea 160 editada para enviar mail
 
 hace falta :
-* visualizar facturas en lsitado de facturas
-* hay un bug en una de las facturas de reprocesar
+* visualizar facturas en lsitado de facturas y notas de credito y ver si es necesario descargar archivo en nc (si se genera pdf ?)
+* hay un bug en una de las facturas de reprocesar en la ultima
 * boorar carrito desde factura
-* nota de venta ?? al eliminar factura (me parece que se puyede hacer desde la pag del sri )
+* hacer que se revierta el inventario cuando se genera la NC  y ver si se genera pdf de la nc (? seria interno capaz)
 *revisar inventario en prductos si reuiqre ono
 * no se peude eliminar facturas despues del 15  dias de emitidas en el sri
 * tenenat

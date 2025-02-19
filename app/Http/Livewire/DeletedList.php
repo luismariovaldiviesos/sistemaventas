@@ -14,7 +14,7 @@ class DeletedList extends Component
     use WithFileUploads;
     public $fact_id='', $secuencial ='', $customer='', $ruc_cliente='', $correo_cliente='', $estado;
     public $fecha_emision='',$clave_acceso='';
-    public $action = 'Listado', $componentName='FACTURAS ELIMINADAS', $search, $form = false;
+    public $action = 'Listado', $componentName='FACTURAS ANULADAS', $search, $form = false;
     private $pagination =20;
     protected $paginationTheme='tailwind';
 
@@ -36,7 +36,7 @@ class DeletedList extends Component
 
     public function deletesri(DeletedFactura $factura){
 
-        $factura->estado = 'ELIMINADO';
+        $factura->estado = 'ANULADO';
         $factura->save();
         $this->noty('Factura marcada  eliminada correctamente');
     }

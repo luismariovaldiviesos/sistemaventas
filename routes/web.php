@@ -14,6 +14,7 @@ use App\Http\Livewire\Diario;
 use App\Http\Livewire\Facturas;
 use App\Http\Livewire\Impuestos;
 use App\Http\Livewire\InvoiceList;
+use App\Http\Livewire\NotasCredito;
 use App\Http\Livewire\Permisos;
 use App\Http\Livewire\Products;
 use App\Http\Livewire\Reports;
@@ -59,6 +60,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('reprocesar', XmlFiles::class)->name('reprocesar');
     Route::get('listadofacturas', InvoiceList::class)->name('listadofacturas');
     Route::get('deletedlist', DeletedList::class)->name('deletedlist');
+    Route::get('notascredito', NotasCredito::class)->name('notascredito');
 
 
 });

@@ -8,7 +8,7 @@
             </h2>
 
             <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2 p-4">
-                <button onclick="openPanel('add')" class="btn btn-primary shadow-md mr-2">Agregar</button>
+                {{-- <button onclick="openPanel('add')" class="btn btn-primary shadow-md mr-2">Agregar</button> --}}
                 <div class="hidden md:block mx-auto text-gray-600">
                     --
                 </div>
@@ -31,10 +31,9 @@
                                 <tr class="text-theme-1">
                                     <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">SECUENCIAL</th>
                                     <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">CLIENTE</th>
-                                    <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">RUC</th>
-                                    <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">CLAVE ACCESO</th>
                                     <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">AUTORIZACION</th>
-                                    <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">ANULADO SRI</th>
+                                    <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">FECHA AUTORIZACION</th>
+                                    <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">SRI</th>
                                     <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">ACCIONES</th>
                                 </tr>
                             </thead>
@@ -43,15 +42,30 @@
                                     <tr class=" dark:bg-dark-1 {{ $loop->index % 2> 0 ? 'bg-gray-200' : '' }}">
 
                                         <td class="text-center font-medium">{{ $factura->secuencial }}</td>
-                                        <td class="text-center font-medium">{{ $factura->cliente}}</td>
-                                        <td class="text-center font-medium">{{ $factura->ruc_cliente }}</td>
-                                        <td class="text-center font-medium">{{ $factura->clave_acceso }}</td>
-                                        <td class="text-center font-medium">{{ $factura->fecha_emision }}</td>
-                                        <td class="text-center font-medium">{{ $factura->estado }}</td>
+                                        <td class="text-center font-medium">{{ $factura->customer->businame}}</td>
+                                        <td class="text-center font-medium">{{ $factura->numeroAutorizacion }}</td>
+                                        <td class="text-center font-medium">{{ $factura->fechaAutorizacion }}</td>
+
+                                        <td class="text-center font-medium">
+                                            @if (!$factura->deleted_at)
+                                                <button class="btn btn-warning text-white border-0 ml-3"
+                                                    wire:click.prevent="setNC({{ $factura->id }})"
+                                                    type="button"
+                                                    title="Marcar NC generada">
+                                                    <i class="fas fa-edit f-2x"></i> Marcar NC
+                                                </button>
+                                            @else
+                                            <span class="badge badge-success p-2 rounded text-dark bg-warning">
+                                                <i class="fas fa-check-circle"></i> NC GENERADA
+                                            </span>
+                                            @endif
+                                        </td>
+
+
 
                                          <td class="dark:border-dark-5 text-center">
                                             <div class="d-flex justify-content-center">
-                                                {{-- <!-- Botón para detalles    -->
+                                                <!-- Botón para detalles    -->
                                                 <button class="btn btn-dark text-white border-0 ml-3"
                                                         wire:click.prevent="show({{ $factura->id }})"
                                                         type="button"
@@ -60,12 +74,12 @@
                                                     f-2x"></i>
                                                 </button>
 
-                                                 <button class="btn btn-warning text-white border-0 ml-3"
+                                                 {{-- <button class="btn btn-warning text-white border-0 ml-3"
                                                         wire:click.prevent="retry({{ $factura->id }})"
                                                         type="button"
                                                         title="Reenviar PDF">
                                                     <i class="fas fa-file-pdf f-2x"></i>
-                                                    </button>
+                                                    </button> --}}
 
                                                 <!-- Botón para descargar archivos -->
                                                 <button class="btn btn-primary text-white border-0 ml-3"
@@ -73,24 +87,34 @@
                                                 type="button"
                                                 title="Descargar Archivos">
                                             <i class="fas fa-download f-2x text-white"></i>
+                                            </button>
+
+
+
+                                                {{-- <!-- Botón para anular factura -->
+                                                <button class="btn btn-danger text-white border-0 ml-3"
+                                                wire:click="confirmDelete({{ $factura->id }})"
+                                                type="button"
+                                                title="Anular Factura">
+                                            <i class="fas fa-trash-alt f-2x"></i>
+                                       || </button> --}}
+
+                                             <!-- Botón para emitir nota de crédito -->
+                                            {{-- <button class="btn btn-warning text-white border-0 ml-3"
+                                                wire:click="confirmNC({{ $factura->id }})"
+                                                type="button"
+                                                title="Emitir Nota de Crédito">
+                                                <i class="fas fa-file-invoice-dollar f-2x"></i>
                                             </button> --}}
 
-                                                <!-- Botón para eliminar -->
-                                                @if($factura->estado == 'pendiente')
-                                                <button class="btn btn-danger text-white border-0 ml-3"
-                                                        wire:click.prevent="deletesri({{ $factura->id }})"
-                                                        type="button"
-                                                        title="Eliminar Factura">
-                                                    <i class="fas fa-trash-alt f-2x"></i>
-                                                </button>
-                                                @endif
+
                                       </div>
                                         </td>
                                     </tr>
                                 @empty
                                     <tr class="bg-gray-200 dark:bg-dark-1">
                                         <td colspan="2">
-                                            <h6 class="text-center">    NO HAY FACTURAS </h6>
+                                            <h6 class="text-center">    NO HAY NOTAS DE CRÉDITO </h6>
                                         </td>
                                     </tr>
                                 @endforelse
@@ -110,6 +134,53 @@
 
         {{-- @include('livewire.$facturas.panel')
         @include('livewire.sales.keyboard') --}}
+
+
+        <script>
+            window.addEventListener('swal:confirm', event => {
+                Swal.fire({
+                    title: '¿Estás seguro de anular la factura?',
+                    text: "Esta acción no se puede deshacer.",
+                    type: 'warning',  // Si tu versión no soporta 'icon', usa 'type'
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#FFC107',
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'Cancelar'
+                }).then(function (result) {
+                    if (result.value) {  // En versiones antiguas de SweetAlert2, se usa 'value' en vez de 'isConfirmed'
+                       // console.log("Emitir evento Livewire: delete, con ID:", event.detail.facturaId);
+                        Livewire.emit('delete', event.detail.facturaId);
+                    }
+                });
+            });
+
+
+
+            window.addEventListener('swal:nc', event => {
+                Swal.fire({
+                    title: '¿Estás seguro de emitir la nota de credito?',
+                    text: "Esta acción no se puede deshacer.",
+                    type: 'warning',  // Si tu versión no soporta 'icon', usa 'type'
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#FFC107',
+                    confirmButtonText: 'Sí, emitir NC',
+                    cancelButtonText: 'Cancelar'
+                }).then(function (result) {
+                    if (result.value) {  // En versiones antiguas de SweetAlert2, se usa 'value' en vez de 'isConfirmed'
+                       // console.log("Emitir evento Livewire: delete, con ID:", event.detail.facturaId);
+                        Livewire.emit('nc', event.detail.facturaId);
+                    }
+                });
+            });
+
+
+
+
+
+        </script>
+
 
 
     {{-- para el buscador  --}}
