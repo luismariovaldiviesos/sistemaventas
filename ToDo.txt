@@ -1,6 +1,7 @@
 pdfController linea 160 editada para enviar mail
 
 hace falta :
+*revisar el cahce para que traiga todo setthing
 * visualizar facturas en lsitado de facturas y notas de credito y ver si es necesario descargar archivo en nc (si se genera pdf ?)
 * hay un bug en una de las facturas de reprocesar en la ultima
 * boorar carrito desde factura
