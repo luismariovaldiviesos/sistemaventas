@@ -23,7 +23,19 @@ class DeletedList extends Component
     {
         //$facturas =  Factura::onlyTrashed()->orderBy('fechaAutorizacion', 'desc')->paginate($this->pagination);
         //dd($facturas);
-        $facturas =  DeletedFactura::orderBy('fecha_emision', 'desc')->paginate($this->pagination);
+        if (strlen($this->search) > 0) {
+            $facturas = DeletedFactura::where(function ($query) {
+                    $query->where('secuencial', 'like', "%{$this->search}%")
+                        ->orWhere('cliente', 'like', "%{$this->search}%")
+                        ->orWhereDate('fecha_emision', 'like', "%{$this->search}%");
+                })
+                ->orderBy('fecha_emision', 'desc')
+                ->paginate($this->pagination);
+        } else {
+            // Si no hay búsqueda, traer todas las facturas eliminadas
+            $facturas = DeletedFactura::orderBy('fecha_emision', 'desc')
+                ->paginate($this->pagination);
+        }
         return view('livewire.deletedlist.component', ['facturas' => $facturas])->layout('layouts.theme.app');;
     }
 
