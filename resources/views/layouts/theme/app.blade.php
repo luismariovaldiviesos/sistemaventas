@@ -74,7 +74,7 @@
             <div class="dark-mode-switcher__toggle border"></div>
         </div> --}}
         <!-- END: Dark Mode Switcher-->
-
+        <livewire:scripts />
         <!-- BEGIN: JS Assets-->
             @include('layouts.theme.footer')
         <!-- END: JS Assets-->
@@ -82,7 +82,7 @@
 
          <!-- para livewire ---------------------------->
 
-         <livewire:scripts />
+
 
          <!-- para livewire ---------------------------->
 
