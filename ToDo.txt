@@ -6,7 +6,6 @@ hace falta :
 * boorar carrito desde factura
 * hacer que se revierta el inventario cuando se genera la NC  y ver si se genera pdf de la nc (? seria interno capaz)
 *revisar inventario en prductos si reuiqre ono
-* no se peude eliminar facturas despues del 15  dias de emitidas en el sri
 * tenenat
 *docker
 
