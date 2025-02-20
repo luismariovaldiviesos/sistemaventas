@@ -7,6 +7,7 @@ use App\Models\DeletedFactura;
 use App\Models\Factura;
 use App\Models\Product;
 use App\Models\Setting;
+use App\Models\XmlFile;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -128,6 +129,8 @@ public function noty($msg, $eventName= 'noty', )
 
                 // Soft delete de la factura
                 $factura->delete();
+                //eliminamos de xml_files
+                XmlFile::where('factura_id', $factura->id)->delete();
             });
 
             // Notificar éxito

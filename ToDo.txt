@@ -11,8 +11,12 @@ hace falta :
 *docker
 
 
-s ileimino una factura, sfot delete debo tambien sacarla de xml file tabla, o sea hacer xml file soft delete
+se debe analizar bien si por ejemplo desde reprocesar se dbe eliminar una factura analizar bien esa aprte
+si esta en reprocesar no hay que hacer nada en el tramite en el sri en deleted list
 
+
+desde reprcesar elimnar la factura y en delet list poner no es necesario hacer nada en el sri en el campo estado deleted_list
+eliminacion interna algo asi (sin procesar en el sri )
 
 
 
