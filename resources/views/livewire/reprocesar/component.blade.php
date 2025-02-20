@@ -32,41 +32,46 @@
                                     <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">SECUENCIAL</th>
                                     <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">CLIENTE</th>
                                     <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">ESTADO</th>
-                                    <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">ACCIONES</th>
+                                    <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">REPROCESAR</th>
+                                    <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">ANULAR</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($facturas as $product )
+                                @forelse ($facturas as $factura )
                                     <tr class=" dark:bg-dark-1 {{ $loop->index % 2> 0 ? 'bg-gray-200' : '' }}">
 
-                                        <td class="text-center font-medium">{{ $product->secuencial }}</td>
-                                        <td class="text-center font-medium">{{ $product->cliente}}</td>
+                                        <td class="text-center font-medium">{{ $factura->secuencial }}</td>
+                                        <td class="text-center font-medium">{{ $factura->cliente}}</td>
                                         <td class="text-center font-medium">
-                                            @if ($product->estado === 'enviado')
+                                            @if ($factura->estado === 'enviado')
                                                 Recuperar del SRI
-                                            @elseif ($product->estado === 'firmado')
+                                            @elseif ($factura->estado === 'firmado')
                                                 Reenviar al SRI
-                                            @elseif ($product->estado === 'creado')
+                                            @elseif ($factura->estado === 'creado')
                                                 Pendiente de firmar
                                             @else
-                                                {{ ucfirst($product->estado) }} <!-- Muestra el estado por defecto si no coincide -->
+                                                {{ ucfirst($factura->estado) }} <!-- Muestra el estado por defecto si no coincide -->
                                             @endif
                                         </td>
 
                                          <td class="dark:border-dark-5 text-center">
                                             <div class="d-flex justify-content-center">
-                                                {{-- @if ($product->sales->count() < 1)
-                                                    <button class="btn btn-danger text-white border-0"
-                                                    onclick="destroy('products','Destroy', {{ $product->id }})"
-                                                    type="button">
-                                                        <i class=" fas fa-trash f-2x"></i>
-                                                    </button>
-                                                @endif --}}
-                                                <button class="btn btn-warning text-white border-0 ml-3"
-                                                    wire:click.prevent="retry({{ $product->id }})"
+                                                    <button class="btn btn-warning text-white border-0 ml-3"
+                                                    wire:click.prevent="retry({{ $factura->id }})"
                                                     type="button">
                                                         <i class=" fas fa-edit f-2x"></i>
                                                     </button>
+                                            </div>
+                                        </td>
+                                        <td class="dark:border-dark-5 text-center">
+                                            <div class="d-flex justify-content-center">
+
+                                                <button class="btn btn-danger text-white border-0 ml-3"
+                                                wire:click="confirmDelete({{ $factura->id }})"
+                                                type="button"
+                                                title="Anular Factura">
+                                            <i class="fas fa-trash-alt f-2x"></i>
+                                        </button>
                                             </div>
                                         </td>
                                     </tr>
@@ -91,96 +96,31 @@
     </div>
 
 
-        {{-- @include('livewire.products.panel')
-        @include('livewire.sales.keyboard') --}}
+      <script>
+
+window.addEventListener('swal:confirm', event => {
+                Swal.fire({
+                    title: '¿Estás seguro de anular la factura?',
+                    text: "Esta acción no se puede deshacer.",
+                    type: 'warning',  // Si tu versión no soporta 'icon', usa 'type'
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#FFC107',
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'Cancelar'
+                }).then(function (result) {
+                    if (result.value) {  // En versiones antiguas de SweetAlert2, se usa 'value' en vez de 'isConfirmed'
+                       // console.log("Emitir evento Livewire: delete, con ID:", event.detail.facturaId);
+                        Livewire.emit('delete', event.detail.facturaId);
+                    }
+                });
+            });
 
 
-    {{-- para el buscador  --}}
-    <script>
-        const inputSearch = document.getElementById('search')
-        inputSearch.addEventListener('change', (e) => {
-            @this.search = e.target.value
-        })
 
-        // abrir modal
-        function openPanel(action = ''){
-            if(action == 'add'){
-                @this.resetUI()
-            }
-            var modal = document.getElementById('panelProduct')
-            modal.classList.add('overflow-y-auto','show')
-            modal.style.cssText="margin-top: 0px; margin-left: 0px; padding-left: 17px; z-index: 100"
-
-        }
-
-        //cerrar modal
-        function closePanel(action = ''){
-
-            var modal = document.getElementById('panelProduct')
-            modal.classList.add('overflow-y-auto','show')
-            modal.style.cssText=""
-
-        }
-
-        window.addEventListener('open-modal', event => {
-            openPanel()
-        })
-
-        window.addEventListener('noty', event => {
-            if (event.detail.action == 'close-modal')  closePanel()
-
-        })
-
-        // kioskBoard.run('.kioskboard', {})
-    </script>
-
-    <script>
-        document.querySelectorAll(".kioskboard").forEach(i => i.addEventListener("change", e => {
-            switch (e.currentTarget.id)
-            {
-                case 'name':
-                    @this.name = e.target.value
-                    break
-                case 'cost':
-                    @this.cost = e.target.value
-                    break
-                case 'code':
-                    @this.code = e.target.value
-                    break
-                case 'price':
-                    @this.price = e.target.value
-                    break
-                case 'price2':
-                    @this.price2 = e.target.value
-                    break
-                case 'pvp':
-                    @this.pvp = e.target.value
-                    break
-                case 'descuento':
-                    @this.descuento = e.target.value
-                    break
-                case 'stock':
-                    @this.stock = e.target.value
-                    break
-                case 'minstock':
-                    @this.minstock = e.target.value
-                    break
-                    case 'ivaporcentaje':
-                    @this.ivaporcentaje = e.target.value
-                    break
-                    case 'iceporcentaje':
-                    @this.iceporcentaje = e.target.value
-                    break
-                    case 'iva':
-                    @this.iva = e.target.value
-                    break
-                    case 'ice':
-                    @this.ice = e.target.value
-                    break
+      </script>
 
 
-            }
-        }))
-    </script>
+
 
 </div>

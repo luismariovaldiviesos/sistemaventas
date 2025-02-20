@@ -35,21 +35,25 @@ class InvoiceList extends Component
 {
     // Si hay un término de búsqueda, se filtra por secuencial o cliente.
     if (strlen($this->search) > 0) {
-        $info = Factura::where('secuencial', 'like', "%{$this->search}%")
-            ->orWhereHas('customer', function ($query) {
-                $query->where('businame', 'like', "%{$this->search}%"); // Filtrar por nombre del cliente
-            })->orWhereDate('fechaAutorizacion','like', "%{$this->search}%" ) // Filtrar por fecha exacta
-            ->where('numeroAutorizacion', '!=', null)
+        $info = Factura::whereNotNull('numeroAutorizacion') // Solo facturas aprobadas por el SRI
             ->where('codDoc', '01') // Filtrar solo facturas
-            ->orderBy('secuencial', 'desc') // Ordenar por la fecha de autorización descendente
-            ->paginate($this->pagination);  // Paginación
+            ->where(function ($query) {
+                $query->where('secuencial', 'like', "%{$this->search}%")
+                    ->orWhereHas('customer', function ($q) {
+                        $q->where('businame', 'like', "%{$this->search}%");
+                    })
+                    ->orWhereDate('fechaAutorizacion', 'like', "%{$this->search}%");
+            })
+            ->orderBy('secuencial', 'desc')
+            ->paginate($this->pagination);
     } else {
-        // Si no hay término de búsqueda, se cargan todas las facturas con número de autorización.
-        $info = Factura::where('numeroAutorizacion', '!=', null)
-            ->where('codDoc', '01') // Filtrar solo facturas
-            ->orderBy('secuencial', 'desc') // Ordenar por la fecha de autorización descendente
-            ->paginate($this->pagination); // Paginación
+        // Si no hay término de búsqueda, solo traer facturas aprobadas
+        $info = Factura::whereNotNull('numeroAutorizacion')
+            ->where('codDoc', '01')
+            ->orderBy('secuencial', 'desc')
+            ->paginate($this->pagination);
     }
+
 
     // Devuelve las facturas al componente de Livewire para la vista.
     return view('livewire.listadofacturas.component', ['facturas' => $info])

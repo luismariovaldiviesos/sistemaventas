@@ -257,4 +257,19 @@ class XmlFiles extends Component
     // necesitamos crear aqi el metodo de  recuperar del sri fetch y pasarle directo la clave de acceso .
 
 
+    public  function confirmDelete(Factura $factura){
+        //dd($factura->id);
+        $this->dispatchBrowserEvent('swal:confirm',[
+                'facturaId' => $factura->id
+        ]);}
+
+
+        protected $listeners = ['delete' => 'delete'];
+
+        public function delete(Factura $factura)
+        {
+            dd($factura);
+        }
+
+
 }

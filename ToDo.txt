@@ -20,6 +20,11 @@ eliminacion interna algo asi (sin procesar en el sri )
 
 
 
+nota : la factura que esta por ser reprocesada no debe asomar en facturas emitidas
+
+
+
+
 
 
 
