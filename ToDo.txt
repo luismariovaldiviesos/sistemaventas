@@ -11,6 +11,9 @@ hace falta :
 *docker
 
 
+s ileimino una factura, sfot delete debo tambien sacarla de xml file tabla, o sea hacer xml file soft delete
+
+
 
 
 

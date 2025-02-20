@@ -40,13 +40,13 @@ class InvoiceList extends Component
             })->orWhereDate('fechaAutorizacion','like', "%{$this->search}%" ) // Filtrar por fecha exacta
             ->where('numeroAutorizacion', '!=', null)
             ->where('codDoc', '01') // Filtrar solo facturas
-            ->orderBy('fechaAutorizacion', 'desc') // Ordenar por la fecha de autorización descendente
+            ->orderBy('secuencial', 'desc') // Ordenar por la fecha de autorización descendente
             ->paginate($this->pagination);  // Paginación
     } else {
         // Si no hay término de búsqueda, se cargan todas las facturas con número de autorización.
         $info = Factura::where('numeroAutorizacion', '!=', null)
             ->where('codDoc', '01') // Filtrar solo facturas
-            ->orderBy('fechaAutorizacion', 'desc') // Ordenar por la fecha de autorización descendente
+            ->orderBy('secuencial', 'desc') // Ordenar por la fecha de autorización descendente
             ->paginate($this->pagination); // Paginación
     }
 

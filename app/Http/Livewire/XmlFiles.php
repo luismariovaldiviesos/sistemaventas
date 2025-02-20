@@ -54,7 +54,7 @@ class XmlFiles extends Component
         $fac = Factura::where('id', '=', $xml->factura_id)->first();
          $nombre_fact_xml = $fac->customer->valueidenti.'_'.$fac->secuencial;
          $claveAccesoFactura =  $fac->claveAcceso;
-         dd($nombre_fact_xml, $claveAccesoFactura);
+         //dd($nombre_fact_xml, $claveAccesoFactura);
          $estado = strtolower(trim($xml->estado));
         //dd($estado);
         //para el envio de la factura de neuv
