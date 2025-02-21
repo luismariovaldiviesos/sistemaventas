@@ -74,7 +74,7 @@
                 <div class="side-menu__icon"> <i data-feather="eye"></i> </div>
                 <div class="side-menu__title">FACTURAS ANULADAS
                     <span class="badge badge-danger ml-2">
-                        {{ \App\Models\DeletedFactura::where('estado', '!=', 'ELIMINADO')->count() }}
+                        {{-- {{ \App\Models\DeletedFactura::where('estado', '=', 'pendiente')->count() }} --}}
                     </span>
                 </div>
             </a>

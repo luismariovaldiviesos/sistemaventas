@@ -8,7 +8,7 @@
             </h2>
 
             <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2 p-4">
-                <button onclick="openPanel('add')" class="btn btn-primary shadow-md mr-2">Agregar</button>
+                {{-- <button onclick="openPanel('add')" class="btn btn-primary shadow-md mr-2">Agregar</button> --}}
                 <div class="hidden md:block mx-auto text-gray-600">
                     --
                 </div>

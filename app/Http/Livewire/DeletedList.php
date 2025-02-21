@@ -12,10 +12,10 @@ class DeletedList extends Component
 {
     use WithPagination;
     use WithFileUploads;
-    public $fact_id='', $secuencial ='', $customer='', $ruc_cliente='', $correo_cliente='', $estado;
-    public $fecha_emision='',$clave_acceso='';
+
+    public $deletedFacturas;
     public $action = 'Listado', $componentName='FACTURAS ANULADAS', $search, $form = false;
-    private $pagination =20;
+    private $pagination =10;
     protected $paginationTheme='tailwind';
 
 
@@ -23,6 +23,7 @@ class DeletedList extends Component
     {
         //$facturas =  Factura::onlyTrashed()->orderBy('fechaAutorizacion', 'desc')->paginate($this->pagination);
         //dd($facturas);
+        $this->deletedFacturas =   DeletedFactura::where('estado', '=', 'pendiente')->count();
         if (strlen($this->search) > 0) {
             $facturas = DeletedFactura::where(function ($query) {
                     $query->where('secuencial', 'like', "%{$this->search}%")
