@@ -110,11 +110,9 @@
                     </div>
                 </div>
             </div>
-
-            <div class="col-spam-12 p-5">
-                {{-- {{ $$facturas->links() }} --}}
-            </div>
+            @include('livewire.listadofacturas.modaldetalles')
         </div>
+
     </div>
 
 
@@ -187,74 +185,26 @@
 
         }
 
-        //cerrar modal
-        function closePanel(action = ''){
+        window.addEventListener('show_factura', event => {
 
-            var modal = document.getElementById('panelProduct')
-            modal.classList.add('overflow-y-auto','show')
-            modal.style.cssText=""
+            openModalDetalle()
+        })
 
+        function openModalDetalle() {
+                var modal = document.getElementById("modalDetalles")
+                modal.classList.add("overflow-y-auto", "show")
+                modal.style.cssText = "margin-top: 0px; margin-left: -100px;  z-index: 1000;"
         }
 
-        window.addEventListener('open-modal', event => {
-            openPanel()
-        })
-
-        window.addEventListener('noty', event => {
-            if (event.detail.action == 'close-modal')  closePanel()
-
-        })
-
-        // kioskBoard.run('.kioskboard', {})
-    </script>
-
-    <script>
-        document.querySelectorAll(".kioskboard").forEach(i => i.addEventListener("change", e => {
-            switch (e.currentTarget.id)
-            {
-                case 'name':
-                    @this.name = e.target.value
-                    break
-                case 'cost':
-                    @this.cost = e.target.value
-                    break
-                case 'code':
-                    @this.code = e.target.value
-                    break
-                case 'price':
-                    @this.price = e.target.value
-                    break
-                case 'price2':
-                    @this.price2 = e.target.value
-                    break
-                case 'pvp':
-                    @this.pvp = e.target.value
-                    break
-                case 'descuento':
-                    @this.descuento = e.target.value
-                    break
-                case 'stock':
-                    @this.stock = e.target.value
-                    break
-                case 'minstock':
-                    @this.minstock = e.target.value
-                    break
-                    case 'ivaporcentaje':
-                    @this.ivaporcentaje = e.target.value
-                    break
-                    case 'iceporcentaje':
-                    @this.iceporcentaje = e.target.value
-                    break
-                    case 'iva':
-                    @this.iva = e.target.value
-                    break
-                    case 'ice':
-                    @this.ice = e.target.value
-                    break
-
-
+        function closeModal() {
+                var modal = document.getElementById("modalDetalles")
+                modal.classList.remove("overflow-y-auto", "show")
+                modal.style.cssText = ""
             }
-        }))
+
+
     </script>
+
+
 
 </div>

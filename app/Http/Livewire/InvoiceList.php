@@ -21,6 +21,8 @@ class InvoiceList extends Component
     use CartTrait;
 
     public $fact_id='', $secuencial ='', $customer='', $directorio='', $estado, $annulmentDays;
+
+    public  $factura ;
     public $action = 'Listado', $componentName='LISTADO DE FACTURAS', $search, $form = false;
     private $pagination =20;
     protected $paginationTheme='tailwind';
@@ -103,7 +105,8 @@ public function noty($msg, $eventName= 'noty', )
     protected $listeners =
         [
             'delete' => 'delete',
-            'nc' => 'nc'
+            'nc' => 'nc',
+
         ];
 
     function nc (Factura $factura){
@@ -147,11 +150,29 @@ public function noty($msg, $eventName= 'noty', )
         }
     }
 
-    function show(Factura $factura)  {
 
-        dd('ver ', $factura->secuencial);
+    public function resetUI()
+    {
+       $this->resetPage();
+       $this->resetValidation();
+       $this->reset('factura','search');
 
     }
+
+
+
+
+   public  function show(Factura $factura)  {
+
+        //dd($factura->id);
+       $this->factura = $factura;
+       //dd($this->factura);
+       $this->noty('','show_factura');
+       //$this->resetUI();
+
+    }
+
+
 
 
 
