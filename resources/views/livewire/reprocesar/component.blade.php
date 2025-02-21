@@ -37,27 +37,27 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($facturas as $factura )
+                                @forelse ($xmls as $xml )
                                     <tr class=" dark:bg-dark-1 {{ $loop->index % 2> 0 ? 'bg-gray-200' : '' }}">
 
-                                        <td class="text-center font-medium">{{ $factura->secuencial }}</td>
-                                        <td class="text-center font-medium">{{ $factura->cliente}}</td>
+                                        <td class="text-center font-medium">{{ $xml->secuencial }}</td>
+                                        <td class="text-center font-medium">{{ $xml->cliente}}</td>
                                         <td class="text-center font-medium">
-                                            @if ($factura->estado === 'enviado')
+                                            @if ($xml->estado === 'enviado')
                                                 Recuperar del SRI
-                                            @elseif ($factura->estado === 'firmado')
+                                            @elseif ($xml->estado === 'firmado')
                                                 Reenviar al SRI
-                                            @elseif ($factura->estado === 'creado')
+                                            @elseif ($xml->estado === 'creado')
                                                 Pendiente de firmar
                                             @else
-                                                {{ ucfirst($factura->estado) }} <!-- Muestra el estado por defecto si no coincide -->
+                                                {{ ucfirst($xml->estado) }} <!-- Muestra el estado por defecto si no coincide -->
                                             @endif
                                         </td>
 
                                          <td class="dark:border-dark-5 text-center">
                                             <div class="d-flex justify-content-center">
                                                     <button class="btn btn-warning text-white border-0 ml-3"
-                                                    wire:click.prevent="retry({{ $factura->id }})"
+                                                    wire:click.prevent="retry({{ $xml->id }})"
                                                     type="button">
                                                         <i class=" fas fa-edit f-2x"></i>
                                                     </button>
@@ -67,7 +67,7 @@
                                             <div class="d-flex justify-content-center">
 
                                                 <button class="btn btn-danger text-white border-0 ml-3"
-                                                wire:click="confirmDelete({{ $factura->id }})"
+                                                wire:click="confirmDelete({{ $xml->id }})"
                                                 type="button"
                                                 title="Anular Factura">
                                             <i class="fas fa-trash-alt f-2x"></i>
@@ -84,7 +84,7 @@
                                 @endforelse
                             </tbody>
                         </table>
-                        {{ $facturas->links() }}
+                        {{ $xmls->links() }}
                     </div>
                 </div>
             </div>

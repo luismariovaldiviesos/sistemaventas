@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\DeletedFactura;
 use App\Models\Factura;
 use App\Models\XmlFile;
 use Carbon\Carbon;
@@ -12,6 +13,8 @@ use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+use App\Traits\CartTrait;
+use Illuminate\Support\Facades\DB;
 
 class XmlFiles extends Component
 {
@@ -19,6 +22,7 @@ class XmlFiles extends Component
 
     use WithPagination;
     use WithFileUploads;
+    use CartTrait;
 
 
 
@@ -40,7 +44,7 @@ class XmlFiles extends Component
             $info = XmlFile::where('estado','!=','autorizado')->paginate($this->pagination);
 
 
-        return view('livewire.reprocesar.component', ['facturas' => $info])
+        return view('livewire.reprocesar.component', ['xmls' => $info])
             ->layout('layouts.theme.app');
     }
 
@@ -257,18 +261,62 @@ class XmlFiles extends Component
     // necesitamos crear aqi el metodo de  recuperar del sri fetch y pasarle directo la clave de acceso .
 
 
-    public  function confirmDelete(Factura $factura){
-        //dd($factura->id);
+    public  function confirmDelete(XmlFile $xml ){
+        //dd($xml->factura_id);
         $this->dispatchBrowserEvent('swal:confirm',[
-                'facturaId' => $factura->id
+                'facturaId' => $xml->factura_id,
         ]);}
 
 
         protected $listeners = ['delete' => 'delete'];
 
-        public function delete(Factura $factura)
+        public function delete($factura_id)
         {
-            dd($factura);
+            // Buscar la factura con todos sus campos, incluso si está eliminada
+
+
+                // Verificar que la factura se ha recuperado correctamente
+                //dd($factura);
+            try {
+                DB::transaction(function () use ($factura_id) {
+                    // Recuperar la factura con relaciones necesarias
+                    $factura = Factura::withTrashed()->findOrFail($factura_id);
+                    //dd($factura);
+                    if (!$factura) {
+                        throw new \Exception("Factura no encontrada con ID {$factura_id}");
+                    }
+
+                    // Restaurar stock antes de eliminar la factura
+                    $this->restoreStockFromFacturas($factura);
+
+                    // Guardar en la tabla DeletedFactura
+                    DeletedFactura::create([
+                        'factura_id' => $factura->id,
+                        'secuencial' => $factura->secuencial,
+                        'cliente' => $factura->customer->businame ?? 'N/A',
+                        'ruc_cliente' => $factura->customer->valueidenti ?? 'N/A',
+                        'correo_cliente' => $factura->customer->email ?? 'N/A',
+                        'fecha_emision' => $factura->created_at->toDateString(),
+                        'clave_acceso' => $factura->claveAcceso,
+                        'estado' => 'ANULADA SIN PROCESO SRI'
+                    ]);
+
+                    // Eliminar archivos XML asociados a la factura
+                    XmlFile::where('factura_id', $factura->id)->delete();
+
+                    // Finalmente, eliminar la factura (soft delete)
+                    $factura->delete();
+                });
+
+                // Notificar éxito
+                $this->noty('Factura eliminada con éxito');
+            } catch (\Throwable $th) {
+                // Registrar error en logs
+                \Log::error("Error al eliminar la factura ID {$factura_id}: " . $th->getMessage());
+
+                // Notificar error
+                $this->noty('No se pudo eliminar la factura. Error: ' . $th->getMessage());
+            }
         }
 
 
