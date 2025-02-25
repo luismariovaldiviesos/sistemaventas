@@ -128,147 +128,32 @@
             <div class="col-spam-12 p-5">
                 {{-- {{ $$facturas->links() }} --}}
             </div>
+
         </div>
+
     </div>
-
-
-        {{-- @include('livewire.$facturas.panel')
-        @include('livewire.sales.keyboard') --}}
-
-
-        <script>
-            window.addEventListener('swal:confirm', event => {
-                Swal.fire({
-                    title: '¿Estás seguro de anular la factura?',
-                    text: "Esta acción no se puede deshacer.",
-                    type: 'warning',  // Si tu versión no soporta 'icon', usa 'type'
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#FFC107',
-                    confirmButtonText: 'Sí, eliminar',
-                    cancelButtonText: 'Cancelar'
-                }).then(function (result) {
-                    if (result.value) {  // En versiones antiguas de SweetAlert2, se usa 'value' en vez de 'isConfirmed'
-                       // console.log("Emitir evento Livewire: delete, con ID:", event.detail.facturaId);
-                        Livewire.emit('delete', event.detail.facturaId);
-                    }
-                });
-            });
-
-
-
-            window.addEventListener('swal:nc', event => {
-                Swal.fire({
-                    title: '¿Estás seguro de emitir la nota de credito?',
-                    text: "Esta acción no se puede deshacer.",
-                    type: 'warning',  // Si tu versión no soporta 'icon', usa 'type'
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#FFC107',
-                    confirmButtonText: 'Sí, emitir NC',
-                    cancelButtonText: 'Cancelar'
-                }).then(function (result) {
-                    if (result.value) {  // En versiones antiguas de SweetAlert2, se usa 'value' en vez de 'isConfirmed'
-                       // console.log("Emitir evento Livewire: delete, con ID:", event.detail.facturaId);
-                        Livewire.emit('nc', event.detail.facturaId);
-                    }
-                });
-            });
-
-
-
-
-
-        </script>
-
-
-
+    @include('livewire.notascredito.modaldetalles')
     {{-- para el buscador  --}}
     <script>
         const inputSearch = document.getElementById('search')
         inputSearch.addEventListener('change', (e) => {
             @this.search = e.target.value
         })
+        // {{--fin  para el buscador  --}}
+    window.addEventListener('show_modal', event => {
+        openModal()
+    })
 
-        // abrir modal
-        function openPanel(action = ''){
-            if(action == 'add'){
-                @this.resetUI()
-            }
-            var modal = document.getElementById('panelProduct')
-            modal.classList.add('overflow-y-auto','show')
-            modal.style.cssText="margin-top: 0px; margin-left: 0px; padding-left: 17px; z-index: 100"
 
-        }
+    function openModal(){
 
-        //cerrar modal
-        function closePanel(action = ''){
+        alert('hola')
+    }
 
-            var modal = document.getElementById('panelProduct')
-            modal.classList.add('overflow-y-auto','show')
-            modal.style.cssText=""
 
-        }
 
-        window.addEventListener('open-modal', event => {
-            openPanel()
-        })
-
-        window.addEventListener('noty', event => {
-            if (event.detail.action == 'close-modal')  closePanel()
-
-        })
-
-        // kioskBoard.run('.kioskboard', {})
     </script>
 
-    <script>
-        document.querySelectorAll(".kioskboard").forEach(i => i.addEventListener("change", e => {
-            switch (e.currentTarget.id)
-            {
-                case 'name':
-                    @this.name = e.target.value
-                    break
-                case 'cost':
-                    @this.cost = e.target.value
-                    break
-                case 'code':
-                    @this.code = e.target.value
-                    break
-                case 'price':
-                    @this.price = e.target.value
-                    break
-                case 'price2':
-                    @this.price2 = e.target.value
-                    break
-                case 'pvp':
-                    @this.pvp = e.target.value
-                    break
-                case 'descuento':
-                    @this.descuento = e.target.value
-                    break
-                case 'stock':
-                    @this.stock = e.target.value
-                    break
-                case 'minstock':
-                    @this.minstock = e.target.value
-                    break
-                    case 'ivaporcentaje':
-                    @this.ivaporcentaje = e.target.value
-                    break
-                    case 'iceporcentaje':
-                    @this.iceporcentaje = e.target.value
-                    break
-                    case 'iva':
-                    @this.iva = e.target.value
-                    break
-                    case 'ice':
-                    @this.ice = e.target.value
-                    break
 
-
-            }
-        }))
-    </script>
 
 </div>

@@ -14,6 +14,7 @@ class NotasCredito extends Component
     public $action = 'Listado', $componentName='LISTADO DE NOTAS DE CRÉDITO', $search, $form = false;
     private $pagination =20;
     protected $paginationTheme='tailwind';
+    public $nc;
 
     public function render()
     {
@@ -59,6 +60,14 @@ class NotasCredito extends Component
         $factura->save();
         // Finalmente, puedes actualizar la vista o realizar alguna acción adicional
         $this->emit('Nota de créidto registrada ');
+    }
+
+
+    public  function  show($id){
+
+        $this->nc = Factura::withTrashed()->where('id', $id)->first();
+        $this->dispatchBrowserEvent('show_modal');
+
     }
 
 
