@@ -175,15 +175,15 @@
         })
 
         // abrir modal
-        function openPanel(action = ''){
-            if(action == 'add'){
-                @this.resetUI()
-            }
-            var modal = document.getElementById('panelProduct')
-            modal.classList.add('overflow-y-auto','show')
-            modal.style.cssText="margin-top: 0px; margin-left: 0px; padding-left: 17px; z-index: 100"
+        // function openPanel(action = ''){
+        //     if(action == 'add'){
+        //         @this.resetUI()
+        //     }
+        //     var modal = document.getElementById('panelProduct')
+        //     modal.classList.add('overflow-y-auto','show')
+        //     modal.style.cssText="margin-top: 0px; margin-left: 0px; padding-left: 17px; z-index: 100"
 
-        }
+        // }
 
         window.addEventListener('show_factura', event => {
 

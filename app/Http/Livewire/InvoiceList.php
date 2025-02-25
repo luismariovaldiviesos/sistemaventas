@@ -22,7 +22,7 @@ class InvoiceList extends Component
 
     public $fact_id='', $secuencial ='', $customer='', $directorio='', $estado, $annulmentDays;
 
-    public  $factura ;
+    public  $factura_detalle ;
     public $action = 'Listado', $componentName='LISTADO DE FACTURAS', $search, $form = false;
     private $pagination =20;
     protected $paginationTheme='tailwind';
@@ -164,16 +164,10 @@ public function noty($msg, $eventName= 'noty', )
 
    public  function show(Factura $factura)  {
 
-        //dd($factura->id);
-       $this->factura = $factura;
-       //dd($this->factura);
-       $this->noty('','show_factura');
-       //$this->resetUI();
+        $this->factura_detalle = $factura->load('detalles');
+        //dd($this->factura_detalle);
 
+        $this->noty('','show_factura');
     }
-
-
-
-
 
 }
