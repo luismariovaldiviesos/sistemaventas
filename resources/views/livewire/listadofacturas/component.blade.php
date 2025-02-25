@@ -42,8 +42,8 @@
 
                                         <td class="text-center font-medium">{{ $factura->secuencial }}</td>
                                         <td class="text-center font-medium">{{ $factura->customer->businame}}</td>
-                                        <td class="text-center font-medium">{{ $factura->numeroAutorizacion }}</td>
-                                        <td class="text-center font-medium">{{ $factura->fechaAutorizacion }}</td>
+                                        <td class="text-center font-medium">{{  $factura->numeroAutorizacion }}</td>
+                                        <td class="text-center font-medium">{{ \Carbon\Carbon::parse($factura->fechaAutorizacion)->format('d-m-Y') }}</td>
 
                                          <td class="dark:border-dark-5 text-center">
                                             <div class="d-flex justify-content-center">

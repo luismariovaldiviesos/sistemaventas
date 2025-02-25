@@ -46,7 +46,7 @@
                                         <td class="text-center font-medium">{{ $factura->cliente}}</td>
                                         <td class="text-center font-medium">{{ $factura->ruc_cliente }}</td>
                                         <td class="text-center font-medium">{{ $factura->clave_acceso }}</td>
-                                        <td class="text-center font-medium">{{ $factura->fecha_emision }}</td>
+                                        <td class="text-center font-medium">{{ \Carbon\Carbon::parse($factura->fecha_emision)->format('d-m-Y') }}</td>
                                         <td class="text-center font-medium">{{ $factura->estado }}</td>
 
                                          <td class="dark:border-dark-5 text-center">
