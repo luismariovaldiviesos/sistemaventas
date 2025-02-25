@@ -134,26 +134,43 @@
     </div>
     @include('livewire.notascredito.modaldetalles')
     {{-- para el buscador  --}}
-    <script>
-        const inputSearch = document.getElementById('search')
-        inputSearch.addEventListener('change', (e) => {
-            @this.search = e.target.value
-        })
-        // {{--fin  para el buscador  --}}
-    window.addEventListener('show_modal', event => {
-        openModal()
+   {{-- para el buscador  --}}
+   <script>
+    const inputSearch = document.getElementById('search')
+    inputSearch.addEventListener('change', (e) => {
+        @this.search = e.target.value
     })
 
+    // abrir modal
+    // function openPanel(action = ''){
+    //     if(action == 'add'){
+    //         @this.resetUI()
+    //     }
+    //     var modal = document.getElementById('panelProduct')
+    //     modal.classList.add('overflow-y-auto','show')
+    //     modal.style.cssText="margin-top: 0px; margin-left: 0px; padding-left: 17px; z-index: 100"
 
-    function openModal(){
+    // }
 
-        alert('hola')
+    window.addEventListener('show_factura', event => {
+
+        openModalDetalle()
+    })
+
+    function openModalDetalle() {
+            var modal = document.getElementById("modalDetalles")
+            modal.classList.add("overflow-y-auto", "show")
+            modal.style.cssText = "margin-top: 0px; margin-left: -100px;  z-index: 1000;"
     }
 
+    function closeModal() {
+            var modal = document.getElementById("modalDetalles")
+            modal.classList.remove("overflow-y-auto", "show")
+            modal.style.cssText = ""
+        }
 
 
-    </script>
-
+</script>
 
 
 </div>

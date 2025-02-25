@@ -1,4 +1,4 @@
-<div wire:ignore.self id="modalnc" class="modal fade" data-backdrop="static" tabindex="-1">
+<div wire:ignore.self id="modalDetalles" class="modal fade" data-backdrop="static" tabindex="-1">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
 
@@ -8,7 +8,7 @@
                 </button>
             </div>
 
-            {{-- <div class="modal-body p-6">
+            <div class="modal-body p-6">
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="invoice-container border p-6 rounded-lg shadow-lg bg-white">
@@ -17,7 +17,7 @@
                                     <header class="mb-6 border-b-2 pb-4">
                                         <h2 class="text-3xl font-bold text-gray-800">Factura Secuencial: {{ optional($factura_detalle)->secuencial ?? 'N/A' }}</h2>
                                         <p class="text-xl font-semibold text-gray-600">Cliente: {{ optional($factura_detalle)->customer->businame ?? 'N/A' }}</p>
-                                        <p class="text-lg font-medium text-gray-500">Autorizado: {{ optional($factura_detalle)->fechaAutorizacion ?? 'N/A' }}</p>
+                                        <p class="text-lg font-medium text-gray-500">Creada: {{ optional($factura_detalle)->deleted_at ?? 'N/A' }}</p>
                                     </header>
                                     <table class="table w-full border-separate border-spacing-0.5">
                                         <thead class="bg-gray-100">
@@ -56,11 +56,11 @@
                         <h3 class="text-2xl font-bold text-gray-800">Total: {{ number_format(optional($factura_detalle)->total ?? 0, 2) }}</h3>
                     </div>
                 </div>
-            </div> --}}
+            </div>
 
-            {{-- <div class="modal-footer text-right">
+            <div class="modal-footer text-right">
                 <button onclick="closeModal()" class="btn btn-primary mr-5">Cerrar Ventana</button>
-            </div> --}}
+            </div>
 
         </div>
     </div>

@@ -14,7 +14,7 @@ class NotasCredito extends Component
     public $action = 'Listado', $componentName='LISTADO DE NOTAS DE CRÉDITO', $search, $form = false;
     private $pagination =20;
     protected $paginationTheme='tailwind';
-    public $nc;
+    public $factura_detalle;
 
     public function render()
     {
@@ -65,9 +65,15 @@ class NotasCredito extends Component
 
     public  function  show($id){
 
-        $this->nc = Factura::withTrashed()->where('id', $id)->first();
-        $this->dispatchBrowserEvent('show_modal');
+        $this->factura_detalle = Factura::withTrashed()->where('id', $id)->first();
+        $this->dispatchBrowserEvent('show_factura');
 
+    }
+
+
+    public  function downloadFiles($id){
+
+        dd($id);
     }
 
 
