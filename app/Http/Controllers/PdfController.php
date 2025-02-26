@@ -17,11 +17,11 @@ class PdfController extends Controller
 
     public  function pdfDowloader (Factura $factura){
 
-        //$empresa =  Setting::get();
+        $empresa =  Setting::first();
         // Limpia cualquier salida previa
         //dd('hola pdf ctm');
         //dd($factura);
-        $empresa =  Cache::get('settings');
+        //$empresa =  Cache::get('settings');
         ob_end_clean();
         ob_start();
         // foreach($factura->detalles as $detalle){
@@ -157,7 +157,7 @@ class PdfController extends Controller
         $pdfContent = $pdf->Output('S');
         $fileName = $factura->customer->businame .'_'.$factura->secuencial .'.pdf';
         Storage::disk('comprobantes/pdfs')->put($fileName, $pdfContent);
-       // $this->enviarFacturea($factura);
+       $this->enviarFacturea($factura);
         //$this->noty('PDF CREADO   CORRECTAMENTE !!!!!!');
         return response($pdf->Output('D',$factura->customer->businame.'.pdf'));
 

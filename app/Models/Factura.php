@@ -90,7 +90,8 @@ class Factura extends Model
 
     public function empresa ()
     {
-        $empresa =  Cache::get('settings');
+        //$empresa =  Cache::get('settings');
+        $empresa = Setting::first();
         return $empresa;
     }
 

@@ -29,9 +29,9 @@ class FacturaMail extends Mailable
 
     public function build()
     {
-        $settings =  Cache::get('settings');
+        //$settings =  Cache::get('settings');
         $body = "Estimado cliente, adjuntamos su factura. Gracias por su preferencia.";
-        //$empresa = Setting::first();
+        $settings = Setting::first();
         $email =  $settings['email'];
         $razonSocial = $settings['razonSocial'];
 
