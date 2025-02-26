@@ -3,7 +3,7 @@ pdfController linea 160 editada para enviar mail
 hace falta :
 
 
-* notas de credito boton descargar pdf
+* notas de credito boton descargar pdf revisar y construir eso ?
 
 
 *revisar el cahce para que traiga todo setthing
