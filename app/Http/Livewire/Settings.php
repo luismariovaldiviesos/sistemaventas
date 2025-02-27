@@ -21,9 +21,11 @@ class Settings extends Component
 
     public function mount()
     {
-        $info =  Setting::first();
+       // $info =  Setting::first();
         //$info =  Cache::get('settings');
         //dd(Cache::get('settings'));
+        $info =  empresa();
+        //dd($info->razonSocial);
 
         if($info){
             $this->selected_id = $info->id;

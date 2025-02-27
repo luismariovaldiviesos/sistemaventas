@@ -17,7 +17,8 @@ class PdfController extends Controller
 
     public  function pdfDowloader (Factura $factura){
 
-        $empresa =  Setting::first();
+        $empresa =  empresa();
+        //$empresa =  Setting::first();
         // Limpia cualquier salida previa
         //dd('hola pdf ctm');
         //dd($factura);

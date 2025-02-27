@@ -1,4 +1,4 @@
-<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body><ns2:autorizacionComprobanteResponse xmlns:ns2="http://ec.gob.sri.ws.autorizacion"><RespuestaAutorizacionComprobante><claveAccesoConsultada>2602202501010384449400110010010000006610000066112</claveAccesoConsultada><numeroComprobantes>1</numeroComprobantes><autorizaciones><autorizacion><estado>AUTORIZADO</estado><numeroAutorizacion>2602202501010384449400110010010000006610000066112</numeroAutorizacion><fechaAutorizacion>2025-02-26T15:47:38-05:00</fechaAutorizacion><ambiente>PRUEBAS</ambiente><comprobante>&lt;?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body><ns2:autorizacionComprobanteResponse xmlns:ns2="http://ec.gob.sri.ws.autorizacion"><RespuestaAutorizacionComprobante><claveAccesoConsultada>2702202501010384449400110010010000006620000066211</claveAccesoConsultada><numeroComprobantes>1</numeroComprobantes><autorizaciones><autorizacion><estado>AUTORIZADO</estado><numeroAutorizacion>2702202501010384449400110010010000006620000066211</numeroAutorizacion><fechaAutorizacion>2025-02-27T10:44:49-05:00</fechaAutorizacion><ambiente>PRUEBAS</ambiente><comprobante>&lt;?xml version="1.0" encoding="UTF-8"?>
 &lt;factura id="comprobante" version="1.0.0">
   &lt;infoTributaria>
     &lt;ambiente>1&lt;/ambiente>
@@ -6,15 +6,15 @@
     &lt;razonSocial>CHOCHO ORELLANA ANGELA XIMENA&lt;/razonSocial>
     &lt;nombreComercial>CHOCHO ORELLANA ANGELA XIMENA&lt;/nombreComercial>
     &lt;ruc>0103844494001&lt;/ruc>
-    &lt;claveAcceso>2602202501010384449400110010010000006610000066112&lt;/claveAcceso>
+    &lt;claveAcceso>2702202501010384449400110010010000006620000066211&lt;/claveAcceso>
     &lt;codDoc>01&lt;/codDoc>
     &lt;estab>001&lt;/estab>
     &lt;ptoEmi>001&lt;/ptoEmi>
-    &lt;secuencial>000000661&lt;/secuencial>
+    &lt;secuencial>000000662&lt;/secuencial>
     &lt;dirMatriz>Dávila Chica y Manuel Moreno&lt;/dirMatriz>
   &lt;/infoTributaria>
   &lt;infoFactura>
-    &lt;fechaEmision>26/02/2025&lt;/fechaEmision>
+    &lt;fechaEmision>27/02/2025&lt;/fechaEmision>
     &lt;dirEstablecimiento>Dávila Chica y Manuel Moreno&lt;/dirEstablecimiento>
     &lt;obligadoContabilidad>NO&lt;/obligadoContabilidad>
     &lt;tipoIdentificacionComprador>05&lt;/tipoIdentificacionComprador>
@@ -82,34 +82,34 @@
   &lt;infoAdicional>
     &lt;campoAdicional nombre="email">khipusistemas@gmail.com&lt;/campoAdicional>
   &lt;/infoAdicional>
-&lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature854162">
-&lt;ds:SignedInfo Id="Signature-SignedInfo775526">
+&lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature197885">
+&lt;ds:SignedInfo Id="Signature-SignedInfo653430">
 &lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315">&lt;/ds:CanonicalizationMethod>
 &lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1">&lt;/ds:SignatureMethod>
-&lt;ds:Reference Id="SignedPropertiesID116828" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature854162-SignedProperties348728">
+&lt;ds:Reference Id="SignedPropertiesID747463" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature197885-SignedProperties112449">
 &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1">&lt;/ds:DigestMethod>
-&lt;ds:DigestValue>d51bNLuTK/hc4azTq8U+/cjw1so=&lt;/ds:DigestValue>
+&lt;ds:DigestValue>zdUsQBlRV4P8hIWxBPFwQIP+zwk=&lt;/ds:DigestValue>
 &lt;/ds:Reference>
-&lt;ds:Reference URI="#Certificate1756465">
+&lt;ds:Reference URI="#Certificate1850517">
 &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1">&lt;/ds:DigestMethod>
-&lt;ds:DigestValue>n0GdvZR7O1NDADmR3PJC2g3sRvQ=&lt;/ds:DigestValue>
+&lt;ds:DigestValue>T3/wXRzof3arlkE5NInHAs+imbk=&lt;/ds:DigestValue>
 &lt;/ds:Reference>
-&lt;ds:Reference Id="Reference-ID-432945" URI="#comprobante">
+&lt;ds:Reference Id="Reference-ID-4018" URI="#comprobante">
 &lt;ds:Transforms>
 &lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature">&lt;/ds:Transform>
 &lt;/ds:Transforms>
 &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1">&lt;/ds:DigestMethod>
-&lt;ds:DigestValue>8/V+1uAF7xuvMY6106eIymb6tRs=&lt;/ds:DigestValue>
+&lt;ds:DigestValue>xR8BfwhWJ9FpK2Mn4mVC7Fw0Lqc=&lt;/ds:DigestValue>
 &lt;/ds:Reference>
 &lt;/ds:SignedInfo>
-&lt;ds:SignatureValue Id="SignatureValue555443">
-EisYWa16ZzgXD96c1Ce4izuRoW5q0K8mTSN5hBTNPGb+/KAnvANcmqgU6b6o/xEj8LsoBhp1Fa9M
-BVVBVuBGUeke0XVz7AqgIhLOx01h73HiiKjZ2b5gIrf40ZHBMEDAeYjcF01Bu9Ae3WYBKu2ychBc
-0ylyMChcNeg8VUzbbSyGVxC8Kw6n4PcokyOP5+SrskYTiG8dU5kQiOkuFlhH2B+hfSWdr82m5xXZ
-HQUjbBFChZaFp5CKrqojrRwglY6cv4iREDX2yy4bwe+WYGpq+8iaDl4D/jYI3NzWa3PMI3/uLd3q
-c8v+n8+Z4DHd4X3wmrGxekR32PwbPPhgD0Wn0A==
+&lt;ds:SignatureValue Id="SignatureValue937543">
+LnLTN7lOSEeGYUgQB3r70kJbpqPjcrDt5lb5ktgXa3ctvi1j2gpJdvlLtLozmhuQAHa1eFEeeAX8
+S647KuClVOio7Yc9cc8SYpJflZCojwc2A9clwtENvdP6wpFZISDXOMj0T7Xz4YWIlLBIyGb5H9iv
+xjpxC+S6OSMhenNtgfZH3y5KMJO3CknzH3Q4P4BP5MboK+2FBdwkZTUR2mKyeAtWhtX0BtgldHVj
+uYYH3e7/TMuk2vjNVxsjA0kenHoHs4MhD10kfd3gKMOIGofIpteUwCu8xhD6G+PYxE/kZO468zRH
+hdHHnupQC5jMoeB+rAlNR1M82JihZxlnd/f0oQ==
 &lt;/ds:SignatureValue>
-&lt;ds:KeyInfo Id="Certificate1756465">
+&lt;ds:KeyInfo Id="Certificate1850517">
 &lt;ds:X509Data>
 &lt;ds:X509Certificate>
 MIIHtDCCBZygAwIBAgIIAiL+KKtN7i8wDQYJKoZIhvcNAQELBQAwgbUxCzAJBgNVBAYTAkVDMREw
@@ -162,4 +162,4 @@ g7MBr+mgbW7Fat2x5YuCDEHKTzOcqzKuWqcHEQ==
 &lt;/ds:RSAKeyValue>
 &lt;/ds:KeyValue>
 &lt;/ds:KeyInfo>
-&lt;ds:Object Id="Signature854162-Object567875">&lt;etsi:QualifyingProperties Target="#Signature854162">&lt;etsi:SignedProperties Id="Signature854162-SignedProperties348728">&lt;etsi:SignedSignatureProperties>&lt;etsi:SigningTime>2025-02-26T15:47:37-05:00&lt;/etsi:SigningTime>&lt;etsi:SigningCertificate>&lt;etsi:Cert>&lt;etsi:CertDigest>&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1">&lt;/ds:DigestMethod>&lt;ds:DigestValue>ayeZ0fP7lAvCzhXSh5LdfyEfBz8=&lt;/ds:DigestValue>&lt;/etsi:CertDigest>&lt;etsi:IssuerSerial>&lt;ds:X509IssuerName>CN=ENTIDAD DE CERTIFICACION ICERT-EC,OU=SUBDIRECCION NACIONAL DE SEGURIDAD DE LA INFORMACION DNTICS,O=CONSEJO DE LA JUDICATURA,L=DM QUITO,C=EC&lt;/ds:X509IssuerName>&lt;ds:X509SerialNumber>153964787910176303&lt;/ds:X509SerialNumber>&lt;/etsi:IssuerSerial>&lt;/etsi:Cert>&lt;/etsi:SigningCertificate>&lt;/etsi:SignedSignatureProperties>&lt;etsi:SignedDataObjectProperties>&lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-432945">&lt;etsi:Description>Doc&lt;/etsi:Description>&lt;etsi:MimeType>text/xml&lt;/etsi:MimeType>&lt;/etsi:DataObjectFormat>&lt;/etsi:SignedDataObjectProperties>&lt;/etsi:SignedProperties>&lt;/etsi:QualifyingProperties>&lt;/ds:Object>&lt;/ds:Signature>&lt;/factura></comprobante><mensajes/></autorizacion></autorizaciones></RespuestaAutorizacionComprobante></ns2:autorizacionComprobanteResponse></soap:Body></soap:Envelope>
+&lt;ds:Object Id="Signature197885-Object920525">&lt;etsi:QualifyingProperties Target="#Signature197885">&lt;etsi:SignedProperties Id="Signature197885-SignedProperties112449">&lt;etsi:SignedSignatureProperties>&lt;etsi:SigningTime>2025-02-27T10:44:48-05:00&lt;/etsi:SigningTime>&lt;etsi:SigningCertificate>&lt;etsi:Cert>&lt;etsi:CertDigest>&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1">&lt;/ds:DigestMethod>&lt;ds:DigestValue>ayeZ0fP7lAvCzhXSh5LdfyEfBz8=&lt;/ds:DigestValue>&lt;/etsi:CertDigest>&lt;etsi:IssuerSerial>&lt;ds:X509IssuerName>CN=ENTIDAD DE CERTIFICACION ICERT-EC,OU=SUBDIRECCION NACIONAL DE SEGURIDAD DE LA INFORMACION DNTICS,O=CONSEJO DE LA JUDICATURA,L=DM QUITO,C=EC&lt;/ds:X509IssuerName>&lt;ds:X509SerialNumber>153964787910176303&lt;/ds:X509SerialNumber>&lt;/etsi:IssuerSerial>&lt;/etsi:Cert>&lt;/etsi:SigningCertificate>&lt;/etsi:SignedSignatureProperties>&lt;etsi:SignedDataObjectProperties>&lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-4018">&lt;etsi:Description>Doc&lt;/etsi:Description>&lt;etsi:MimeType>text/xml&lt;/etsi:MimeType>&lt;/etsi:DataObjectFormat>&lt;/etsi:SignedDataObjectProperties>&lt;/etsi:SignedProperties>&lt;/etsi:QualifyingProperties>&lt;/ds:Object>&lt;/ds:Signature>&lt;/factura></comprobante><mensajes/></autorizacion></autorizaciones></RespuestaAutorizacionComprobante></ns2:autorizacionComprobanteResponse></soap:Body></soap:Envelope>
