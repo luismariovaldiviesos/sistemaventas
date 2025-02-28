@@ -158,7 +158,7 @@ class PdfController extends Controller
         $pdfContent = $pdf->Output('S');
         $fileName = $factura->customer->businame .'_'.$factura->secuencial .'.pdf';
         Storage::disk('comprobantes/pdfs')->put($fileName, $pdfContent);
-       $this->enviarFacturea($factura);
+      // $this->enviarFacturea($factura);
         //$this->noty('PDF CREADO   CORRECTAMENTE !!!!!!');
         return response($pdf->Output('D',$factura->customer->businame.'.pdf'));
 

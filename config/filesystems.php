@@ -38,9 +38,21 @@ return [
             'driver' => 'local',
             'root' => storage_path('app/comprobantes/firmados'),
         ],
+        'comprobantes/no_enviados' => [
+            'driver' => 'local',
+            'root' => storage_path('app/comprobantes/no_enviados'),
+        ],
+        'comprobantes/devueltos' => [
+            'driver' => 'local',
+            'root' => storage_path('app/comprobantes/devueltos'),
+        ],
         'comprobantes/enviados' => [
             'driver' => 'local',
             'root' => storage_path('app/comprobantes/enviados'),
+        ],
+        'comprobantes/no_autorizados' => [
+            'driver' => 'local',
+            'root' => storage_path('app/comprobantes/no_autorizados'),
         ],
         'comprobantes/autorizados' => [
             'driver' => 'local',

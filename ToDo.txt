@@ -18,13 +18,16 @@ hace falta :
 
 
 secuencia del xml  en factura ****
-paso uno CREADO linea 46  (firmar, enviar y recibir)
+paso uno NO_FIRMADO linea 506  (firmar, enviar y recibir) ok
 paso dos FIRMADO linea 600  (enviar y recibir)
 paso tres no hay red NO_ENVIADO linea 672  (enviar y recibir)
 paso cuatro DEVUELTA 690 (nada que hacer, devuelta con error)
 paso cinco ENVIADO al sri 701 (recibir)
 paso seis NO_AUTORIZADO 770 (nada que hacer)
 paso siete AUTORIZADO   782 (nada que hacer, fin del proceso)
+
+
+
 
 
 
