@@ -503,6 +503,7 @@ class Factura extends Model
                 'cliente'    => $razonSocialCli,
                 'directorio' => 'comprobantes/no_firmados',
                 'estado'     => 'creado',
+                //paso 1
                 ]);
             if (!Storage::disk('comprobantes/no_firmados')->exists($nombre_fact_xml)) {
                 throw new Exception("El archivo XML no firmado no fue guardado: $nombre_fact_xml");
@@ -596,6 +597,7 @@ class Factura extends Model
                 $xmlFile->update([
                     'directorio' => 'comprobantes/firmados',
                     'estado'     => 'firmado',
+                    //paso dos
                 ]);
                 $archivo_xml_firmado =  file_get_contents($ruta_si_firmados .  $nombre_fact_xml_firmada);
                 //dd($claveAcceso,$archivo_xml_firmado);
@@ -666,6 +668,8 @@ class Factura extends Model
 
         if ($code !== 200) {
             //throw new SriReceiveException('Sri está caido.');
+            //paso 3, no hay red no se envio el xml al sri
+            //aqui debe ir no enviados
             dd("sri caido");
         }
 
@@ -683,16 +687,18 @@ class Factura extends Model
                 $xmlFile->update([
                     'directorio' => 'comprobantes/enviados',
                     'estado' => 'enviado'
+                    // paso 4 devueltas por el sri aqui debe ir una actualziacion del xml y carpeta devuelta por el sri
                 ]);
                 dd('Devuelta, ya se envió el comprobante al SRI, estado del XML');
             }
 
-            Storage::disk('comprobantes/enviados')->put($nombre_fact_xml_firmada,$archivo_xml_firmado);
+        Storage::disk('comprobantes/enviados')->put($nombre_fact_xml_firmada,$archivo_xml_firmado);
         //dd('hasta aqui lelga todo ');
         $xmlFile = XmlFile::where('factura_id', $factura_id)->firstOrFail();
         $xmlFile->update([
             'directorio' => 'comprobantes/enviados',
             'estado' => 'enviado'
+            //paso 5 si todo va bien hasta aqui esta enviado el comprobante
         ]);
     }
 
@@ -761,6 +767,7 @@ class Factura extends Model
         if ('NO AUTORIZADO' === (string)$estado) {
             $comprobante = $simpleXml->xpath('//autorizacion')[0];
            // throw new SriAuthorizeException($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
+           //paso 6 aqui iria no autorizado por el sri se deberia crear el directorio y actualizar el xml
            dd($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
         }
         if ('AUTORIZADO' === (string)$estado) {
@@ -772,6 +779,7 @@ class Factura extends Model
             $comprobanteAutorizacion=$simpleXml->xpath('//comprobante')[0];
             // aqui hay que llamar a la funcion xml autorizado *****************
 
+            //paso 7 comprbante autorizado por el sri
             Storage::disk('comprobantes/autorizados')->put($nombre_fact_xml_firmada,$archivo_xml_firmado);
            // dd('autorizado:', $nombre_fact_xml_firmada,$archivo_xml_firmado);
            $xmlFile = XmlFile::where('factura_id', $factura_id)->firstOrFail();

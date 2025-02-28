@@ -6,7 +6,7 @@ hace falta :
 * notas de credito boton descargar pdf revisar y construir eso ?
 
 
-*revisar el cahce para que traiga todo setthing
+*que el archivo y la contraseña para firmar salgan de setthing s
 * visualizar facturas en lsitado de facturas y notas de credito y ver si es necesario descargar archivo en nc (si se genera pdf ?)
 * hay un bug en una de las facturas de reprocesar en la ultima
 * boorar carrito desde factura
@@ -14,6 +14,21 @@ hace falta :
 *revisar inventario en prductos si reuiqre ono
 * tenenat
 *docker
+
+
+
+secuencia del xml  en factura ****
+paso uno CREADO linea 46  (firmar, enviar y recibir)
+paso dos FIRMADO linea 600  (enviar y recibir)
+paso tres no hay red NO_ENVIADO linea 672  (enviar y recibir)
+paso cuatro DEVUELTA 690 (nada que hacer, devuelta con error)
+paso cinco ENVIADO al sri 701 (recibir)
+paso seis NO_AUTORIZADO 770 (nada que hacer)
+paso siete AUTORIZADO   782 (nada que hacer, fin del proceso)
+
+
+
+
 
 
 
