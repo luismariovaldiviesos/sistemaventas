@@ -545,6 +545,7 @@ class Factura extends Model
         //ruta del certifixcado
         // Ruta del certificado digital (archivo .pfx o .p12)
         $certPath = base_path('storage/app/certificados/P0000119207.p12');
+        //dd($certPath);
         // Contraseña del certificado digital
         $certPass = 'Okz9UqnjX1';
         // Contenido del xml
@@ -555,6 +556,7 @@ class Factura extends Model
         if (!$certStore) {
             dd('Error al cargar el certificado digital.');
         }
+        //dd($certStore);
         // Extraer la clave privada y el certificado del almacenamiento
         $key = openssl_pkey_get_private($certs['pkey']);
         $cert = openssl_x509_read($certs['cert']);
@@ -579,7 +581,7 @@ class Factura extends Model
         $comando = "java -jar \"$jarPath\" $argumentos";
         try {
             $resp = shell_exec($comando);
-           // dd($resp);
+           //dd($resp);
         } catch (\Exception $e) {
             dd('Error al buscar java: ' . $e->getMessage());
         }
