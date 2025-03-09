@@ -1,4 +1,5 @@
 pdfController linea 160 editada para enviar mail
+para poder enviar desde el server los correos revisar el .env de desarollo
 
 hace falta :
 
