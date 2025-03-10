@@ -74,7 +74,7 @@ class XmlFiles extends Component
         try {
             if ($estado === 'creado')
              {
-                dd('esto va bien, firma envia y recibe ');
+                //dd('esto va bien, firma envia y recibe ');
                 $factura->firmarFactura($nombre_fact_xml, $fac->id);
                 $this->updateFact($fac);
 
