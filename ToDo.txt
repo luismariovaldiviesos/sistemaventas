@@ -20,7 +20,8 @@ hace falta :
 
 secuencia del xml  en factura ****
 paso uno NO_FIRMADO linea 506  (firmar, enviar y recibir) ok
-paso dos FIRMADO linea 600  (enviar y recibir)
+paso dos FIRMADO linea 600  (enviar y recibir)  //  no deberia ahcer nada ya que si no se firma queda como no firmado
+
 paso tres no hay red NO_ENVIADO linea 672  (enviar y recibir)
 paso cuatro DEVUELTA 690 (nada que hacer, devuelta con error)
 paso cinco ENVIADO al sri 701 (recibir)
