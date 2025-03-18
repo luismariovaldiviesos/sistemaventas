@@ -131,7 +131,7 @@ class XmlFiles extends Component
     public function Refetch($claveAcceso, $nombre_fact_xml_firmada,$factura_id) {
 
         //autorizados
-        dd('vamos a recupearar del srl ',$nombre_fact_xml_firmada);
+       // dd('vamos a recupearar del srl ',$nombre_fact_xml_firmada);
        //dd($invoiceObj->key);
     $ruta_enviados  =  base_path('storage/app/comprobantes/enviados/');
      $archivo_xml_enviado =  file_get_contents($ruta_enviados .  $nombre_fact_xml_firmada);

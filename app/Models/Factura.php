@@ -531,6 +531,8 @@ class Factura extends Model
 
         // variables generales para autorizar xml sri
         //dd($nombre_fact_xml, $factura_id);
+        $empresa = $this->empresa();
+        //dd($empresa);
         $vtipoambiente=1;
         $wsdls = $this->wsdl($vtipoambiente);
         $recepcion = $wsdls['recepcion'];
@@ -544,10 +546,13 @@ class Factura extends Model
          $ruta_si_firmados =  base_path('storage/app/comprobantes/firmados/');
         //ruta del certifixcado
         // Ruta del certificado digital (archivo .pfx o .p12)
-        $certPath = base_path('storage/app/certificados/P0000119207.p12');
+        //$certPath = base_path('storage/app/certificados/P0000119207.p12');
+        $certPath = base_path("storage/app/certificados/{$empresa->cert_file}");
         //dd($certPath);
         // Contraseña del certificado digital
-        $certPass = 'Okz9UqnjX1';
+        //$certPass = 'Okz9UqnjX1';
+        $certPass = $empresa->cert_password;
+        //dd($certPass);
         // Contenido del xml
         $factContent = file_get_contents($archivo_x_firmar);
         //dd($factContent);
@@ -578,12 +583,18 @@ class Factura extends Model
         //$comando = ('java -jar C:\\Comprobantes\\firmaComprobanteElectronico\\dist\\firmaComprobanteElectronico.jar ' . $argumentos);
         //$comando = ('java -jar C:\\Comprobantes\\firmaComprobanteElectronico\\dist\\firmaComprobanteElectronico.jar ' . $argumentos);
         $jarPath =  base_path('storage/jar/dist/firmaComprobanteElectronico.jar');
-        $comando = "java -jar \"$jarPath\" $argumentos";
+       $comando = "java -jar \"$jarPath\" $argumentos";
         try {
             $resp = shell_exec($comando);
            //dd($resp);
         } catch (\Exception $e) {
-            dd('Error al buscar java: ' . $e->getMessage());
+            $xmlFile = XmlFile::where('factura_id', $factura_id)->firstOrFail();
+            $xmlFile->update([
+                'directorio' => 'comprobantes/no_firmados',
+                'estado'     => 'creado',
+                //paso dos
+            ]);
+            dd('Error al buscar java, no se pudo firmar el archivo XML ' . $e->getMessage());
         }
 
         $claveAcces = simplexml_load_file($ruta_si_firmados . $nombre_fact_xml_firmada);
@@ -614,7 +625,13 @@ class Factura extends Model
                return($respuestaSRI);
             break;
             default:
-            dd('no se firmó el documento');
+            $xmlFile = XmlFile::where('factura_id', $factura_id)->firstOrFail();
+            $xmlFile->update([
+                'directorio' => 'comprobantes/no_firmados',
+                'estado'     => 'creado',
+                //paso dos
+            ]);
+            dd('Error general no se pudo firmar el archivo XML ' . $e->getMessage());
 
         }
     }
