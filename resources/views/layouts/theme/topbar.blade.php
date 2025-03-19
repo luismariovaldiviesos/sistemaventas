@@ -6,7 +6,7 @@
     </div>
     <div class="-intro-x breadcrumb mr-auto hidden sm:flex">
        @php
-            $empresa =  Cache::get('settings');
+            $empresa =  empresa();
        @endphp
     <div class="empresa-info">
         <span>{{ $empresa->razonSocial }} {{ $empresa->ruc }} {{ $empresa->dirMatriz }}</span>

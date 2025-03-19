@@ -14,6 +14,7 @@ class XmlFile extends Model
         'cliente',
         'directorio',
         'estado',
+        'error'
     ];
 
     // Relación con la factura

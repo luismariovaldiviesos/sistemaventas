@@ -24,10 +24,10 @@ paso dos FIRMADO linea 600  (enviar y recibir)  //  no deberia ahcer nada ya que
 
 paso tres no hay red NO_ENVIADO linea 692  (enviar y recibir)   se guarda no enviado en xmlfiles ok
 
-paso cuatro DEVUELTA 690 (nada que hacer, devuelta con error)   aqui se debe guardar el error en el campo de la tabla
+paso cuatro DEVUELTA 690 (nada que hacer, devuelta con error)   aqui se debe guardar el error en el campo de la tabla ok
 paso cinco ENVIADO al sri 727 (recibir)  ok
 
-paso seis NO_AUTORIZADO 770 (nada que hacer)     aqui se debe guardar el error en el campo de la tabla
+paso seis NO_AUTORIZADO 770 (nada que hacer)     aqui se debe guardar el error en el campo de la tabla ok
 paso siete AUTORIZADO   782 (nada que hacer, fin del proceso)   OK
 
 

@@ -1,4 +1,4 @@
-<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body><ns2:autorizacionComprobanteResponse xmlns:ns2="http://ec.gob.sri.ws.autorizacion"><RespuestaAutorizacionComprobante><claveAccesoConsultada>1703202501010384449400110010010000006740000067419</claveAccesoConsultada><numeroComprobantes>1</numeroComprobantes><autorizaciones><autorizacion><estado>NO AUTORIZADO</estado><fechaAutorizacion>2025-03-18T09:41:53-05:00</fechaAutorizacion><ambiente>PRUEBAS</ambiente><comprobante>&lt;?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body><ns2:autorizacionComprobanteResponse xmlns:ns2="http://ec.gob.sri.ws.autorizacion"><RespuestaAutorizacionComprobante><claveAccesoConsultada>1703202501010384449400110010010000006730000067316</claveAccesoConsultada><numeroComprobantes>1</numeroComprobantes><autorizaciones><autorizacion><estado>NO AUTORIZADO</estado><fechaAutorizacion>2025-03-19T10:40:31-05:00</fechaAutorizacion><ambiente>PRUEBAS</ambiente><comprobante>&lt;?xml version="1.0" encoding="UTF-8"?>
 &lt;factura id="comprobante" version="1.0.0">
   &lt;infoTributaria>
     &lt;ambiente>1&lt;/ambiente>
@@ -6,11 +6,11 @@
     &lt;razonSocial>CHOCHO ORELLANA ANGELA XIMENA&lt;/razonSocial>
     &lt;nombreComercial>CHOCHO ORELLANA ANGELA XIMENA&lt;/nombreComercial>
     &lt;ruc>0103844494001&lt;/ruc>
-    &lt;claveAcceso>1703202501010384449400110010010000006740000067419&lt;/claveAcceso>
+    &lt;claveAcceso>1703202501010384449400110010010000006730000067316&lt;/claveAcceso>
     &lt;codDoc>01&lt;/codDoc>
     &lt;estab>001&lt;/estab>
     &lt;ptoEmi>001&lt;/ptoEmi>
-    &lt;secuencial>000000674&lt;/secuencial>
+    &lt;secuencial>000000673&lt;/secuencial>
     &lt;dirMatriz>Dávila Chica y Manuel Moreno&lt;/dirMatriz>
   &lt;/infoTributaria>
   &lt;infoFactura>
@@ -65,34 +65,34 @@
   &lt;infoAdicional>
     &lt;campoAdicional nombre="email">khipusistemas@gmail.com&lt;/campoAdicional>
   &lt;/infoAdicional>
-&lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature409226">
-&lt;ds:SignedInfo Id="Signature-SignedInfo594668">
+&lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature886576">
+&lt;ds:SignedInfo Id="Signature-SignedInfo237514">
 &lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315">&lt;/ds:CanonicalizationMethod>
 &lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1">&lt;/ds:SignatureMethod>
-&lt;ds:Reference Id="SignedPropertiesID344981" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature409226-SignedProperties366488">
+&lt;ds:Reference Id="SignedPropertiesID880294" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature886576-SignedProperties250672">
 &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1">&lt;/ds:DigestMethod>
-&lt;ds:DigestValue>NfQmqNU9Y9ATFaRT4keQZAbZ6uc=&lt;/ds:DigestValue>
+&lt;ds:DigestValue>PRpuc2newlZewcmk4sdC+n+lP4I=&lt;/ds:DigestValue>
 &lt;/ds:Reference>
-&lt;ds:Reference URI="#Certificate1741322">
+&lt;ds:Reference URI="#Certificate1110280">
 &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1">&lt;/ds:DigestMethod>
-&lt;ds:DigestValue>BdJuhOVZvOEfUZiXEvpq3OPfNG4=&lt;/ds:DigestValue>
+&lt;ds:DigestValue>kgpdLbqUgxXX7ojbfYCqZcQZp7c=&lt;/ds:DigestValue>
 &lt;/ds:Reference>
-&lt;ds:Reference Id="Reference-ID-319338" URI="#comprobante">
+&lt;ds:Reference Id="Reference-ID-961071" URI="#comprobante">
 &lt;ds:Transforms>
 &lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature">&lt;/ds:Transform>
 &lt;/ds:Transforms>
 &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1">&lt;/ds:DigestMethod>
-&lt;ds:DigestValue>3cQ4MaGdIt3rZdU29wy4YZB4RPc=&lt;/ds:DigestValue>
+&lt;ds:DigestValue>/wGlGqr/c71Md34xPus53x2DIxc=&lt;/ds:DigestValue>
 &lt;/ds:Reference>
 &lt;/ds:SignedInfo>
-&lt;ds:SignatureValue Id="SignatureValue820304">
-Wut569egcwGjnLYPRkV0StCnZujCZAPObLzse5bZ6ipXTtZIduRfrqEQ3o/XLinWjiSCmXSVRgS/
-ESY9uHnCkPpt72eX054ixHcvqNyIYtkq8aYJMyhNBDPuLVg7ZKrfPmMBCOBKNUG2+2eiTnMIdu9Z
-GPN8WN1Fx6c1s7qntsoCbOSNNiW21sMA0ntnMK50Yem96epin5fxfcQYyFIT9fEMUj1EZB/McbH+
-XtXtBRKMzh/DjYCdVljIijnLEw8rERqvKIz4T8eYEzP/3ByES48XdpJ3dtyrRwzc6BS+LBD01dUe
-ZHtsTbypjG5JlPwwMUw0W1qoC8iHtaCVkI6WZg==
+&lt;ds:SignatureValue Id="SignatureValue275782">
+CDd6Jj7r6hdo6ud0+1lkmvF8caY+CGaAnM+/OfLmjPQZNxQS6a11e+wTKqj0OzNodry4T+Zk/k28
+ZOdfbS+fQUy/0FHEjL6Wlx/T1Rvmgo5A5rCUEUOeMJMwsuOEG/wE5roBdEH38VkWu44QSF8wCYug
+v5BDV8PupuD2B67HTo0oy3cxyo41r+EE0J4ufiHEtuqh+CNXuEOwWoNNJdkRD8mk+W0fckV+faDW
+KL5Gr5v3iuRPmInX5vT1nLT0YTEl3hfxSu0hiyUqkN0BzF/IxoAXIToBceZ2L+Pvu4FDLe44s9fX
+LHhXu82xEERHD7e2LrJ5ypXZfAdd2QEA6bVkLA==
 &lt;/ds:SignatureValue>
-&lt;ds:KeyInfo Id="Certificate1741322">
+&lt;ds:KeyInfo Id="Certificate1110280">
 &lt;ds:X509Data>
 &lt;ds:X509Certificate>
 MIIHnTCCBYWgAwIBAgIIYfOuAUd3EpQwDQYJKoZIhvcNAQELBQAwgbUxCzAJBgNVBAYTAkVDMREw
@@ -145,4 +145,4 @@ M6rZGUDi9Oev9A2d+xqNA19Ik7nM801sX62MrQ==
 &lt;/ds:RSAKeyValue>
 &lt;/ds:KeyValue>
 &lt;/ds:KeyInfo>
-&lt;ds:Object Id="Signature409226-Object339953">&lt;etsi:QualifyingProperties Target="#Signature409226">&lt;etsi:SignedProperties Id="Signature409226-SignedProperties366488">&lt;etsi:SignedSignatureProperties>&lt;etsi:SigningTime>2025-03-18T09:41:52-05:00&lt;/etsi:SigningTime>&lt;etsi:SigningCertificate>&lt;etsi:Cert>&lt;etsi:CertDigest>&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1">&lt;/ds:DigestMethod>&lt;ds:DigestValue>mlyDoFi3vsJQZBbLF7BOYycZM+4=&lt;/ds:DigestValue>&lt;/etsi:CertDigest>&lt;etsi:IssuerSerial>&lt;ds:X509IssuerName>CN=ENTIDAD DE CERTIFICACION ICERT-EC,OU=SUBDIRECCION NACIONAL DE SEGURIDAD DE LA INFORMACION DNTICS,O=CONSEJO DE LA JUDICATURA,L=DM QUITO,C=EC&lt;/ds:X509IssuerName>&lt;ds:X509SerialNumber>7058176361536885396&lt;/ds:X509SerialNumber>&lt;/etsi:IssuerSerial>&lt;/etsi:Cert>&lt;/etsi:SigningCertificate>&lt;/etsi:SignedSignatureProperties>&lt;etsi:SignedDataObjectProperties>&lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-319338">&lt;etsi:Description>Doc&lt;/etsi:Description>&lt;etsi:MimeType>text/xml&lt;/etsi:MimeType>&lt;/etsi:DataObjectFormat>&lt;/etsi:SignedDataObjectProperties>&lt;/etsi:SignedProperties>&lt;/etsi:QualifyingProperties>&lt;/ds:Object>&lt;/ds:Signature>&lt;/factura></comprobante><mensajes><mensaje><identificador>39</identificador><mensaje>FIRMA INVALIDA</mensaje><informacionAdicional>La firma es invalida [La firma es invalida RucComprobante:0103844494001 RucCertificado:0101866846001]</informacionAdicional><tipo>ERROR</tipo></mensaje></mensajes></autorizacion></autorizaciones></RespuestaAutorizacionComprobante></ns2:autorizacionComprobanteResponse></soap:Body></soap:Envelope>
+&lt;ds:Object Id="Signature886576-Object13675">&lt;etsi:QualifyingProperties Target="#Signature886576">&lt;etsi:SignedProperties Id="Signature886576-SignedProperties250672">&lt;etsi:SignedSignatureProperties>&lt;etsi:SigningTime>2025-03-19T10:40:30-05:00&lt;/etsi:SigningTime>&lt;etsi:SigningCertificate>&lt;etsi:Cert>&lt;etsi:CertDigest>&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1">&lt;/ds:DigestMethod>&lt;ds:DigestValue>mlyDoFi3vsJQZBbLF7BOYycZM+4=&lt;/ds:DigestValue>&lt;/etsi:CertDigest>&lt;etsi:IssuerSerial>&lt;ds:X509IssuerName>CN=ENTIDAD DE CERTIFICACION ICERT-EC,OU=SUBDIRECCION NACIONAL DE SEGURIDAD DE LA INFORMACION DNTICS,O=CONSEJO DE LA JUDICATURA,L=DM QUITO,C=EC&lt;/ds:X509IssuerName>&lt;ds:X509SerialNumber>7058176361536885396&lt;/ds:X509SerialNumber>&lt;/etsi:IssuerSerial>&lt;/etsi:Cert>&lt;/etsi:SigningCertificate>&lt;/etsi:SignedSignatureProperties>&lt;etsi:SignedDataObjectProperties>&lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-961071">&lt;etsi:Description>Doc&lt;/etsi:Description>&lt;etsi:MimeType>text/xml&lt;/etsi:MimeType>&lt;/etsi:DataObjectFormat>&lt;/etsi:SignedDataObjectProperties>&lt;/etsi:SignedProperties>&lt;/etsi:QualifyingProperties>&lt;/ds:Object>&lt;/ds:Signature>&lt;/factura></comprobante><mensajes><mensaje><identificador>39</identificador><mensaje>FIRMA INVALIDA</mensaje><informacionAdicional>La firma es invalida [La firma es invalida RucComprobante:0103844494001 RucCertificado:0101866846001]</informacionAdicional><tipo>ERROR</tipo></mensaje></mensajes></autorizacion></autorizaciones></RespuestaAutorizacionComprobante></ns2:autorizacionComprobanteResponse></soap:Body></soap:Envelope>

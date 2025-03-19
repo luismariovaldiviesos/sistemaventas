@@ -197,12 +197,17 @@ class XmlFiles extends Component
        if ('NO AUTORIZADO' === (string)$estado) {
            $comprobante = $simpleXml->xpath('//autorizacion')[0];
           // throw new SriAuthorizeException($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
-          Storage::disk('comprobantes/no_autorizados')->put($nombre_fact_xml_firmada,$archivo_xml_enviado);
+           // Extraer mensaje de error de manera segura
+            $mensajeError = optional($comprobante->mensajes->mensaje[0]->mensaje)->__toString();
+            $infoAdicional = optional($comprobante->mensajes->mensaje[0]->informacionAdicional)->__toString();
+             Storage::disk('comprobantes/no_autorizados')->put($nombre_fact_xml_firmada,$archivo_xml_enviado);
           $xmlFile->update([
            'directorio' => 'comprobantes/no_autorizados',
-           'estado' => 'no_autorizado'
+           'estado' => 'no_autorizado',
+           'error' =>trim($mensajeError . '-' . $infoAdicional)
        ]);
-          dd($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
+          //dd($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
+          dd('no autorizado:', $mensajeError, $infoAdicional);
        }
        if ('AUTORIZADO' === (string)$estado) {
            $comprobante = $simpleXml->xpath('//autorizacion')[0];
@@ -288,9 +293,16 @@ class XmlFiles extends Component
                 DB::transaction(function () use ($factura_id) {
                     // Recuperar la factura con relaciones necesarias
                     $factura = Factura::withTrashed()->findOrFail($factura_id);
-                    //dd($factura);
+                    //dd($factura->xmlFile->error);
                     if (!$factura) {
                         throw new \Exception("Factura no encontrada con ID {$factura_id}");
+                    }
+
+                    if($factura->xmlFile->error == null){
+                        $estado = 'ANULADA SIN PROCESO SRI';
+                    }
+                    else{
+                        $estado = $factura->xmlFile->error;
                     }
 
                     // Restaurar stock antes de eliminar la factura
@@ -305,7 +317,7 @@ class XmlFiles extends Component
                         'correo_cliente' => $factura->customer->email ?? 'N/A',
                         'fecha_emision' => $factura->created_at->toDateString(),
                         'clave_acceso' => $factura->claveAcceso,
-                        'estado' => 'ANULADA SIN PROCESO SRI'
+                        'estado' => $estado
                     ]);
 
                     // Eliminar archivos XML asociados a la factura

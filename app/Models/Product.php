@@ -71,7 +71,7 @@ class Product extends Model
     //relaciones
     public function sales()
     {
-       return $this->hasMany(OrderDetail::class);
+       return $this->hasMany(DetalleFactura::class);
     }
 
 

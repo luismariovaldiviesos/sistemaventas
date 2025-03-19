@@ -54,7 +54,8 @@
                                             @endif
                                         </td>
 
-                                         <td class="dark:border-dark-5 text-center">
+                                        @if($xml->error  == null)
+                                        <td class="dark:border-dark-5 text-center">
                                             <div class="d-flex justify-content-center">
                                                     <button class="btn btn-warning text-white border-0 ml-3"
                                                     wire:click.prevent="retry({{ $xml->id }})"
@@ -63,6 +64,15 @@
                                                     </button>
                                             </div>
                                         </td>
+                                        @else
+                                        <td class="dark:border-dark-5 text-center">
+                                            <div class="d-flex justify-content-center text-center">
+                                                <h2 style="max-width: 400px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                                                    title="{{ $xml->error }}" class="mx-auto">
+                                                    {{ $xml->error }}
+                                                </h2>
+                                            </div>
+                                        @endif
                                         <td class="dark:border-dark-5 text-center">
                                             <div class="d-flex justify-content-center">
 

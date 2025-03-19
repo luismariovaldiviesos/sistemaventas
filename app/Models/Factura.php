@@ -706,16 +706,20 @@ class Factura extends Model
          {
             $comprobante = $simpleXml->xpath('//comprobante')[0];
             //throw new SriReceiveException($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
-            dd($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
+            //dd($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
+            $mensajeError = optional($comprobante->mensajes->mensaje[0]->mensaje)->__toString();
+            $infoAdicional = optional($comprobante->mensajes->mensaje[0]->informacionAdicional)->__toString();
 
                 $xmlFile->update([
                     'directorio' => 'comprobantes/devueltos',
-                    'estado' => 'devuelto'
+                    'estado' => 'devuelto',
+                    'error' =>trim($mensajeError . '-' . $infoAdicional)
                     // paso 4 devueltas por el sri aqui debe ir una actualziacion del xml y carpeta devuelta por el sri
                     // aqui debe guardar el error del sri, agregar campo a la tabla xml_files.
                 ]);
                 Storage::disk('comprobantes/devueltos')->put($nombre_fact_xml_firmada,$archivo_xml_firmado);
-                dd('Devuelta, ya se envió el comprobante al SRI, estado del XML');
+                //dd('Devuelta, ya se envió el comprobante al SRI, estado del XML');
+                dd('DEVUELTA:', $mensajeError, $infoAdicional);
             }
 
         Storage::disk('comprobantes/enviados')->put($nombre_fact_xml_firmada,$archivo_xml_firmado);
@@ -795,12 +799,16 @@ class Factura extends Model
             $comprobante = $simpleXml->xpath('//autorizacion')[0];
            // throw new SriAuthorizeException($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
            //paso 6 aqui iria no autorizado por el sri se deberia crear el directorio y actualizar el xml y llenar el motivo de no autorizado
+           $mensajeError = optional($comprobante->mensajes->mensaje[0]->mensaje)->__toString();
+            $infoAdicional = optional($comprobante->mensajes->mensaje[0]->informacionAdicional)->__toString();
            Storage::disk('comprobantes/no_autorizados')->put($nombre_fact_xml_firmada,$archivo_xml_firmado);
            $xmlFile->update([
             'directorio' => 'comprobantes/no_autorizados',
-            'estado' => 'no_autorizado'
+            'estado' => 'no_autorizado',
+            'error' =>trim($mensajeError . '-' . $infoAdicional)
         ]);
-           dd($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
+           //dd($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
+           dd('no autorizado:', $mensajeError, $infoAdicional);
         }
         if ('AUTORIZADO' === (string)$estado) {
             $comprobante = $simpleXml->xpath('//autorizacion')[0];
