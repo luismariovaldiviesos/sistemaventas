@@ -61,6 +61,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('listadofacturas', InvoiceList::class)->name('listadofacturas');
     Route::get('deletedlist', DeletedList::class)->name('deletedlist');
     Route::get('notascredito', NotasCredito::class)->name('notascredito');
+    Route::get('impuestos', Impuestos::class)->name('impuestos');
 
 
 });
