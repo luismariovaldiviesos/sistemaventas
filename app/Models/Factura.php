@@ -650,6 +650,7 @@ class Factura extends Model
             $host = 'https://cel.sri.gob.ec';
         }
 
+        $xmlFile = XmlFile::where('factura_id', $factura_id)->firstOrFail();
 
         $curl = curl_init();
 
@@ -684,12 +685,16 @@ class Factura extends Model
 
         //dd(curl_close($curl));
 
-
         if ($code !== 200) {
             //throw new SriReceiveException('Sri está caido.');
             //paso 3, no hay red no se envio el xml al sri
             //aqui debe ir no enviados
-            dd("sri caido");
+            $xmlFile->update([
+                'directorio' => 'comprobantes/no_enviados',
+                'estado' => 'no_enviado'
+
+            ]);
+            dd("NO SE ENVIÓ EL COMPROBANTE AL SRI, REVISE SU CONEXIÓN A INTERNET O SRI CAÍDO");
         }
 
         $simpleXml = new \SimpleXMLElement($response);
@@ -701,13 +706,15 @@ class Factura extends Model
          {
             $comprobante = $simpleXml->xpath('//comprobante')[0];
             //throw new SriReceiveException($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
-            //dd($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
-                $xmlFile = XmlFile::where('factura_id', $factura_id)->firstOrFail();
+            dd($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
+
                 $xmlFile->update([
-                    'directorio' => 'comprobantes/enviados',
-                    'estado' => 'enviado'
+                    'directorio' => 'comprobantes/devueltos',
+                    'estado' => 'devuelto'
                     // paso 4 devueltas por el sri aqui debe ir una actualziacion del xml y carpeta devuelta por el sri
+                    // aqui debe guardar el error del sri, agregar campo a la tabla xml_files.
                 ]);
+                Storage::disk('comprobantes/devueltos')->put($nombre_fact_xml_firmada,$archivo_xml_firmado);
                 dd('Devuelta, ya se envió el comprobante al SRI, estado del XML');
             }
 
@@ -727,6 +734,7 @@ class Factura extends Model
         //dd('vamos a recupearar del srl ',$nombre_fact_xml_firmada,$archivo_xml_firmado);
        //dd($invoiceObj->key);
         $ambiente = "1";
+        $xmlFile = XmlFile::where('factura_id', $factura_id)->firstOrFail();
         if ($ambiente == "1") {
             $host = 'https://celcer.sri.gob.ec';
         } else {
@@ -768,7 +776,7 @@ class Factura extends Model
 
         if ($code !== 200) {
             //throw new SriAuthorizeException('Sri está caido.');
-            dd("sri caiido en recuperacion");
+            dd("PROBLEMAS CON EL SRI, REVISE SU CONEXIÓN A INTERNET O SRI CAÍDO");
         }
         //dd( substr($response, 0, 200)); // Imprime los primeros 200 caracteres de $response)
         // if (simplexml_load_string($response) === false) {
@@ -781,12 +789,17 @@ class Factura extends Model
             //dd('estado del archivo recuperado del sri : ',$estado, $nombre_fact_xml_firmada);
         } catch (\Exception $e) {
             throw new Exception('Error al parsear el XML: ' . $e->getMessage());
-            dd('Error al parsear el XML: ' . $e->getMessage());
+            dd('ERROR AL TRATAR EL XML EN RECUPERACION DEL SRI: ' . $e->getMessage());
         }
         if ('NO AUTORIZADO' === (string)$estado) {
             $comprobante = $simpleXml->xpath('//autorizacion')[0];
            // throw new SriAuthorizeException($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
-           //paso 6 aqui iria no autorizado por el sri se deberia crear el directorio y actualizar el xml
+           //paso 6 aqui iria no autorizado por el sri se deberia crear el directorio y actualizar el xml y llenar el motivo de no autorizado
+           Storage::disk('comprobantes/no_autorizados')->put($nombre_fact_xml_firmada,$archivo_xml_firmado);
+           $xmlFile->update([
+            'directorio' => 'comprobantes/no_autorizados',
+            'estado' => 'no_autorizado'
+        ]);
            dd($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
         }
         if ('AUTORIZADO' === (string)$estado) {
@@ -801,7 +814,7 @@ class Factura extends Model
             //paso 7 comprbante autorizado por el sri
             Storage::disk('comprobantes/autorizados')->put($nombre_fact_xml_firmada,$archivo_xml_firmado);
            // dd('autorizado:', $nombre_fact_xml_firmada,$archivo_xml_firmado);
-           $xmlFile = XmlFile::where('factura_id', $factura_id)->firstOrFail();
+
            $xmlFile->update([
                'directorio' => 'comprobantes/autorizados',
                'estado' => 'autorizado'

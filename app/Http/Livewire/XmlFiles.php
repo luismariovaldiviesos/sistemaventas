@@ -133,6 +133,7 @@ class XmlFiles extends Component
         //autorizados
        // dd('vamos a recupearar del srl ',$nombre_fact_xml_firmada);
        //dd($invoiceObj->key);
+       $xmlFile = XmlFile::where('factura_id', $factura_id)->firstOrFail();
     $ruta_enviados  =  base_path('storage/app/comprobantes/enviados/');
      $archivo_xml_enviado =  file_get_contents($ruta_enviados .  $nombre_fact_xml_firmada);
     //dd($archivo_xml_enviado);
@@ -178,7 +179,7 @@ class XmlFiles extends Component
 
        if ($code !== 200) {
            //throw new SriAuthorizeException('Sri está caido.');
-           dd("sri caiido en recuperacion");
+           dd("PROBLEMAS CON EL SRI, REVISE SU CONEXIÓN A INTERNET O SRI CAÍDO");
        }
        //dd( substr($response, 0, 200)); // Imprime los primeros 200 caracteres de $response)
        // if (simplexml_load_string($response) === false) {
@@ -191,11 +192,16 @@ class XmlFiles extends Component
            //dd('estado del archivo recuperado del sri : ',$estado, $nombre_fact_xml_firmada);
        } catch (\Exception $e) {
            throw new Exception('Error al parsear el XML: ' . $e->getMessage());
-           dd('Error al parsear el XML: ' . $e->getMessage());
+           dd('ERROR AL TRATAR EL XML EN RECUPERACION DEL SRI: ' . $e->getMessage());
        }
        if ('NO AUTORIZADO' === (string)$estado) {
            $comprobante = $simpleXml->xpath('//autorizacion')[0];
           // throw new SriAuthorizeException($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
+          Storage::disk('comprobantes/no_autorizados')->put($nombre_fact_xml_firmada,$archivo_xml_enviado);
+          $xmlFile->update([
+           'directorio' => 'comprobantes/no_autorizados',
+           'estado' => 'no_autorizado'
+       ]);
           dd($comprobante->mensajes[0]->mensaje->mensaje, $comprobante->mensajes[0]->mensaje->informacionAdicional);
        }
        if ('AUTORIZADO' === (string)$estado) {
