@@ -31,6 +31,9 @@ paso seis NO_AUTORIZADO 770 (nada que hacer)     aqui se debe guardar el error e
 paso siete AUTORIZADO   782 (nada que hacer, fin del proceso)   OK
 
 
+377  ice en factura, revisar que ese cree conel numero de impuestos que graba
+
+
 
 cambios
 716 linea de factura
