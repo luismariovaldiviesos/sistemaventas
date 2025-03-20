@@ -11,11 +11,11 @@
             <div class="modal-header p-5">
                 <h2 class="font-medium text-base mr-auto">Gestión de Productos</h2>
 
-                @if ($this->ivaporcentaje != 'elegir' && $this->iceporcentaje != 'elegir')
+                {{-- @if ($this->ivaporcentaje != 'elegir' && $this->iceporcentaje != 'elegir') --}}
 
                     <x-save class="mt-4 mr-5"/>
 
-                @endif
+                {{-- @endif --}}
 
 
             </div>
@@ -113,7 +113,7 @@
                 </div>
 
 
-                <div class="mt-4">
+                {{-- <div class="mt-4">
                     <div class="sm:grid grid-cols-2 gap-2">
                         <div class="input-group">
                             <div class="input-group-text">IVA {{ number_format($iva,2)  }}</div>
@@ -139,7 +139,32 @@
                         <x-alert msg="{{ $message  }}" />
                         @enderror
                     </div>
+                </div> --}}
+
+
+                <div class="mt-4">
+                    <h5>Selecciona los impuestos aplicables:</h5>
+                    <div class="grid grid-cols-2 gap-2">
+                        @foreach($impuestos as $impuesto)
+                            <label class="flex items-center">
+                                <input
+                                    type="checkbox"
+                                    wire:model="impuestosSeleccionados"
+                                    value="{{ $impuesto->id }}"
+                                    class="mr-2"
+                                    {{ in_array($impuesto->id, $impuestosSeleccionados) ? 'checked' : '' }}
+                                >
+                                {{ $impuesto->nombre }} ({{ $impuesto->porcentaje }}%)
+                            </label>
+                        @endforeach
+                    </div>
+
+                    @error('impuestosSeleccionados')
+                    <x-alert msg="{{ $message }}" />
+                    @enderror
                 </div>
+
+
 
                 <div class="mt-4">
                     <div class="input-group">

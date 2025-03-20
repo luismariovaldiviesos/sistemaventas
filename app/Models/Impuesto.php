@@ -36,4 +36,12 @@ class Impuesto extends Model
         'codigo_porcentaje.required' => 'Codigo porcentaje impuesto requerido',
         'porcentaje.required' => 'Porcentaje impuesto requerido',
     ];
+
+
+     // Product.php
+public function productos()
+{
+    return $this->belongsToMany(Product::class, 'impuesto_producto', 'impuesto_id', 'producto_id');
+}
+
 }

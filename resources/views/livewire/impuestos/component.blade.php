@@ -42,11 +42,14 @@
                                         <td class="dark:border-dark-5 text-center">
                                             <div class="d-flex justify-content-center">
 
+                                                @if($impuesto->productos->count() < 0)
+
                                                     <button class="btn btn-danger text-white border-0"
                                                     onclick="destroy('impuestos','Destroy', {{ $impuesto->id }})"
                                                     type="button">
                                                         <i class=" fas fa-trash f-2x"></i>
                                                     </button>
+                                                @endif
 
                                                 <button class="btn btn-warning text-white border-0 ml-3"
                                                     wire:click.prevent="Edit({{ $impuesto->id }})"
@@ -59,7 +62,7 @@
                                 @empty
                                     <tr class="bg-gray-200 dark:bg-dark-1">
                                         <td colspan="2">
-                                            <h6 class="text-center">    NO HAY IMPUESTOS  REGISTRADAS </h6>
+                                            <h6 class="text-center">    NO HAY IMPUESTOS  REGISTRADOS </h6>
                                         </td>
                                     </tr>
                                 @endforelse

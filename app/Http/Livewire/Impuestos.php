@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\Impuesto;
+use App\Models\Product;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -92,7 +93,50 @@ class Impuestos extends Component
             ]
         );
 
+          // Obtener todos los productos que tienen este impuesto
+         $productos = Product::whereHas('impuestos', function($query) use ($impuesto) {
+            $query->where('impuestos.id', $impuesto->id);
+                })->get();
+        //dd($productos);
 
+         // Actualizar el precio de los productos con el nuevo porcentaje del impuesto
+        foreach ($productos as $producto) {
+            //calcular el nuevo precio teniendo en cuenta el nuevo porcentaje de impuesto
+            $precioBase  =  $producto->price;
+            $precioConDescuento = $precioBase;
+
+            // Aplica descuento si existe
+            if ($producto->descuento > 0) {
+                $precioConDescuento = $precioBase - ($precioBase * $producto->descuento / 100);
+            }
+
+           //dd($precioConDescuent);
+
+           //recalcular los impuestos
+           $totalImpuestos =  0;
+           foreach ($producto->impuestos as $impuestoRelacionado) {
+            // Si el impuesto es el que se acaba de actualizar, usamos el nuevo porcentaje
+            if ($impuestoRelacionado->id === $impuesto->id) {
+                $totalImpuestos += ($precioConDescuento * $impuesto->porcentaje) / 100;
+            } else {
+                // Si el impuesto no ha cambiado, usamos el porcentaje actual del impuesto relacionado
+                $totalImpuestos += ($precioConDescuento * $impuestoRelacionado->porcentaje) / 100;
+            }
+        }
+           //nuevo pvp
+            $pvp = $precioConDescuento + $totalImpuestos;
+            // Actualizamos el producto con el nuevo precio
+            //dd($pvp);
+            if (is_numeric($pvp) && $pvp > 0) {
+                $producto->update([
+                    'price2' => number_format($pvp, 2),
+                ]);
+                //dd('Precio actualizado: ' . $producto->price2); // Confirmación de la actualización
+            } else {
+                //dd('Valor de PVP no válido: ' . $pvp); // Si el PVP es inválido
+            }
+
+            }
         $this->noty($this->selected_id < 1 ? 'Impuesto Registrado' : 'Impuesto Actualizado', 'noty', false, 'close-modal');
         $this->resetUI();
     }

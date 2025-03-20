@@ -12,7 +12,7 @@ class Product extends Model
     use CartTrait;
 
 
-    protected $fillable =  ['code','name','price','iva','ice','descuento','price2','changes','cost','stock','minstock','category_id'];
+    protected $fillable =  ['code','name','price','descuento','price2','changes','cost','stock','minstock','category_id'];
 
 
     //validaciones
@@ -24,8 +24,6 @@ class Product extends Model
                 'code' => 'nullable|max:25',
                 'category' => 'required|not_in:elegir',
                 'price' => 'gt:0', // mayor a cero
-                'iva' => 'required|not_in:elegir',
-                'ice' => 'required|not_in:elegir',
                 'cost' => 'gt:0', // mayor a cero
                 'stock' => 'required',
                 'minstock' => 'required',
@@ -37,8 +35,6 @@ class Product extends Model
                 'code' => 'nullable|max:25',
                 'category' => 'required|not_in:elegir',
                 'price' => 'gt:0', // mayor a cero
-                'iva' => 'required|not_in:elegir',
-                'ice' => 'required|not_in:elegir',
                 'cost' => 'gt:0', // mayor a cero
                 'stock' => 'required',
                 'minstock' => 'required',
@@ -58,13 +54,7 @@ class Product extends Model
         'cost.gt' => 'El costo debe ser mayor a cero',
         'price.gt' => 'El precio debe ser mayor a cero',
         'stock.required' => 'Ingresa el stock',
-        'minstock.required' => 'Ingresa el stock mínimo',
-
-        'iva.not_in' => 'Elige un valor para el  iva',
-        'ice.not_in' => 'Elige un valor para el ice ',
-
-        'iva.required' => 'El IVA es requerido',
-        'ice.required' => 'El ICE es requerido',
+        'minstock.required' => 'Ingresa el stock mínimo'
     ];
 
 
@@ -128,6 +118,13 @@ class Product extends Model
 
         return $stock;
     }
+
+
+  // Product.php
+public function impuestos()
+{
+    return $this->belongsToMany(Impuesto::class, 'impuesto_producto', 'producto_id', 'impuesto_id');
+}
 
 
    }

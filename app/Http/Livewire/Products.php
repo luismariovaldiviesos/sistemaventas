@@ -4,7 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\Category;
 use App\Models\Image;
-
+use App\Models\Impuesto;
 use App\Models\Product;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -21,13 +21,21 @@ class Products extends Component
     private $pagination =15;
     protected $paginationTheme='tailwind';
 
-    public $ivaporcentaje = 'elegir';
-    public $iceporcentaje = 'elegir';
+    public $impuestos ; // lista de impuestos desde la base de datos
+    public $impuestosSeleccionados = [];
+    public $totalImpuestos;
 
-    public $iva = 0;
-    public $ice = 0;
+    // public $ivaporcentaje = 'elegir';
+    // public $iceporcentaje = 'elegir';
+
+    // public $iva = 0;
+    // public $ice = 0;
 
    // public $selectedImpuestos =[];
+
+   public function mount(){
+        $this->impuestos  =  Impuesto::all();
+   }
 
 
     public function render()
@@ -83,19 +91,16 @@ class Products extends Component
             'code',
             'cost',
             'price',
-            'iva',
-            'ice',
             'descuento',
             'price2',
-            'ivaporcentaje',
-            'iceporcentaje',
-            'stock',
+             'stock',
             'minstock',
             'selected_id',
             'search',
             'action',
             'gallery'
         );
+
     }
 
     public function CloseModal()
@@ -113,14 +118,15 @@ class Products extends Component
         $this->code = $product->code;
         $this->cost = number_format($product->cost,2) ;
         $this->price = number_format($product->price,2) ;
-        $this->iva = $product->iva;
-        $this->ice = $product->ice;
+        // $this->iva = $product->iva;
+        // $this->ice = $product->ice;
         $this->descuento = number_format($product->descuento,1);
         $this->price2 = number_format($product->price2,2) ;
         $this->stock = $product->stock;
         $this->minstock = $product->minstock;
         $this->category = $product->category_id;
-
+        $this->impuestosSeleccionados = $product->impuestos->pluck('id')->toArray();
+        //dd($this->impuestosSeleccionados);
 
         $this->noty('', 'open-modal', false);
 
@@ -131,26 +137,42 @@ class Products extends Component
 
     public function Store()
     {
+        //dd($this->impuestosSeleccionados);
 
          sleep(1);
-        $this->validate(Product::rules($this->selected_id), Product::$messages);
+       // $this->validate(Product::rules($this->selected_id), Product::$messages);
 
 
         if($this->descuento > 0)
         {
             $totalDescuento  =  ($this->price * $this->descuento) /100;
             $precioConDescuento =   $this->price - $totalDescuento;
-            $this->iva = ($precioConDescuento * $this->ivaporcentaje)/100;
-            $this->ice = ($precioConDescuento * $this->iceporcentaje)/100;
-            $impuestos = $this->iva + $this->ice;
-            $pvp = $precioConDescuento + $impuestos;
+            // $this->iva = ($precioConDescuento * $this->ivaporcentaje)/100;
+            // $this->ice = ($precioConDescuento * $this->iceporcentaje)/100;
+            // $impuestos = $this->iva + $this->ice;
+            // $pvp = $precioConDescuento + $impuestos;
         }
         else{
-            $this->iva = ($this->price * $this->ivaporcentaje)/100;
-            $this->ice = ($this->price * $this->iceporcentaje)/100;
-            $impuestos = $this->iva + $this->ice;
-            $pvp = $this->price + $impuestos;
+            // $this->iva = ($this->price * $this->ivaporcentaje)/100;
+            // $this->ice = ($this->price * $this->iceporcentaje)/100;
+            // $impuestos = $this->iva + $this->ice;
+            // $pvp = $this->price + $impuestos;
+            $precioConDescuento = $this->price;
        }
+
+       $this->totalImpuestos = 0;
+       foreach($this->impuestosSeleccionados as $impuestoId){
+            $impuesto =  Impuesto::find($impuestoId); // treamoes el impuesto
+            if ($impuesto) {
+                $montoImpuesto = ($precioConDescuento * $impuesto->porcentaje) / 100;
+                $this->totalImpuestos += $montoImpuesto;
+            }
+       }
+
+       // Precio final considerando los impuestos
+        $pvp = $precioConDescuento + $this->totalImpuestos;
+
+       //dd($precioConDescuento, $pvp);
 
         $product = Product::updateOrCreate(
 
@@ -160,8 +182,8 @@ class Products extends Component
                 'code' => $this->code,
                 'cost' => $this->cost,
                 'price' => $this->price,
-                'iva' => $this->iva,
-                'ice' => $this->ice,
+                // 'iva' => $this->iva,
+                // 'ice' => $this->ice,
                 'descuento' => $this->descuento,
                 'price2' => $pvp,
                 'stock' => $this->stock,
@@ -169,6 +191,8 @@ class Products extends Component
                 'category_id' => $this->category
             ]
         );
+        // Sincronizar impuestos seleccionados con el producto
+        $product->impuestos()->sync($this->impuestosSeleccionados);
 
         //fotos producto
         if(!empty($this->gallery)){
@@ -239,6 +263,7 @@ class Products extends Component
         });
         //eliminar las relaciones
         $product->images()->delete();
+        $product->impuestos()->detach(); // Elimina relaciones en la tabla pivote
         //eliminar el producto
         $product->delete();
         $this->noty('Se eliminó el producto');
