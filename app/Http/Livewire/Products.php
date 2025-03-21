@@ -16,7 +16,7 @@ class Products extends Component
     use WithPagination;
     use WithFileUploads;
 
-    public $name='', $code ='', $cost=0, $price=0, $price2=0, $pvp = 0, $descuento = 0,  $stock=0, $minstock=0, $category='elegir',$selected_id=0,$gallery = [];
+    public $name='', $code ='', $cost=0, $price=0, $price2=0, $pvp = 0, $descuento = 0,  $stock, $minstock, $category='elegir',$selected_id=0,$gallery = [];
     public $action = 'Listado', $componentName='CATALOGO DE PRODUCTOS', $search, $form = false;
     private $pagination =15;
     protected $paginationTheme='tailwind';
@@ -139,11 +139,11 @@ class Products extends Component
 
     public function Store()
     {
-        //dd($this->impuestosSeleccionados);
+
 
          sleep(1);
 
-        $this->validate(Product::rules($this->selected_id), Product::$messages);
+        $this->validate(Product::rules($this->selected_id,$this->isPhysical), Product::$messages);
 
 
         if($this->descuento > 0)
@@ -169,7 +169,7 @@ class Products extends Component
        // Precio final considerando los impuestos
         $pvp = $precioConDescuento + $this->totalImpuestos;
 
-       dd($precioConDescuento, $pvp);
+      // dd($precioConDescuento, $pvp);
 
         $product = Product::updateOrCreate(
 

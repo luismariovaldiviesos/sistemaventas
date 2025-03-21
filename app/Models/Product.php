@@ -16,32 +16,23 @@ class Product extends Model
 
 
     //validaciones
-    public static  function rules ($id)
-    {
-        if($id <= 0){
-            return[
-                'name' => 'required|min:3|max:100|string|unique:products',
-                'code' => 'nullable|max:25',
-                'category' => 'required|not_in:elegir',
-                'price' => 'gt:0', // mayor a cero
-                'cost' => 'gt:0', // mayor a cero
-                'stock' => 'required',
-                'minstock' => 'required',
-            ];
-        }
-        else{
-            return[
-                'name' => "required|min:3|max:100|string|unique:products,name,{$id}",
-                'code' => 'nullable|max:25',
-                'category' => 'required|not_in:elegir',
-                'price' => 'gt:0', // mayor a cero
-                'cost' => 'gt:0', // mayor a cero
-                'stock' => 'required',
-                'minstock' => 'required',
-            ];
-        }
+    public static function rules($id, $requiereStock = false)
+{
+    $rules = [
+        'name' => "required|min:3|max:100|string|unique:products,name,{$id}",
+        'code' => 'nullable|max:25',
+        'category' => 'required|not_in:elegir',
+        'price' => 'gt:0',  // Mayor a cero
+        'cost' => 'gt:0',   // Mayor a cero
+    ];
 
+    if ($requiereStock) {
+        $rules['stock'] = 'required|integer|min:0';
+        $rules['minstock'] = 'required|integer|min:0';
     }
+
+    return $rules;
+}
 
     public static $messages = [
         'name.required' => 'Nombre del producto requerido',
