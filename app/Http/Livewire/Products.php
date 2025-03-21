@@ -24,6 +24,7 @@ class Products extends Component
     public $impuestos ; // lista de impuestos desde la base de datos
     public $impuestosSeleccionados = [];
     public $totalImpuestos;
+    public bool $isPhysical = false;
 
     // public $ivaporcentaje = 'elegir';
     // public $iceporcentaje = 'elegir';
@@ -140,7 +141,8 @@ class Products extends Component
         //dd($this->impuestosSeleccionados);
 
          sleep(1);
-       // $this->validate(Product::rules($this->selected_id), Product::$messages);
+
+        $this->validate(Product::rules($this->selected_id,$this->isPhysical), Product::$messages);
 
 
         if($this->descuento > 0)
@@ -172,7 +174,7 @@ class Products extends Component
        // Precio final considerando los impuestos
         $pvp = $precioConDescuento + $this->totalImpuestos;
 
-       //dd($precioConDescuento, $pvp);
+       dd($precioConDescuento, $pvp);
 
         $product = Product::updateOrCreate(
 

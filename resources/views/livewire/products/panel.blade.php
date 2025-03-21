@@ -75,6 +75,19 @@
                 </div>
 
                 <div class="mt-4">
+                    <div class="input-group">
+                        <label class="flex items-center">
+                            <input
+                                type="checkbox"
+                                wire:model="isPhysical"
+                                class="mr-2">
+                            Producto Físico (Requiere Stock)
+                        </label>
+                    </div>
+                </div>
+
+                @if ($isPhysical == true)
+                <div class="mt-4">
                     <div class="sm:grid grid-cols-2 gap-2">
                         <div class="input-group">
                             <div class="input-group-text">Stock</div>
@@ -94,6 +107,7 @@
                         @enderror
                     </div>
                 </div>
+                @endif
 
 
                 <div class="mt-4">

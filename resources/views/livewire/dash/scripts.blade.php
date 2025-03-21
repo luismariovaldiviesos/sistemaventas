@@ -207,7 +207,12 @@
             ]
             chartTop5.updateSeries(newData)
 
-
+            // Actualizar el título del total anual
+            chartMonth.updateOptions({
+                title: {
+                    text: totalYearSales()
+                }
+            })
 
         })
 
