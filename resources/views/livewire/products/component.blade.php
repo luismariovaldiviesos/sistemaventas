@@ -36,7 +36,7 @@
                                     <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">IMP</th>
                                     <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">DSTO</th>
                                     <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">PRECIO DE VENTA </th>
-                                    <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">STOCK</th>
+                                    {{-- <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">STOCK</th> --}}
                                     <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">ACCIONES</th>
                                 </tr>
                             </thead>
@@ -49,7 +49,7 @@
 
                                         <td class="dark:border-dark-5">
                                             <h6 class="mb-1 font-medium">{{ $product->name }}</h6>
-                                            <small class="font-normal">{{ $product->sales->count() }} Ventas</small>
+                                            {{-- <small class="font-normal">{{ $product->sales->count() }} Ventas</small> --}}
                                         </td>
 
                                         <td class="text-center">{{ strtoupper($product->category ) }}</td>

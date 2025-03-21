@@ -20,10 +20,10 @@ class Product extends Model
 {
     $rules = [
         'name' => "required|min:3|max:100|string|unique:products,name,{$id}",
-        'code' => 'nullable|max:25',
+        'code' => 'required|max:25',
         'category' => 'required|not_in:elegir',
         'price' => 'gt:0',  // Mayor a cero
-        'cost' => 'gt:0',   // Mayor a cero
+
     ];
 
     if ($requiereStock) {
@@ -35,15 +35,15 @@ class Product extends Model
 }
 
     public static $messages = [
-        'name.required' => 'Nombre del producto requerido',
-        'name.min' => 'Nombre del producto debe tener al menos tres caracteres',
-        'name.max' => 'Nombre del producto debe tener máximos 100 caracteres',
-        'name.unique' => 'Nombre del producto ya existe en la base de datos',
+        'name.required' => 'Nombre del producto/servicio requerido',
+        'name.min' => 'Nombre del producto/servicio debe tener al menos tres caracteres',
+        'name.max' => 'Nombre del producto/servicio debe tener máximos 100 caracteres',
+        'name.unique' => 'Nombre del producto/servicio ya existe en la base de datos',
         'code.max' => 'El código debe tener máximo 25 caracteres',
+         'code.required' => 'Ingrese Codigo del producto/servicio',
         'category.required' => 'La categoria es requerida',
         'category.not_in' => 'Elige una categoría válida',
-        'cost.gt' => 'El costo debe ser mayor a cero',
-        'price.gt' => 'El precio debe ser mayor a cero',
+       'price.gt' => 'El precio debe ser mayor a cero',
         'stock.required' => 'Ingresa el stock',
         'minstock.required' => 'Ingresa el stock mínimo'
     ];

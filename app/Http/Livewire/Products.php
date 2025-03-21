@@ -177,12 +177,12 @@ class Products extends Component
             [
                 'name' => $this->name,
                 'code' => $this->code,
-                'cost' => $this->cost,
+                'cost' => $this->cost ?? null,
                 'price' => $this->price,
                 'descuento' => $this->descuento,
                 'price2' => $pvp,
-                'stock' => $this->stock,
-                'minstock' => $this->minstock,
+                'stock' => $this->stock ?? null,
+                'minstock' => $this->minstock ?? null,
                 'category_id' => $this->category
             ]
         );
