@@ -142,23 +142,17 @@ class Products extends Component
 
          sleep(1);
 
-        $this->validate(Product::rules($this->selected_id,$this->isPhysical), Product::$messages);
+        $this->validate(Product::rules($this->selected_id), Product::$messages);
 
 
         if($this->descuento > 0)
         {
             $totalDescuento  =  ($this->price * $this->descuento) /100;
             $precioConDescuento =   $this->price - $totalDescuento;
-            // $this->iva = ($precioConDescuento * $this->ivaporcentaje)/100;
-            // $this->ice = ($precioConDescuento * $this->iceporcentaje)/100;
-            // $impuestos = $this->iva + $this->ice;
-            // $pvp = $precioConDescuento + $impuestos;
+
         }
         else{
-            // $this->iva = ($this->price * $this->ivaporcentaje)/100;
-            // $this->ice = ($this->price * $this->iceporcentaje)/100;
-            // $impuestos = $this->iva + $this->ice;
-            // $pvp = $this->price + $impuestos;
+
             $precioConDescuento = $this->price;
        }
 
@@ -184,8 +178,6 @@ class Products extends Component
                 'code' => $this->code,
                 'cost' => $this->cost,
                 'price' => $this->price,
-                // 'iva' => $this->iva,
-                // 'ice' => $this->ice,
                 'descuento' => $this->descuento,
                 'price2' => $pvp,
                 'stock' => $this->stock,
@@ -225,11 +217,6 @@ class Products extends Component
                 $product->images()->save($img);
             }
         }
-
-        // producto impuesto
-       // $product->impuestos()->sync($this->selectedImpuestos, true);
-        //$this->pvp =  $this->calculaPVP($product);
-        //$affected =  DB::table('products')->where('id', $product->id)->update(['price2' => $this->pvp]);
         $this->noty($this->selected_id > 0  ?  'Producto actualizado' : 'Producto registrado', 'noty', 'false', 'close-modal');
         $this->resetUI();
     }
