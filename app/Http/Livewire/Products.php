@@ -99,7 +99,8 @@ class Products extends Component
             'selected_id',
             'search',
             'action',
-            'gallery'
+            'gallery',
+            'isPhysical'
         );
 
     }
