@@ -323,7 +323,8 @@ class Factura extends Model
     public function xmlFactura($factura_id,$tipoIdentificadorCli, $razonSocialCli, $identificadorCliente,$direccionCliente,
      $totalSinImpuesto, $totalDescuento,$subtotaliva12, $totalIva12,$totalFactura, $detalles,$secuencia,$claveAcce)
     {
-        //dd($this->claveAcceso, 'desde eme metodo a crear xml');
+        // dd($factura_id,$tipoIdentificadorCli, $razonSocialCli, $identificadorCliente,$direccionCliente,
+        // $totalSinImpuesto, $totalDescuento,$subtotaliva12, $totalIva12,$totalFactura, $detalles,$secuencia,$claveAcce);
         $empresa = $this->empresa();
         //$ultimaFactura = Factura::latest()->first();
         //$secuencial = $ultimaFactura->secuencial;
@@ -494,6 +495,7 @@ class Factura extends Model
         $archivo_factura_xml =$xml->saveXML();
         //nombre del archivo
         $nombre_fact_xml = $identificadorCliente.'_'.$secuencia.'.xml'; // nombre de la imagen
+        //dd($nombre_fact_xml,$archivo_factura_xml);
         //Y se guarda en el nombre del archivo 'achivo.xml', y el obejto nstanciado
         try {
             Storage::disk('comprobantes/no_firmados')->put($nombre_fact_xml,$archivo_factura_xml);

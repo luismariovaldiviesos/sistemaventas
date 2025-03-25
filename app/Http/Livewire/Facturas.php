@@ -96,11 +96,11 @@ class Facturas extends Component
             $this->subTotSinImpuesto =  $this->getTotalSICart();
             $this->contentCart = $this->getContentCart();
             //dd($this->contentCart);
-            $this->iva12 = $this->getIva12();
-            $this->iva0 = $this->getIva0();
-            $this->totalImpuesto12 = $this->getImpuesto12();
-            $this->totalIce = $this->getIce();
-            $this->totalDscto = $this->getDscto();
+            // $this->iva12 = $this->getIva12();
+            // $this->iva0 = $this->getIva0();
+            // $this->totalImpuesto12 = $this->getImpuesto12();
+            // $this->totalIce = $this->getIce();
+            // $this->totalDscto = $this->getDscto();
             //dd($totalImpuesto12);
 
 
@@ -245,6 +245,11 @@ class Facturas extends Component
         $this->totalIce = 0;           // Total ICE
         $this->totalImpuesto15 = 0;    // Total IVA 15%
         $this->totalCart = 0;          // Total general del carrito
+         // $this->iva12 = $this->getIva12();
+            // $this->iva0 = $this->getIva0();
+            // $this->totalImpuesto12 = $this->getImpuesto12();
+            // $this->totalIce = $this->getIce();
+            // $this->totalDscto = $this->getDscto();
 
         // Inicializar array de impuestos dinámico
         $impuestos = [
@@ -390,7 +395,7 @@ class Facturas extends Component
             //********** crea xml , firma, envia y devuelve del sri  */
             $factura->xmlFactura(
                 $factura->id, $tipeIDenti, $customer->businame, $customer->valueidenti, $customer->address,
-                $this->subTotSinImpuesto, $this->totalDscto,$this->subtotal0, $this->subtotal15,$this->totalIce,
+                $this->subTotSinImpuesto, $this->totalDscto, $this->subtotal15,
                 $this->totalImpuesto15, $this->totalCart, $this->getContentCart(),
                 $this->secuencial, $this->claveAcceso
             );
