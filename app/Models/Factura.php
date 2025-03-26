@@ -375,8 +375,20 @@ class Factura extends Model
 		$xml_bas = $xml->createElement('baseImponible',$subtotaliva12); // ok subtotal iva 12
 		$xml_val = $xml->createElement('valor', $totalIva12);// total impuesto 12 %  round($amount, 2);
 
-        //REVISAR AQUI EL ICE
+//REVISAR AQUI EL ICE****************************************************************************************
+        $xml_tim_ice = $xml->createElement('totalImpuesto');
+$xml_tco_ice = $xml->createElement('codigo','3'); // 3 = ICE
+$xml_cpr_ice = $xml->createElement('codigoPorcentaje','3009'); // Código específico para ICE (ejemplo: 3009)
+$xml_bas_ice = $xml->createElement('baseImponible','0.00'); // subtotal para ICE
+$xml_val_ice = $xml->createElement('valor', '0.00'); // total ICE
 
+// aqui iva cero
+$xml_tim_iva0 = $xml->createElement('totalImpuesto');
+$xml_tco_iva0 = $xml->createElement('codigo','2'); // 2 = IVA
+$xml_cpr_iva0 = $xml->createElement('codigoPorcentaje','0'); // 0 = IVA 0%
+$xml_bas_iva0 = $xml->createElement('baseImponible','0.00'); // subtotal para IVA 0%
+$xml_val_iva0 = $xml->createElement('valor', '0.00'); // siempre 0 para IVA 0%
+//********************************************************************************************************************** */
         //PARTE 2.3
 		$xml_pro = $xml->createElement('propina','0.00');  // ok
 		$xml_imt = $xml->createElement('importeTotal',$totalFactura);// ok
@@ -461,6 +473,22 @@ class Factura extends Model
 		$xml_tim->appendChild($xml_cpr);
 		$xml_tim->appendChild($xml_bas);
 		$xml_tim->appendChild($xml_val);
+
+        //********************ice y cero */
+        //cerrar iva0
+$xml_imp->appendChild($xml_tim_iva0);
+$xml_tim_iva0->appendChild($xml_tco_iva0);
+$xml_tim_iva0->appendChild($xml_cpr_iva0);
+$xml_tim_iva0->appendChild($xml_bas_iva0);
+$xml_tim_iva0->appendChild($xml_val_iva0);
+
+//cerrar ice
+$xml_imp->appendChild($xml_tim_ice);
+$xml_tim_ice->appendChild($xml_tco_ice);
+$xml_tim_ice->appendChild($xml_cpr_ice);
+$xml_tim_ice->appendChild($xml_bas_ice);
+$xml_tim_ice->appendChild($xml_val_ice);
+
 		$xml_fac->appendChild($xml_def);
 
 
