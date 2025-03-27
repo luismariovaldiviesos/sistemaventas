@@ -40,6 +40,12 @@ cambios
 
 
 
+27  de marzo iniciamos modificacion de tabla factura para eliminar
+campos directos de impuestos; hasta aqui es funcional con impuestos
+directos pasados al crear el xml
+
+
+
 
 
 
