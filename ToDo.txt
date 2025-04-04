@@ -43,6 +43,17 @@ cambios
 27  de marzo iniciamos modificacion de tabla factura para eliminar
 campos directos de impuestos; hasta aqui es funcional con impuestos
 directos pasados al crear el xml
+se deben elimnar los campos :
+subtotal0
+subtotal12
+ice
+iva12
+
+
+
+ojo creo que si  hay que poner recklacular en el render
+y no en cada metodo
+
 
 
 

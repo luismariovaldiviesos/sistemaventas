@@ -41,7 +41,7 @@ class Factura extends Model
     protected $dates = ['deleted_at']; // Indica que deleted_at es una fecha
 
     protected $fillable = ['secuencial','numeroAutorizacion','fechaAutorizacion','codDoc','claveAcceso','customer_id',
-                            'user_id','subtotal','subtotal0','subtotal12','ice','descuento','iva12','total','formaPago'
+                            'user_id','subtotal','descuento','total','formaPago'
                             ];
 
 
@@ -320,239 +320,195 @@ class Factura extends Model
 
     // public function xmlFactura($fecha,$correo,$secuencial,$codigo,$cantidad,$descripcion,
     //                          $preciou,$descuento,$preciot,$subtotal,$iva12,$total)
-    public function xmlFactura($factura_id,$tipoIdentificadorCli, $razonSocialCli, $identificadorCliente,$direccionCliente,
-     $totalSinImpuesto, $totalDescuento,$subtotaliva12, $totalIva12,$totalFactura, $detalles,$secuencia,$claveAcce)
-    {
-        // dd($factura_id,$tipoIdentificadorCli, $razonSocialCli, $identificadorCliente,$direccionCliente,
-        // $totalSinImpuesto, $totalDescuento,$subtotaliva12, $totalIva12,$totalFactura, $detalles,$secuencia,$claveAcce);
-        $empresa = $this->empresa();
-        //$ultimaFactura = Factura::latest()->first();
-        //$secuencial = $ultimaFactura->secuencial;
-        $xml =  new DOMDocument('1.0','utf-8');
-        $xml->formatOutput = true;
-        //PRIMERA PARTE
-		$xml_fac = $xml->createElement('factura');
-		$cabecera = $xml->createAttribute('id');
-		$cabecera->value = 'comprobante';
-		$cabecerav = $xml->createAttribute('version');
-		$cabecerav->value = '1.0.0';
-		$xml_inf = $xml->createElement('infoTributaria');
-		$xml_amb = $xml->createElement('ambiente',$empresa->ambiente);
-		$xml_tip = $xml->createElement('tipoEmision',$empresa->tipoEmision);
-		$xml_raz = $xml->createElement('razonSocial',$empresa->razonSocial);
-		$xml_nom = $xml->createElement('nombreComercial',$empresa->nombreComercial);
-		$xml_ruc = $xml->createElement('ruc',$empresa->ruc);
-		//$fechasf=date('dmY'); /// ******************revisar***************
-		// $dig = new modulo();
-		// $clave_acceso=$fechasf.'01010376784400110010010000'.$secuencial.'123456781';
-		$xml_cla = $xml->createElement('claveAcceso',$claveAcce);
-		$xml_doc = $xml->createElement('codDoc','01');  ///simpre va a ser 01 porque es fact
-		$xml_est = $xml->createElement('estab',$empresa->estab);
-		$xml_emi = $xml->createElement('ptoEmi',$empresa->ptoEmi);
-		$xml_sec = $xml->createElement('secuencial',$secuencia);
-		$xml_dir = $xml->createElement('dirMatriz',$empresa->dirMatriz);
+    public function xmlFactura($factura_id, $tipoIdentificadorCli, $razonSocialCli, $identificadorCliente, $direccionCliente,
+    $totalSinImpuesto, $totalDescuento, $totalFactura, $detalles, $secuencia, $claveAcce, $totalImpuestos)
+{
+   // dd($totalImpuestos, $detalles);
+    $empresa = $this->empresa();
+    $xml = new DOMDocument('1.0', 'utf-8');
+    $xml->formatOutput = true;
+
+    // Crear la estructura base del XML
+    $xml_fac = $xml->createElement('factura');
+    $xml_fac->setAttribute('id', 'comprobante');
+    $xml_fac->setAttribute('version', '1.0.0');
+
+    $xml_inf = $xml->createElement('infoTributaria');
+    $xml_inf->appendChild($xml->createElement('ambiente', $empresa->ambiente));
+    $xml_inf->appendChild($xml->createElement('tipoEmision', $empresa->tipoEmision));
+    $xml_inf->appendChild($xml->createElement('razonSocial', $empresa->razonSocial));
+    $xml_inf->appendChild($xml->createElement('nombreComercial', $empresa->nombreComercial));
+    $xml_inf->appendChild($xml->createElement('ruc', $empresa->ruc));
+    $xml_inf->appendChild($xml->createElement('claveAcceso', $claveAcce));
+    $xml_inf->appendChild($xml->createElement('codDoc', '01'));
+    $xml_inf->appendChild($xml->createElement('estab', $empresa->estab));
+    $xml_inf->appendChild($xml->createElement('ptoEmi', $empresa->ptoEmi));
+    $xml_inf->appendChild($xml->createElement('secuencial', $secuencia));
+    $xml_inf->appendChild($xml->createElement('dirMatriz', $empresa->dirMatriz));
+
+    $xml_fac->appendChild($xml_inf);
+
+    // Información de la factura
+    $xml_def = $xml->createElement('infoFactura');
+    $xml_def->appendChild($xml->createElement('fechaEmision', date('d/m/Y')));
+    $xml_def->appendChild($xml->createElement('dirEstablecimiento', $empresa->dirEstablecimiento));
+    $xml_def->appendChild($xml->createElement('obligadoContabilidad', $empresa->obligadoContabilidad));
+    $xml_def->appendChild($xml->createElement('tipoIdentificacionComprador', $tipoIdentificadorCli));
+    $xml_def->appendChild($xml->createElement('razonSocialComprador', $razonSocialCli));
+    $xml_def->appendChild($xml->createElement('identificacionComprador', $identificadorCliente));
+    $xml_def->appendChild($xml->createElement('direccionComprador', $direccionCliente));
+    $xml_def->appendChild($xml->createElement('totalSinImpuestos', number_format((float)$totalSinImpuesto, 2, '.', '')));
+    $xml_def->appendChild($xml->createElement('totalDescuento', number_format((float)$totalDescuento, 2, '.', '')));
 
 
-        $xml_def = $xml->createElement('infoFactura');
-		$xml_fec = $xml->createElement('fechaEmision',date('d/m/Y'));
-		$xml_des = $xml->createElement('dirEstablecimiento',$empresa->dirEstablecimiento);
-		$xml_con = $xml->createElement('contribuyenteEspecial',$empresa->contribuyenteEspecial);
-		$xml_obl = $xml->createElement('obligadoContabilidad',$empresa->obligadoContabilidad);
-		$xml_ide = $xml->createElement('tipoIdentificacionComprador', $tipoIdentificadorCli);
-		$xml_rco = $xml->createElement('razonSocialComprador', $razonSocialCli);
-		$xml_idc = $xml->createElement('identificacionComprador', $identificadorCliente);
-        $xml_dir_cli = $xml->createElement('direccionComprador',$direccionCliente);
-		$xml_tsi = $xml->createElement('totalSinImpuestos', $totalSinImpuesto);// total de factura ok
-		$xml_tds = $xml->createElement('totalDescuento', $totalDescuento);// ttal de descuento factura ok
-
-
-        //SEGUNDA PARTE 2.2
-		$xml_imp = $xml->createElement('totalConImpuestos');// inicio de impuestos ok
-        // iva 12%
-		$xml_tim = $xml->createElement('totalImpuesto');// ok iva 12
-		$xml_tco = $xml->createElement('codigo','2');// ok codi¿go impuesto 2  = iva
-		$xml_cpr = $xml->createElement('codigoPorcentaje','4');// ok codigo porcentaje iva 12 = 2  iva al 15 = 4
-		$xml_bas = $xml->createElement('baseImponible',$subtotaliva12); // ok subtotal iva 12
-		$xml_val = $xml->createElement('valor', $totalIva12);// total impuesto 12 %  round($amount, 2);
-
-//REVISAR AQUI EL ICE****************************************************************************************
-        $xml_tim_ice = $xml->createElement('totalImpuesto');
-$xml_tco_ice = $xml->createElement('codigo','3'); // 3 = ICE
-$xml_cpr_ice = $xml->createElement('codigoPorcentaje','3009'); // Código específico para ICE (ejemplo: 3009)
-$xml_bas_ice = $xml->createElement('baseImponible','0.00'); // subtotal para ICE
-$xml_val_ice = $xml->createElement('valor', '0.00'); // total ICE
-
-// aqui iva cero
-$xml_tim_iva0 = $xml->createElement('totalImpuesto');
-$xml_tco_iva0 = $xml->createElement('codigo','2'); // 2 = IVA
-$xml_cpr_iva0 = $xml->createElement('codigoPorcentaje','0'); // 0 = IVA 0%
-$xml_bas_iva0 = $xml->createElement('baseImponible','0.00'); // subtotal para IVA 0%
-$xml_val_iva0 = $xml->createElement('valor', '0.00'); // siempre 0 para IVA 0%
-//********************************************************************************************************************** */
-        //PARTE 2.3
-		$xml_pro = $xml->createElement('propina','0.00');  // ok
-		$xml_imt = $xml->createElement('importeTotal',$totalFactura);// ok
-		$xml_mon = $xml->createElement('moneda','DOLAR');// ok
-
-		//PARTE PAGOS
-		$xml_pgs = $xml->createElement('pagos');//ok
-		$xml_pag = $xml->createElement('pago');// ok
-		$xml_fpa = $xml->createElement('formaPago','01');// efectivo ok
-		$xml_tot = $xml->createElement('total',$totalFactura);// ok
-		$xml_pla = $xml->createElement('plazo','90');// ok
-		$xml_uti = $xml->createElement('unidadTiempo','dias');// ok
-        $xml_dts = $xml->createElement('detalles');
-        foreach ($detalles as $d) {
-            $xml_det = $xml->createElement('detalle');
-            $xml_cop = $xml->createElement('codigoPrincipal', $d['id']);
-            $xml_dcr = $xml->createElement('descripcion', $d['name']);
-            $xml_can = $xml->createElement('cantidad', $d['qty']);
-            $xml_pru = $xml->createElement('precioUnitario', round($d['price'], 2));
-            $xml_dsc = $xml->createElement('descuento', $d['descuento']);
-            $xml_tsm = $xml->createElement('precioTotalSinImpuesto', round($d['price'], 2));
-            $xml_ips = $xml->createElement('impuestos');
-            $xml_ipt = $xml->createElement('impuesto');
-            $xml_cdg = $xml->createElement('codigo', '2');
-            $xml_cpt = $xml->createElement('codigoPorcentaje', '4');
-            $xml_trf = $xml->createElement('tarifa', '15');
-            $xml_bsi = $xml->createElement('baseImponible',round($d['price'], 2));
-            $xml_vlr = $xml->createElement('valor', round($d['price'], 2));
-
-            $xml_det->appendChild($xml_cop);
-            $xml_det->appendChild($xml_dcr);
-            $xml_det->appendChild($xml_can);
-            $xml_det->appendChild($xml_pru);
-            $xml_det->appendChild($xml_dsc);
-            $xml_det->appendChild($xml_tsm);
-            $xml_det->appendChild($xml_ips);
-
-            $xml_ips->appendChild($xml_ipt);
-            $xml_ipt->appendChild($xml_cdg);
-            $xml_ipt->appendChild($xml_cpt);
-            $xml_ipt->appendChild($xml_trf);
-            $xml_ipt->appendChild($xml_bsi);
-            $xml_ipt->appendChild($xml_vlr);
-
-            $xml_dts->appendChild($xml_det);
+    //agrupamos impesustos
+    $impuestosAgrupados = [];
+    foreach($totalImpuestos as $impuesto){
+        $clave = $impuesto['codigo_impuesto'] . '-' . $impuesto['codigo_porcentaje'];
+        if (!isset($impuestosAgrupados[$clave])) {
+            $impuestosAgrupados[$clave] = [
+                'codigo_impuesto'   => $impuesto['codigo_impuesto'],
+                'codigo_porcentaje' => $impuesto['codigo_porcentaje'],
+                'base_imponible'    => 0,
+                'valor_impuesto'    => 0
+            ];
         }
-
-        // Finalmente, agregar el elemento 'detalles' al XML
-        $xml->appendChild($xml_dts);
-        $xml_ifa = $xml->createElement('infoAdicional');//ok
-		$xml_cp1 = $xml->createElement('campoAdicional',$empresa->email);// ok
-		$atributo = $xml->createAttribute('nombre');// ******************revisar***************
-		$atributo->value = 'email';// ******************revisar***************
-         //PRIMERA PARTE
-		$xml_inf->appendChild($xml_amb);
-		$xml_inf->appendChild($xml_tip);
-		$xml_inf->appendChild($xml_raz);
-		$xml_inf->appendChild($xml_nom);
-		$xml_inf->appendChild($xml_ruc);
-		$xml_inf->appendChild($xml_cla);
-		$xml_inf->appendChild($xml_doc);
-		$xml_inf->appendChild($xml_est);
-		$xml_inf->appendChild($xml_emi);
-		$xml_inf->appendChild($xml_sec);
-		$xml_inf->appendChild($xml_dir);
-		$xml_fac->appendChild($xml_inf);
-
-		//SEGUNDA PARTE
-		$xml_def->appendChild($xml_fec);
-		$xml_def->appendChild($xml_des);
-		//$xml_def->appendChild($xml_con);
-		$xml_def->appendChild($xml_obl);
-		$xml_def->appendChild($xml_ide);
-		$xml_def->appendChild($xml_rco);
-		$xml_def->appendChild($xml_idc);
-		$xml_def->appendChild($xml_dir_cli);
-		$xml_def->appendChild($xml_tsi);
-		$xml_def->appendChild($xml_tds);
-		$xml_def->appendChild($xml_imp);
-		$xml_imp->appendChild($xml_tim);
-		$xml_tim->appendChild($xml_tco);
-		$xml_tim->appendChild($xml_cpr);
-		$xml_tim->appendChild($xml_bas);
-		$xml_tim->appendChild($xml_val);
-
-        //********************ice y cero */
-        //cerrar iva0
-$xml_imp->appendChild($xml_tim_iva0);
-$xml_tim_iva0->appendChild($xml_tco_iva0);
-$xml_tim_iva0->appendChild($xml_cpr_iva0);
-$xml_tim_iva0->appendChild($xml_bas_iva0);
-$xml_tim_iva0->appendChild($xml_val_iva0);
-
-//cerrar ice
-$xml_imp->appendChild($xml_tim_ice);
-$xml_tim_ice->appendChild($xml_tco_ice);
-$xml_tim_ice->appendChild($xml_cpr_ice);
-$xml_tim_ice->appendChild($xml_bas_ice);
-$xml_tim_ice->appendChild($xml_val_ice);
-
-		$xml_fac->appendChild($xml_def);
-
-
-
-		//SEGUNDA PARTE 2.3
-
-		$xml_def->appendChild($xml_pro);
-		$xml_def->appendChild($xml_imt);
-		$xml_def->appendChild($xml_mon);
-
-
-
-		$xml_def->appendChild($xml_pgs);
-		$xml_pgs->appendChild($xml_pag);
-		$xml_pag->appendChild($xml_fpa);
-		$xml_pag->appendChild($xml_tot);
-		$xml_pag->appendChild($xml_pla);
-		$xml_pag->appendChild($xml_uti);
-		$xml_fac->appendChild($xml_dts);
-		$xml_dts->appendChild($xml_det);
-		$xml_fac->appendChild($xml_ifa);
-		$xml_ifa->appendChild($xml_cp1);
-		$xml_cp1->appendChild($atributo);
-		$xml_fac->appendChild($cabecera);
-		$xml_fac->appendChild($cabecerav);
-		$xml->appendChild($xml_fac);
-        //Se eliminan espacios en blanco
-        $xml->preserveWhiteSpace = false;
-        //Se ingresa formato de salida
-        $xml->formatOutput = true;
-        //Se instancia el objeto
-        $archivo_factura_xml =$xml->saveXML();
-        //nombre del archivo
-        $nombre_fact_xml = $identificadorCliente.'_'.$secuencia.'.xml'; // nombre de la imagen
-        //dd($nombre_fact_xml,$archivo_factura_xml);
-        //Y se guarda en el nombre del archivo 'achivo.xml', y el obejto nstanciado
-        try {
-            Storage::disk('comprobantes/no_firmados')->put($nombre_fact_xml,$archivo_factura_xml);
-            XmlFile::create([
-                'factura_id' => $factura_id,
-                'secuencial' => $secuencia,
-                'cliente'    => $razonSocialCli,
-                'directorio' => 'comprobantes/no_firmados',
-                'estado'     => 'creado',
-                //paso 1
-                ]);
-            if (!Storage::disk('comprobantes/no_firmados')->exists($nombre_fact_xml)) {
-                throw new Exception("El archivo XML no firmado no fue guardado: $nombre_fact_xml");
-            }
-        } catch (\Exception $e) {
-            Log::error("Error en la creación del XML: " . $e->getMessage());
-            $this->noty('ERROR AL CREAR EL XML ','noty','error');
-            return false; // Termina el flujo o realiza un rollback.
-        }
-
-       //dd('creado archivo xml ', $nombre_fact_xml, $archivo_factura_xml);
-
-       //debemos llamar al metodo aqui y pasarle el nombre del archivo
-        $nombre_fact_xml =  substr($nombre_fact_xml, 0, -4); // Remover la extensión .xml
-       // dd($nombre_fact_xml);
-
-        $this->firmarFactura($nombre_fact_xml, $factura_id);
-
+        $impuestosAgrupados[$clave]['base_imponible'] += $impuesto['base_imponible'];
+        $impuestosAgrupados[$clave]['valor_impuesto'] += $impuesto['valor_impuesto'];
     }
+
+
+     // 🔹 Sección totalConImpuestos con los impuestos agrupados
+    $xml_imp = $xml->createElement('totalConImpuestos');
+    foreach ($impuestosAgrupados as $impuesto) {
+        $xml_tim = $xml->createElement('totalImpuesto');
+        $xml_tim->appendChild($xml->createElement('codigo', (int) $impuesto['codigo_impuesto']));
+        $xml_tim->appendChild($xml->createElement('codigoPorcentaje', (int) $impuesto['codigo_porcentaje']));
+        $xml_tim->appendChild($xml->createElement('baseImponible', number_format((float)$impuesto['base_imponible'], 2, '.', '')));
+        $xml_tim->appendChild($xml->createElement('valor', number_format((float)$impuesto['valor_impuesto'], 2, '.', '')));
+        $xml_imp->appendChild($xml_tim);
+    }
+    $xml_def->appendChild($xml_imp);
+
+
+
+    $xml_def->appendChild($xml->createElement('propina', '0.00'));
+    $xml_def->appendChild($xml->createElement('importeTotal', number_format((float)$totalFactura, 2, '.', '')));
+    $xml_def->appendChild($xml->createElement('moneda', 'DOLAR'));
+
+    // Pagos
+    $xml_pgs = $xml->createElement('pagos');
+    $xml_pag = $xml->createElement('pago');
+    $xml_pag->appendChild($xml->createElement('formaPago', '01'));
+    $xml_pag->appendChild($xml->createElement('total', number_format((float)$totalFactura, 2, '.', '')));
+    $xml_pag->appendChild($xml->createElement('plazo', '90'));
+    $xml_pag->appendChild($xml->createElement('unidadTiempo', 'dias'));
+    $xml_pgs->appendChild($xml_pag);
+    $xml_def->appendChild($xml_pgs);
+
+       // Agregar elementos de retención (requeridos por el SRI)
+    //    $xml_def->appendChild($xml->createElement('valorRetIva', '0.00'));
+    //    $xml_def->appendChild($xml->createElement('valorRetRenta', '0.00'));
+
+    $xml_fac->appendChild($xml_def);
+
+    // Detalles de la factura
+    $xml_dts = $xml->createElement('detalles');
+
+    foreach ($detalles as $d) {
+        $xml_det = $xml->createElement('detalle');
+        $xml_det->appendChild($xml->createElement('codigoPrincipal', $d['id']));
+        $xml_det->appendChild($xml->createElement('descripcion', $d['name']));
+        $xml_det->appendChild($xml->createElement('cantidad', $d['qty']));
+        $xml_det->appendChild($xml->createElement('precioUnitario', number_format((float)$d['price'], 2, '.', '')));
+        $xml_det->appendChild($xml->createElement('descuento', number_format((float)$d['descuento'], 2, '.', '')));
+
+         // 🔹 Base imponible corregida
+         $baseImponible = round(($d['price'] * $d['qty']) - (($d['price'] * $d['qty']) * ($d['descuento'] / 100)), 2);
+         $xml_det->appendChild($xml->createElement('precioTotalSinImpuesto', number_format($baseImponible, 2, '.', '')));
+
+         // 🔹 Agregar impuestos de cada producto sin repetir
+         $xml_ips = $xml->createElement('impuestos');
+         $impuestosAgrupadosProd = [];
+
+        foreach ($d['impuestos'] as $imp) {
+                $key = $imp['codigo'] . '-' . $imp['codigo_porcentaje'];
+                $valorImpuesto = round($baseImponible * ($imp['porcentaje'] / 100), 2);
+                if (!isset($impuestosAgrupadosProd[$key])) {
+                    $impuestosAgrupadosProd[$key] = [
+                        'codigo' => $imp['codigo'],
+                        'codigo_porcentaje' => $imp['codigo_porcentaje'],
+                        'tarifa' => $imp['porcentaje'],
+                        'baseImponible' => 0,
+                        'valor' => 0
+                    ];
+                }
+
+                $impuestosAgrupadosProd[$key]['baseImponible'] += $baseImponible;
+                $impuestosAgrupadosProd[$key]['valor'] += $valorImpuesto;
+        }
+
+        // ✅ Agregar impuestos únicos al XML
+        foreach ($impuestosAgrupadosProd as $imp) {
+            $xml_ipt = $xml->createElement('impuesto');
+            $xml_ipt->appendChild($xml->createElement('codigo', $imp['codigo']));
+            $xml_ipt->appendChild($xml->createElement('codigoPorcentaje', $imp['codigo_porcentaje']));
+            $xml_ipt->appendChild($xml->createElement('tarifa', $imp['tarifa']));
+            $xml_ipt->appendChild($xml->createElement('baseImponible', number_format($imp['baseImponible'], 2, '.', '')));
+            $xml_ipt->appendChild($xml->createElement('valor', number_format($imp['valor'], 2, '.', '')));
+            $xml_ips->appendChild($xml_ipt);
+        }
+        $xml_det->appendChild($xml_ips);
+        $xml_dts->appendChild($xml_det);
+    }
+
+    // ✅ Solo agregamos los detalles una vez
+
+    $xml_fac->appendChild($xml_dts);
+
+    // Información adicional
+    $xml_ifa = $xml->createElement('infoAdicional');
+    $xml_cp1 = $xml->createElement('campoAdicional', $empresa->email);
+    $xml_cp1->setAttribute('nombre', 'email');
+    $xml_ifa->appendChild($xml_cp1);
+    $xml_fac->appendChild($xml_ifa);
+
+    $xml->appendChild($xml_fac);
+    //Se eliminan espacios en blanco
+    $xml->preserveWhiteSpace = false;
+    $xml->formatOutput = true;
+    $archivo_factura_xml = $xml->saveXML();
+
+    $nombre_fact_xml = $identificadorCliente . '_' . $secuencia . '.xml';
+    // dd($nombre_fact_xml,$archivo_factura_xml);
+    try {
+        Storage::disk('comprobantes/no_firmados')->put($nombre_fact_xml,$archivo_factura_xml);
+        XmlFile::create([
+            'factura_id' => $factura_id,
+            'secuencial' => $secuencia,
+            'cliente'    => $razonSocialCli,
+            'directorio' => 'comprobantes/no_firmados',
+            'estado'     => 'creado',
+            //paso 1
+            ]);
+        if (!Storage::disk('comprobantes/no_firmados')->exists($nombre_fact_xml)) {
+            throw new Exception("El archivo XML no firmado no fue guardado: $nombre_fact_xml");
+        }
+    } catch (\Exception $e) {
+        Log::error("Error en la creación del XML: " . $e->getMessage());
+        $this->noty('ERROR AL CREAR EL XML ','noty','error');
+        return false; // Termina el flujo o realiza un rollback.
+    }
+
+   //dd('creado archivo xml ', $nombre_fact_xml, $archivo_factura_xml);
+
+   //debemos llamar al metodo aqui y pasarle el nombre del archivo
+    $nombre_fact_xml =  substr($nombre_fact_xml, 0, -4); // Remover la extensión .xml
+   // dd($nombre_fact_xml);
+
+    $this->firmarFactura($nombre_fact_xml, $factura_id);
+}
+
 
 
 
@@ -927,6 +883,11 @@ $xml_tim_ice->appendChild($xml_val_ice);
 
     public function usuario(){
         return $this->belongsTo(User::class);
+    }
+
+
+    public function impuestos(){
+        return $this->hasMany(FacturaImpuesto::class, 'factura_id');
     }
 
 

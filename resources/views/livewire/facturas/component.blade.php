@@ -64,8 +64,8 @@
                                                 <th class="border-b-2 dark:border-dark-5 whitespace-nowrap font-bold text-center" width="15%">CANT</th>
                                                 <th class="border-b-2 dark:border-dark-5 whitespace-nowrap font-bold" width="60%">DESCRIPCIÓN</th>
                                                 <th class="border-b-2 dark:border-dark-5 whitespace-nowrap font-bold">P. UNITARIO</th>
-                                                <th class="border-b-2 dark:border-dark-5 whitespace-nowrap font-bold">IVA 12%</th>
-                                                <th class="border-b-2 dark:border-dark-5 whitespace-nowrap font-bold">ICE</th>
+                                                <th class="border-b-2 dark:border-dark-5 whitespace-nowrap font-bold">IMPUESTOS</th>
+                                                <th class="border-b-2 dark:border-dark-5 whitespace-nowrap font-bold">TOTAL IMPUESTOS</th>
                                                 <th class="border-b-2 dark:border-dark-5 whitespace-nowrap font-bold">DSTO</th>
                                                 <th class="border-b-2 dark:border-dark-5 whitespace-nowrap font-bold">PVP</th>
                                                 <th class="border-b-2 dark:border-dark-5 whitespace-nowrap font-bold">SUBTOTAL</th>
@@ -112,14 +112,26 @@
 
                                                 {{-- FIN PRECIO UNITARIO  --}}
 
-                                                {{-- iva --}}
+                                                {{-- IMPUESTOS --}}
 
-                                                <td class="border-b dark:border-dark-5 text-center">{{number_format($item->iva,2)}}</td>
-                                                {{-- FIN iva --}}
-                                                 {{-- ICE --}}
+                                                <td class="border-b dark:border-dark-5 text-center">
 
-                                                 <td class="border-b dark:border-dark-5 text-center">{{ number_format($item->ice,2) }}</td>
-                                                 {{-- FIN ICE --}}
+                                                    @foreach ($item->impuestos as $imp)
+                                                       <div>
+                                                        {{ $imp->nombre }}
+                                                    </div>
+                                                    @endforeach
+
+                                                </td>
+                                                {{-- FIN IMPUESTOS --}}
+                                                 {{-- TOTAL IMPUESTOS --}}
+
+                                                  <td class="border-b dark:border-dark-5 text-center">
+                                                            {{-- {{ number_format(($item['price'] * $item['qty'] - ($item['price'] * $item['qty'] * ($item['descuento'] / 100))) * ($imp['porcentaje'] / 100), 2) }}
+                                                             --}}
+                                                        {{ number_format($item['total_impuesto'],3) }}
+                                                   </td>
+                                                 {{-- FIN TOTAL IMPUESTOS --}}
 
                                                      {{-- DESCUENTO --}}
 
@@ -145,7 +157,7 @@
 
                                                         {{-- desactivamos el boton ams si als existencias son menores --}}
                                                         <button  wire:click.prevent="increaseQty({{$item->id}})"
-                                                        class="btn btn-success ml-4 {{$item->livestock > 0 ? '' : 'hidden'}} " >
+                                                        class="btn btn-success ml-4 " >
                                                         <i class="fas fa-plus"></i>
                                                         </button>
 
@@ -237,10 +249,16 @@
                     <h4 class="text-2x5">{{$itemsCart}}</h4>
                 </div>
                 <div class="mt-3">
-                    <h1 class="text-2x1 font-bold">SUBTOTAL</h1>
+                    <h1 class="text-2x1 font-bold">SUBTOTAL FACTURA</h1>
                     <h4 class="text-2x1">${{number_format($this->subTotSinImpuesto,2)}}</h4>
+
+
                 </div>
                 <div class="mt-3">
+                    <h1 class="text-2x1 font-bold">DESCUENTO FACTURA</h1>
+                    <h3 class="text-2x1">${{number_format($this->totalDscto,2)}}</h3>
+                </div>
+                {{-- <div class="mt-3">
                     <h1 class="text-2x1 font-bold"> sub total TARIFA 12</h1>
                     <h4 class="text-2x1"> ${{number_format($this->iva12,2)}}</h4>
                 </div>
@@ -248,17 +266,25 @@
                     <h1 class="text-2x1 font-bold">sub total TARIFA 0</h1>
                     <h4 class="text-2x1"> ${{number_format($this->iva0,2)}}</h4>
                 </div>
-                <div class="mt-3">
-                    <h1 class="text-2x1 font-bold">TOTAL descuento</h1>
-                    <h3 class="text-2x1">${{number_format($this->totalDscto,2)}}</h3>
-                </div>
+
                 <div class="mt-3">
                     <h1 class="text-2x1 font-bold">ICE</h1>
                     <h4 class="text-2x1"> ${{number_format($this->totalIce,2)}}</h4>
-                </div>
+                </div> --}}
+                <!-- Subtotales por tipo de impuesto -->
+
+               <!-- Subtotales dinámicos por tipo de impuesto -->
+                 @foreach ($subtotales as $nombre => $valor)
                 <div class="mt-3">
-                    <h1 class="text-2x1 font-bold">12 % IVA</h1>
-                    <h4 class="text-2x1"> ${{number_format($this->totalImpuesto12,2)}}</h4>
+                    <h1 class="text-2x1 font-bold">base imponible {{ $nombre }}</h1>
+                    <h4 class="text-2x1">${{ number_format($valor, 2) }}</h4>
+                </div>
+                @endforeach
+                 <div class="mt-3">
+                    <h1 class="text-2x1 font-bold">total impuestos</h1>
+                        @foreach($this->impuestos as $nombre => $valor)
+                        <p>{{ $nombre }}: ${{ number_format($valor, 2) }}</p>
+                        @endforeach
                 </div>
                 <div class="mt-3">
                     <h1 class="text-2x1 font-bold">TOTAL</h1>

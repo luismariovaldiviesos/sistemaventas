@@ -36,7 +36,7 @@
                                     <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">IMP</th>
                                     <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">DSTO</th>
                                     <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">PRECIO DE VENTA </th>
-                                    {{-- <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">STOCK</th> --}}
+                                    <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">STOCK</th>
                                     <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">ACCIONES</th>
                                 </tr>
                             </thead>
@@ -62,17 +62,24 @@
 
                                         <td class="text-center font-medium">{{ number_format($product->descuento,0)}}%</td>
                                         <td class="text-center font-medium">{{ number_format($product->price2,2 ) }}</td>
-                                        @if ($product->stock  <= $product->minstock  )
-                                        <td class="text-center font-medium">
-                                            <button type="button" class="btn btn-danger">
-                                                <span class="badge badge-danger">Alerta {{ $product->stock }}</span>
-                                              </button>
-                                        </td>
-                                        @else
-                                        <td class="text-center font-medium ">
-                                            <button type="text" class="btn btn-outline-primary sm">aceptable</button>
-                                            <small>{{ $product->stock }}</small>
-                                        </td>
+                                        @if ($product->es_servicio == false)
+                                                @if ($product->stock  <= $product->minstock  )
+                                                <td class="text-center font-medium">
+                                                    <button type="button" class="btn btn-danger">
+                                                        <span class="badge badge-danger">Alerta {{ $product->stock }}</span>
+                                                    </button>
+                                                </td>
+                                                @else
+                                                <td class="text-center font-medium ">
+                                                    <button type="text" class="btn btn-primary sm">{{ $product->stock }}</button>
+                                                    <small></small>
+                                                </td>
+                                                @endif
+                                        @endif
+                                        @if ($product->es_servicio == true)
+                                            <td class="text-center font-medium">
+                                                <button type="text" class="btn btn-warning sm">Producto no es físico</button>
+                                            </td>
                                         @endif
 
 

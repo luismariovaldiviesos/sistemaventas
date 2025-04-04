@@ -25,6 +25,7 @@ class Products extends Component
     public $impuestosSeleccionados = [];
     public $totalImpuestos;
     public bool $isPhysical = false;
+    public bool $es_servicio = false;
 
     // public $ivaporcentaje = 'elegir';
     // public $iceporcentaje = 'elegir';
@@ -41,9 +42,6 @@ class Products extends Component
 
     public function render()
     {
-
-
-
         if(strlen($this->search) > 0)
             $info =  Product::join('categories as c','c.id','products.category_id')
                 ->select('products.*','c.name as category')
@@ -56,6 +54,8 @@ class Products extends Component
             $info =  Product::join('categories as c','c.id','products.category_id')
                 ->select('products.*','c.name as category')
                 ->paginate($this->pagination);
+
+
 
 
         return view('livewire.products.component', [
@@ -100,7 +100,8 @@ class Products extends Component
             'search',
             'action',
             'gallery',
-            'isPhysical'
+            'isPhysical',
+            'es_servicio',
         );
 
     }
@@ -113,7 +114,6 @@ class Products extends Component
 
     public function Edit (Product $product)
     {
-
         //dd($product);
         $this->selected_id = $product->id;
         $this->name = $product->name;
@@ -128,12 +128,7 @@ class Products extends Component
         $this->minstock = $product->minstock;
         $this->category = $product->category_id;
         $this->impuestosSeleccionados = $product->impuestos->pluck('id')->toArray();
-        //dd($this->impuestosSeleccionados);
-
         $this->noty('', 'open-modal', false);
-
-
-
     }
 
 
@@ -142,6 +137,11 @@ class Products extends Component
 
 
          sleep(1);
+         if ($this->isPhysical == false) {
+            $this->es_servicio = true;
+          }
+
+          //dd('fisico', $this->isPhysical, 'servicio', $this->es_servicio);
 
         $this->validate(Product::rules($this->selected_id,$this->isPhysical), Product::$messages);
 
@@ -171,6 +171,9 @@ class Products extends Component
 
       // dd($precioConDescuento, $pvp);
 
+
+
+
         $product = Product::updateOrCreate(
 
             ['id' => $this->selected_id ],
@@ -183,6 +186,7 @@ class Products extends Component
                 'price2' => $pvp,
                 'stock' => $this->stock ?? null,
                 'minstock' => $this->minstock ?? null,
+                'es_servicio' => $this->es_servicio,
                 'category_id' => $this->category
             ]
         );

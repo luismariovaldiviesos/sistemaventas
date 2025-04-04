@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Customer;
 use App\Models\DetalleFactura;
 use App\Models\Factura;
+use App\Models\FacturaImpuesto;
 use App\Models\Product;
 use App\Models\User;
 use App\Models\XmlFactura;
@@ -47,6 +48,7 @@ class Facturas extends Component
 
     //totales
     public $subTotSinImpuesto =0;
+    public $subtotalSinImpuestos = 0; // Total de productos sin impuestos
 
      // producto seleccionado
      public $productIdSelected, $productChangesSelected, $productNameSelected, $changesProduct;
@@ -56,6 +58,8 @@ class Facturas extends Component
 
      //dinamicos para la tabla
      public $subtotal0 = 0, $subtotal15 = 0, $totalImpuesto15 =0;
+      public  $impuestos = [];  // Ejemplo: ['IVA 15' => 5.00, 'ICE 3101' => 2.00]
+     public $subtotales = []; // Ejemplo: ['IVA 15' => 30.00, 'ICE 3101' => 10.00]
 
      protected $paginationTheme = "bootstrap";
 
@@ -68,6 +72,17 @@ class Facturas extends Component
      public function mount()
      {
 
+        $fact  = new Factura();
+        $this->claveAcceso = $fact->claveAcceso();
+        $this->secuencial = $fact->secuencial();
+        $this->recalcularTotales();
+    //    dd([
+    //     'Subtotal sin impuestos' => $this->subTotSinImpuesto,
+    //     'Descuento' => $this->totalDscto,
+    //     'Subtotales por tipo de impuesto' => $this->subtotales,
+    //     'Total impuestos' => $this->impuestos,
+    //     'Total Carrito' => $this->totalCart,
+    // ]);
 
 
      }
@@ -78,12 +93,9 @@ class Facturas extends Component
     {
 
 
-       // dd($jarPath);
-        $fact  = new Factura();
         $this->fechaFactura =  Carbon::now()->format('d-m-Y');
-       $this->claveAcceso = $fact->claveAcceso();
-       $this->secuencial = $fact->secuencial();
-       //dd($this->secuencial);
+
+      // dd($this->secuencial , $this->claveAcceso);
       // dd($this->claveAcceso);
         $this->validaCaja();
         if(strlen($this->searchCustomer) > 0)
@@ -93,8 +105,9 @@ class Facturas extends Component
             $this->customers =  Customer::orderBy('businame','asc')->get()->take(5); //primeros 5 clientes
             $this->totalCart = $this->getTotalCart();
             $this->itemsCart = $this->getItemsCart();
-            $this->subTotSinImpuesto =  $this->getTotalSICart();
-            $this->contentCart = $this->getContentCart();
+           // $this->subTotSinImpuesto =  $this->getTotalSICart();
+           $this->contentCart = $this->getContentCart();
+            //$this->recalcularTotales();
             //dd($this->contentCart);
             // $this->iva12 = $this->getIva12();
             // $this->iva0 = $this->getIva0();
@@ -159,14 +172,21 @@ class Facturas extends Component
     public function getProductsByCategory($category_id)
     {
         $this->showListProducts =  true;
-        $this->productsList = Product::where('category_id', $category_id)->where('stock','>', 0)->get();
-    }
+        //$this->productsList = Product::where('category_id', $category_id)->where('stock','>', 0)->orWhere('es_servicio','=',true)->get();
+        $this->productsList = Product::where('category_id', $category_id)
+                        ->where(function ($query) {
+                            $query->where('stock', '>', 0)
+                                ->orWhere('es_servicio', true);
+                        })
+                        ->get();
+     }
 
     public function add2Cart(Product $product)
     {
 
        $this->addProductCart($product, 1, $this->changes);
        $this->changes = '';
+       $this->recalcularTotales();
        //$this->subTotSinImpuesto = $this->subTotSinImpuesto + $product->price;
        //dd($this->subTotSinImpuesto);
     }
@@ -174,16 +194,19 @@ class Facturas extends Component
     public function increaseQty(Product $product, $cant=1)
     {
         $this->updateQtyCart($product, $cant);
+        $this->recalcularTotales();
     }
 
     public function decreaseQty($productId)
     {
         $this->decreaseQtyCart($productId);
+        $this->recalcularTotales();
     }
 
     public function removeFromCart($id)
     {
         $this->removeProductCart($id);
+        $this->recalcularTotales();
     }
 
     public function updateQty(Product $product, $cant=1)
@@ -193,10 +216,16 @@ class Facturas extends Component
             $this->noty('STOCK INSUFICIENTE','noty','error');
             return;
         }
-        if ($cant <= 0)
+        if ($cant <= 0){
+
             $this->removeProductCart($product->id);
-        else
+            $this->recalcularTotales();
+        }
+        else{
             $this->replaceQuantityCart($product->id, $cant);
+            $this->recalcularTotales();
+        }
+
     }
 
       // para los cambios en el modal
@@ -237,74 +266,72 @@ class Facturas extends Component
 
 
       public function recalcularTotales()
-    {
-        $this->subTotSinImpuesto = 0;  // Subtotal sin impuestos
-        $this->totalDscto = 0;         // Total descuento
-        $this->subtotal0 = 0;          // Subtotal IVA 0%
-        $this->subtotal15 = 0;         // Subtotal IVA 15%
-        $this->totalIce = 0;           // Total ICE
-        $this->totalImpuesto15 = 0;    // Total IVA 15%
-        $this->totalCart = 0;          // Total general del carrito
-         // $this->iva12 = $this->getIva12();
-            // $this->iva0 = $this->getIva0();
-            // $this->totalImpuesto12 = $this->getImpuesto12();
-            // $this->totalIce = $this->getIce();
-            // $this->totalDscto = $this->getDscto();
+      {
+          $this->subTotSinImpuesto = 0;  // Subtotal sin impuestos
+          $this->totalDscto = 0;         // Total descuento
+          $this->totalCart = 0;          // Total general del carrito
 
-        // Inicializar array de impuestos dinámico
-        $impuestos = [
-            'IVA 0' => 0,
-            'IVA 15' => 0,
-            'ICE' => 0,
-        ];
+          // Array dinámico para impuestos y subtotales por tipo de impuesto
+          $this->impuestos = [];  // Ejemplo: ['IVA 15' => 5.00, 'ICE 3101' => 2.00]
+          $this->subtotales = []; // Ejemplo: ['IVA 15' => 30.00, 'ICE 3101' => 10.00]
 
-        // Iterar los productos del carrito
-        foreach ($this->getContentCart() as $producto) {
-            $subtotalProducto = $producto['price'] * $producto['qty'];
-            $this->subTotSinImpuesto += $subtotalProducto;
+          $this->subtotalSinImpuestos = 0; // Total de productos sin impuestos
 
-            // Calcular descuento si existe (como porcentaje)
-            $montoDescuento = isset($producto['descuento']) ? $subtotalProducto * ($producto['descuento'] / 100) : 0;
-            $this->totalDscto += $montoDescuento;
+          // Iterar los productos del carrito
+          foreach ($this->getContentCart() as &$producto) { // Referencia con & para modificar directamente
+              $subtotalProducto = $producto['price'] * $producto['qty'];
+              $this->subTotSinImpuesto += $subtotalProducto;
 
-            // Iterar sobre los impuestos asignados al producto
-            foreach ($producto['impuestos'] as $tax) {
-                $nombreImpuesto = $tax['nombre'] . ' ' . intval($tax['porcentaje']); // Ej. IVA 15 o ICE 5
-                $porcentaje = $tax['porcentaje'];
+              // Calcular descuento si existe (como porcentaje)
+              $montoDescuento = isset($producto['descuento']) ? $subtotalProducto * ($producto['descuento'] / 100) : 0;
+              $this->totalDscto += $montoDescuento;
 
-                // Base imponible después de descuento
-                $baseImponible = $subtotalProducto - $montoDescuento;
-                $montoImpuesto = round($baseImponible * $porcentaje / 100, 2);
+              // Base imponible después de descuento
+              $baseImponible = $subtotalProducto - $montoDescuento;
 
-                // Acumular montos según el tipo de impuesto
-                $impuestos[$nombreImpuesto] = ($impuestos[$nombreImpuesto] ?? 0) + $montoImpuesto;
+              // Inicializar el total de impuestos para este producto
+              $producto['total_impuesto'] = 0;
 
-                // Calcular subtotales según el tipo de impuesto
-                if (intval($porcentaje) === 0) {
-                    $this->subtotal0 += $subtotalProducto;
-                } elseif (strpos($nombreImpuesto, 'IVA 15') !== false) {
-                    $this->subtotal15 += $subtotalProducto;
-                    $this->totalImpuesto15 += $montoImpuesto;
-                } elseif (strpos($nombreImpuesto, 'ICE') !== false) {
-                    $this->totalIce += $montoImpuesto;
-                }
-            }
-        }
+              // Si el producto no tiene impuestos, acumular en subtotal sin impuestos
+              if (empty($producto['impuestos'])) {
+                  $this->subtotalSinImpuestos += $baseImponible;
+              }
 
-        // Calcular el total del carrito: subtotal - descuentos + impuestos totales
-        $this->totalCart = round($this->subTotSinImpuesto - $this->totalDscto + array_sum($impuestos), 2);
+              // Iterar sobre los impuestos asignados al producto
+              foreach ($producto['impuestos'] as $tax) {
+                  $nombreImpuesto = $tax['nombre'] . ' ' . intval($tax['porcentaje']); // Ejemplo: IVA 15 o ICE 3101
+                  $porcentaje = $tax['porcentaje'];
+                  $montoImpuesto = round($baseImponible * $porcentaje / 100, 2);
 
-        // Debug con dd para revisar los resultados
-        // dd([
-        //     'Subtotal sin impuestos' => $this->subTotSinImpuesto,
-        //     'Descuento' => $this->totalDscto,
-        //     'Subtotal IVA 0%' => $this->subtotal0,
-        //     'Subtotal IVA 15%' => $this->subtotal15,
-        //     'Total ICE' => $this->totalIce,
-        //     'Total IVA 15%' => $this->totalImpuesto15,
-        //     'Total Carrito' => $this->totalCart,
-        // ]);
-    }
+                  // Acumular montos de impuestos
+                  $this->impuestos[$nombreImpuesto] = ($this->impuestos[$nombreImpuesto] ?? 0) + $montoImpuesto;
+
+                  // Acumular base imponible por tipo de impuesto
+                  $this->subtotales[$nombreImpuesto] = ($this->subtotales[$nombreImpuesto] ?? 0) + $baseImponible;
+
+                  // Sumar al total de impuestos del producto
+                  $producto['total_impuesto'] += $montoImpuesto;
+              }
+          }
+
+          // Calcular el total del carrito: subtotal - descuentos + impuestos totales
+          $this->totalCart = round(
+              $this->subTotSinImpuesto - $this->totalDscto + array_sum($this->impuestos),
+              3
+          );
+
+          // Debug con dd para revisar los resultados
+        //    dd([
+        //        'Subtotal sin impuestos' => $this->subTotSinImpuesto,
+        //        'Descuento' => $this->totalDscto,
+        //        'Subtotal sin impuestos específicos' => $this->subtotalSinImpuestos,
+        //        'Subtotales por tipo de impuesto' => $this->subtotales,
+        //        'Total impuestos' => $this->impuestos,
+        //        'Total Carrito' => $this->totalCart,
+        //        'Productos con total de impuesto' => $this->getContentCart(), // Aquí puedes ver el total de impuesto por producto
+        //    ]);
+      }
+
 
       // guardar venta
       public function storeSale($print = false)
@@ -339,16 +366,19 @@ class Facturas extends Component
                 $tipeIDenti = '04';  //ruc
             }
 
-            $this->recalcularTotales();
-            // dd([
-            //     'Subtotal sin impuestos' => $this->subTotSinImpuesto,
-            //     'Descuento' => $this->totalDscto,
-            //     'Subtotal IVA 0%' => $this->subtotal0,
-            //     'Subtotal IVA 15%' => $this->subtotal15,
-            //     'Total ICE' => $this->totalIce,
-            //     'Total IVA 15%' => $this->totalImpuesto15,
-            //     'Total Carrito' => $this->totalCart,
-            // ]);
+           // $this->recalcularTotales();
+           dd([
+            'Subtotal sin impuestos' => $this->subTotSinImpuesto,
+            'Descuento' => $this->totalDscto,
+            'Subtotal sin impuestos específicos' => $this->subtotalSinImpuestos,
+            'Subtotales por tipo de impuesto' => $this->subtotales,
+            'Total impuestos' => $this->impuestos,
+            'Total Carrito' => $this->totalCart,
+            'Productos con total de impuesto' => $this->getContentCart(), // Aquí puedes ver el total de impuesto por producto
+        ]);
+
+
+
             $factura  =  Factura::create([
                 //dd($this->secuencial, $this->claveAcceso), hasta aqui llega bien secuencial y clave
                 'secuencial' => $this->secuencial,
@@ -357,18 +387,14 @@ class Facturas extends Component
                 'customer_id' =>  $this->customer_id,
                 'user_id' => Auth()->user()->id,
                 'subtotal' => $this->subTotSinImpuesto,  //ok
-                'subtotal0' => $this->subtotal0,   //iva0 borrar
-                'subtotal12' => $this->subtotal15,     //iva12 borrar
-                'ice' => $this->totalIce,    //ok
                 'descuento' => $this->totalDscto,
-                'iva12' => $this->totalImpuesto15,  //totalImpuesto12 borrar
                 'total' => $this->totalCart,
                 'formaPago' => '01'
             ]);
             //dd($factura);
             if ($factura) {
                 $items =  $this->getContentCart();
-                //dd($items);
+               // dd($items);
                foreach($items  as $item)
                {
                 DetalleFactura::create([
@@ -382,22 +408,40 @@ class Facturas extends Component
                 ]);
 
                  //**********  actualizamos stock */
+                 // si producto es servicio no actualiza stock
                  $product = Product::find($item->id);
-                 $product->stock = $product->stock - $item->qty;
-                 $product->save();
+                 if ($product->es_servicio == 0){
+                    $product->stock = $product->stock - $item->qty;
+                    $product->save();
+                 }
+
+
+                 foreach($item['impuestos'] as $tax)
+                 {
+                    FacturaImpuesto::create([
+                        'factura_id' => $factura->id,
+                        'nombre_impuesto' => $tax['nombre'],
+                        'codigo_impuesto' => $tax['codigo'],
+                        'codigo_porcentaje' => $tax['codigo_porcentaje'],
+                        'base_imponible' => ($item['price'] * $item['qty']) * (1 - ($item['descuento'] ?? 0) / 100),
+                        'valor_impuesto' => round((($item['price'] * $item['qty']) * (1 - ($item['descuento'] ?? 0) / 100)) * ($tax['porcentaje'] / 100), 2),
+                 ]);
+                 }
+
                }
             }
 
             DB::commit();
 
-
+            //dd($factura->impuestos);
+            //ya no va : $this->subtotal15,   $this->totalImpuesto15,
 
             //********** crea xml , firma, envia y devuelve del sri  */
             $factura->xmlFactura(
                 $factura->id, $tipeIDenti, $customer->businame, $customer->valueidenti, $customer->address,
-                $this->subTotSinImpuesto, $this->totalDscto, $this->subtotal15,
-                $this->totalImpuesto15, $this->totalCart, $this->getContentCart(),
-                $this->secuencial, $this->claveAcceso
+                $this->subTotSinImpuesto, $this->totalDscto,
+              $this->totalCart, $this->getContentCart(),
+                $this->secuencial, $this->claveAcceso,$factura->impuestos
             );
 
 
