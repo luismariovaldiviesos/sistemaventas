@@ -367,15 +367,15 @@ class Facturas extends Component
             }
 
            // $this->recalcularTotales();
-           dd([
-            'Subtotal sin impuestos' => $this->subTotSinImpuesto,
-            'Descuento' => $this->totalDscto,
-            'Subtotal sin impuestos específicos' => $this->subtotalSinImpuestos,
-            'Subtotales por tipo de impuesto' => $this->subtotales,
-            'Total impuestos' => $this->impuestos,
-            'Total Carrito' => $this->totalCart,
-            'Productos con total de impuesto' => $this->getContentCart(), // Aquí puedes ver el total de impuesto por producto
-        ]);
+        //    dd([
+        //     'Subtotal sin impuestos' => $this->subTotSinImpuesto,
+        //     'Descuento' => $this->totalDscto,
+        //     'Subtotal sin impuestos específicos' => $this->subtotalSinImpuestos,
+        //     'Subtotales por tipo de impuesto' => $this->subtotales,
+        //     'Total impuestos' => $this->impuestos,
+        //     'Total Carrito' => $this->totalCart,
+        //     'Productos con total de impuesto' => $this->getContentCart(), // Aquí puedes ver el total de impuesto por producto
+        // ]);
 
 
 
@@ -453,9 +453,14 @@ class Facturas extends Component
         }
 
         // actualiza la factura con la fecha de autorizacion
-        $factura->fechaAutorizacion =  Carbon::now();
-        $factura->numeroAutorizacion =  $factura->claveAcceso;
-        $factura->save();
+        if (isset($factura)) {
+            $factura->fechaAutorizacion = Carbon::now();
+            $factura->numeroAutorizacion = $factura->claveAcceso;
+            $factura->save();
+        } else {
+            $this->noty('Error: Factura no definida.', 'noty', 'error');
+            return;
+        }
         $this->clearCart();
         $this->resetUI();
         $url =  route('descargar-pdf', ['factura'=>$factura->id]);
