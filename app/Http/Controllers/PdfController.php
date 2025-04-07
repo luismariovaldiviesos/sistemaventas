@@ -124,17 +124,61 @@ class PdfController extends Controller
 		//$ejey += 4;
     }
         //KARDEX TOTALES
-		$pdf->SetFont('Arial', 'B', 7);
-		$pdf->SetXY(120, $ejey);$pdf->Cell(50, 4, 'SUBTOTAL', 1 , 1, 'L');
-		$pdf->SetXY(120, $ejey+4);$pdf->Cell(50, 4, 'IVA 0%', 1 , 1, 'L');
-		$pdf->SetXY(120, $ejey+8);$pdf->Cell(50, 4, 'IVA 12%', 1 , 1, 'L');
-		$pdf->SetXY(120, $ejey+12);$pdf->Cell(50, 4, 'DESCUENTO $', 1 , 1, 'L');
-		$pdf->SetXY(120, $ejey+16);$pdf->Cell(50, 4, 'VALOR TOTAL', 1 , 1, 'L');
-		$pdf->SetXY(170, $ejey);$pdf->Cell(30, 4, $factura->total, 1 , 1, 'R');//SUBTOTAL
-		$pdf->SetXY(170, $ejey+4);$pdf->Cell(30, 4, $factura->subtotal0, 1 , 1, 'R');//IVA 0
-		$pdf->SetXY(170, $ejey+8);$pdf->Cell(30, 4, $factura->subtotal12, 1 , 1, 'R');//VALOR IVA
-		$pdf->SetXY(170, $ejey+12);$pdf->Cell(30, 4, $factura->descuento, 1 , 1, 'R');//VALOR DESCUENTO
-		$pdf->SetXY(170, $ejey+16);$pdf->Cell(30, 4, $factura->total, 1 , 1, 'R');//VALOR CON IVA
+		// $pdf->SetFont('Arial', 'B', 7);
+		// $pdf->SetXY(120, $ejey);$pdf->Cell(50, 4, 'SUBTOTAL', 1 , 1, 'L');
+		// $pdf->SetXY(120, $ejey+4);$pdf->Cell(50, 4, 'IVA 0%', 1 , 1, 'L');
+		// $pdf->SetXY(120, $ejey+8);$pdf->Cell(50, 4, 'IVA 12%', 1 , 1, 'L');
+		// $pdf->SetXY(120, $ejey+12);$pdf->Cell(50, 4, 'DESCUENTO $', 1 , 1, 'L');
+		// $pdf->SetXY(120, $ejey+16);$pdf->Cell(50, 4, 'VALOR TOTAL', 1 , 1, 'L');
+		// $pdf->SetXY(170, $ejey);$pdf->Cell(30, 4, $factura->total, 1 , 1, 'R');//SUBTOTAL
+		// $pdf->SetXY(170, $ejey+4);$pdf->Cell(30, 4, $factura->subtotal0, 1 , 1, 'R');//IVA 0
+		// $pdf->SetXY(170, $ejey+8);$pdf->Cell(30, 4, $factura->subtotal12, 1 , 1, 'R');//VALOR IVA
+		// $pdf->SetXY(170, $ejey+12);$pdf->Cell(30, 4, $factura->descuento, 1 , 1, 'R');//VALOR DESCUENTO
+		// $pdf->SetXY(170, $ejey+16);$pdf->Cell(30, 4, $factura->total, 1 , 1, 'R');//VALOR CON IVA
+
+        // seccion totales e impuestos
+        $impuestosAgrupados =  $factura->impuestos->groupBy('nombre_impuesto')
+            ->map(function ($items){
+                return $items->sum('valor_impuesto');
+            });
+            $pdf->SetFont('Arial', 'B', 7);
+            $linea = 0;
+            $yBase = $ejey;
+            // SUBTOTAL
+            $pdf->SetXY(120, $yBase + $linea);
+            $pdf->Cell(50, 4, 'SUBTOTAL', 1, 1, 'L');
+            $pdf->SetXY(170, $yBase + $linea);
+            $pdf->Cell(30, 4, number_format($factura->subtotal, 2), 1, 1, 'R');
+            $linea += 4;
+
+            // IMPUESTOS AGRUPADOS
+        foreach ($impuestosAgrupados as $nombre => $valor) {
+            $pdf->SetXY(120, $yBase + $linea);
+            $pdf->Cell(50, 4, $nombre, 1, 1, 'L');
+
+            $pdf->SetXY(170, $yBase + $linea);
+            $pdf->Cell(30, 4, number_format($valor, 2), 1, 1, 'R');
+
+            $linea += 4;
+        }
+
+        // DESCUENTO
+            $pdf->SetXY(120, $yBase + $linea);
+            $pdf->Cell(50, 4, 'DESCUENTO $', 1, 1, 'L');
+            $pdf->SetXY(170, $yBase + $linea);
+            $pdf->Cell(30, 4, number_format($factura->descuento, 2), 1, 1, 'R');
+            $linea += 4;
+
+                    // TOTAL
+            $pdf->SetXY(120, $yBase + $linea);
+            $pdf->Cell(50, 4, 'VALOR TOTAL', 1, 1, 'L');
+            $pdf->SetXY(170, $yBase + $linea);
+            $pdf->Cell(30, 4, number_format($factura->total, 2), 1, 1, 'R');
+
+
+
+
+
 		//INFO ADICIONAL
 		$pdf->SetFont('Arial', 'B', 8);
 		$pdf->SetXY(10, $ejey);$pdf->Cell(105, 6, 'INFORMACION ADICIONAL', 1 , 1, 'C');
