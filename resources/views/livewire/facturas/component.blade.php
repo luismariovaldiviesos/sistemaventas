@@ -129,7 +129,7 @@
                                                   <td class="border-b dark:border-dark-5 text-center">
                                                             {{-- {{ number_format(($item['price'] * $item['qty'] - ($item['price'] * $item['qty'] * ($item['descuento'] / 100))) * ($imp['porcentaje'] / 100), 2) }}
                                                              --}}
-                                                        {{ number_format($item['total_impuesto'],3) }}
+                                                        {{ number_format($item['total_impuesto'],2) }}
                                                    </td>
                                                  {{-- FIN TOTAL IMPUESTOS --}}
 
@@ -258,20 +258,6 @@
                     <h1 class="text-2x1 font-bold">DESCUENTO FACTURA</h1>
                     <h3 class="text-2x1">${{number_format($this->totalDscto,2)}}</h3>
                 </div>
-                {{-- <div class="mt-3">
-                    <h1 class="text-2x1 font-bold"> sub total TARIFA 12</h1>
-                    <h4 class="text-2x1"> ${{number_format($this->iva12,2)}}</h4>
-                </div>
-                <div class="mt-3">
-                    <h1 class="text-2x1 font-bold">sub total TARIFA 0</h1>
-                    <h4 class="text-2x1"> ${{number_format($this->iva0,2)}}</h4>
-                </div>
-
-                <div class="mt-3">
-                    <h1 class="text-2x1 font-bold">ICE</h1>
-                    <h4 class="text-2x1"> ${{number_format($this->totalIce,2)}}</h4>
-                </div> --}}
-                <!-- Subtotales por tipo de impuesto -->
 
                <!-- Subtotales dinámicos por tipo de impuesto -->
                  @foreach ($subtotales as $nombre => $valor)

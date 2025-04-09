@@ -267,14 +267,23 @@ class Factura extends Model
     public  function secuencial ()
     {
 
-        // Consultar si la tabla de facturas está vacía
-        $ultimaFactura = Factura::latest('secuencial')->first();
+        DB::transaction(function () use (&$numeroSecuencial){
+            $ultimaFactura =  DB::table('facturas')
+                ->lockForUpdate()
+                ->orderByDesc('secuencial')
+                ->first();
 
-        if ($ultimaFactura == null) {
-            $numeroSecuencial = 1;
-        } else {
-            $numeroSecuencial = intval($ultimaFactura->secuencial) + 1;
-        }
+                if ($ultimaFactura == null) {
+                    $numeroSecuencial = 1;
+                } else {
+                    $numeroSecuencial = intval($ultimaFactura->secuencial) + 1;
+                }
+        });
+
+        // Consultar si la tabla de facturas está vacía
+       // $ultimaFactura = Factura::latest('secuencial')->first();
+
+
 
         // Formatear el número secuencial con ceros a la izquierda y asegurarse de que no exceda 9 dígitos
         $numeroFormateado = str_pad($numeroSecuencial, 9, '0', STR_PAD_LEFT);

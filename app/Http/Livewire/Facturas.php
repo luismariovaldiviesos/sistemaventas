@@ -27,14 +27,14 @@ use PhpParser\Node\Stmt\Return_;
 class Facturas extends Component
 {
 
-    protected $listeners = ['archivoNoFirmadoNoGuardado'];
+    protected $listeners = ['cancelSale'];
 
      //traits
      use CartTrait, PrinterTrait, PdfTrait;
 
      // propiedades generales
-    public $search, $cash, $searchCustomer, $searchProduct, $customer_id =null,
-     $changes,  $customerSelected ="Seleccionar Cliente", $productSelected = "Buscar producto",
+    public  $cash, $searchCustomer, $searchProduct, $customer_id =null,
+     $changes,  $customerSelected ="Seleccionar Cliente", $productSelected = "Buscar producto",$productNameSelected="",$productChangesSelected="",
      $claveAcceso ='', $secuencial ='', $fechaFactura ;
 
     // mostrar y activar panels
@@ -51,19 +51,20 @@ class Facturas extends Component
     public $subtotalSinImpuestos = 0; // Total de productos sin impuestos
 
      // producto seleccionado
-     public $productIdSelected, $productChangesSelected, $productNameSelected, $changesProduct;
+     public $productIdSelected;
 
      // impuestos
-     public $iva12 = 0, $iva0 =0, $totalImpuesto12 =0,  $totalIce=0, $totalDscto=0;
+     public  $totalDscto=0;
 
      //dinamicos para la tabla
-     public $subtotal0 = 0, $subtotal15 = 0, $totalImpuesto15 =0;
+    // public $subtotal0 = 0, $subtotal15 = 0, $totalImpuesto15 =0;
       public  $impuestos = [];  // Ejemplo: ['IVA 15' => 5.00, 'ICE 3101' => 2.00]
      public $subtotales = []; // Ejemplo: ['IVA 15' => 30.00, 'ICE 3101' => 10.00]
 
      protected $paginationTheme = "bootstrap";
 
      public $estadoCaja;
+
 
 
 
@@ -75,14 +76,7 @@ class Facturas extends Component
         $fact  = new Factura();
         $this->claveAcceso = $fact->claveAcceso();
         $this->secuencial = $fact->secuencial();
-        $this->recalcularTotales();
-    //    dd([
-    //     'Subtotal sin impuestos' => $this->subTotSinImpuesto,
-    //     'Descuento' => $this->totalDscto,
-    //     'Subtotales por tipo de impuesto' => $this->subtotales,
-    //     'Total impuestos' => $this->impuestos,
-    //     'Total Carrito' => $this->totalCart,
-    // ]);
+        //$this->recalcularTotales();
 
 
      }
@@ -103,11 +97,11 @@ class Facturas extends Component
              ->orderBy('businame','asc')->get()->take(5); //primeros 5 clientes
         else
             $this->customers =  Customer::orderBy('businame','asc')->get()->take(5); //primeros 5 clientes
-            $this->totalCart = $this->getTotalCart();
+            //$this->totalCart = $this->getTotalCart();
             $this->itemsCart = $this->getItemsCart();
            // $this->subTotSinImpuesto =  $this->getTotalSICart();
-           $this->contentCart = $this->getContentCart();
-            //$this->recalcularTotales();
+            $this->contentCart = $this->getContentCart();
+            $this->recalcularTotales();
             //dd($this->contentCart);
             // $this->iva12 = $this->getIva12();
             // $this->iva0 = $this->getIva0();
@@ -172,7 +166,6 @@ class Facturas extends Component
     public function getProductsByCategory($category_id)
     {
         $this->showListProducts =  true;
-        //$this->productsList = Product::where('category_id', $category_id)->where('stock','>', 0)->orWhere('es_servicio','=',true)->get();
         $this->productsList = Product::where('category_id', $category_id)
                         ->where(function ($query) {
                             $query->where('stock', '>', 0)
@@ -259,9 +252,9 @@ class Facturas extends Component
 
       public function resetUI()
       {
-          $this->reset('tabProducts', 'cash', 'showListProducts', 'tabCategories', 'search',
-          'searchCustomer', 'searchProduct', 'customer_id', 'customerSelected', 'totalCart',
-          'itemsCart', 'productIdSelected', 'productChangesSelected', 'productNameSelected', 'changesProduct','subTotSinImpuesto');
+        $this->reset('cash','searchCustomer','searchProduct','customer_id','changes','customerSelected','productSelected','claveAcceso','secuencial','fechaFactura',
+        'showListProducts','tabProducts','tabCategories','productsList','customers','products','totalCart','itemsCart','contentCart',
+        'subTotSinImpuesto','subtotalSinImpuestos','productIdSelected','totalDscto','impuestos','subtotales');
       }
 
 
@@ -269,7 +262,7 @@ class Facturas extends Component
       {
           $this->subTotSinImpuesto = 0;  // Subtotal sin impuestos
           $this->totalDscto = 0;         // Total descuento
-          $this->totalCart = 0;          // Total general del carrito
+          //$this->totalCart = 0;          // Total general del carrito
 
           // Array dinámico para impuestos y subtotales por tipo de impuesto
           $this->impuestos = [];  // Ejemplo: ['IVA 15' => 5.00, 'ICE 3101' => 2.00]
@@ -278,7 +271,7 @@ class Facturas extends Component
           $this->subtotalSinImpuestos = 0; // Total de productos sin impuestos
 
           // Iterar los productos del carrito
-          foreach ($this->getContentCart() as &$producto) { // Referencia con & para modificar directamente
+          foreach ($this->contentCart as &$producto) { // Referencia con & para modificar directamente
               $subtotalProducto = $producto['price'] * $producto['qty'];
               $this->subTotSinImpuesto += $subtotalProducto;
 
@@ -447,10 +440,10 @@ class Facturas extends Component
 
 
         }
-        catch (\Throwable $e) {
-            FacadesDB::rollback();
-            $this->noty('Error al guardar el pedido: ' . $e->getMessage(), 'noty', 'error');
-        }
+            catch (\Throwable $e) {
+                FacadesDB::rollback();
+                $this->noty('Error al guardar el pedido: ' . $e->getMessage(), 'noty', 'error');
+            }
 
         // actualiza la factura con la fecha de autorizacion
         if (isset($factura)) {
@@ -468,6 +461,14 @@ class Facturas extends Component
         return redirect()->to($url);
 
 
+      }
+
+
+      public function cancelSale()
+      {
+        $this->clearCart();
+        $this->resetUI();
+        $this->noty('VENTA CANCELADA');
       }
 
 

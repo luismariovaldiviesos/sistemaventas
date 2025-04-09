@@ -49,10 +49,9 @@ subtotal12
 ice
 iva12
 
+000000763  no se creo el pdf, considerar crear pdf cuando hay un error en el reset no se creo el pdf
 
 
-ojo creo que si  hay que poner recklacular en el render
-y no en cada metodo
 
 
 

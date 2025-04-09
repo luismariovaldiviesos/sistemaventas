@@ -1,4 +1,4 @@
-<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body><ns2:autorizacionComprobanteResponse xmlns:ns2="http://ec.gob.sri.ws.autorizacion"><RespuestaAutorizacionComprobante><claveAccesoConsultada>0704202501010186684600110010010000007610000076113</claveAccesoConsultada><numeroComprobantes>1</numeroComprobantes><autorizaciones><autorizacion><estado>AUTORIZADO</estado><numeroAutorizacion>0704202501010186684600110010010000007610000076113</numeroAutorizacion><fechaAutorizacion>2025-04-07T16:18:36-05:00</fechaAutorizacion><ambiente>PRUEBAS</ambiente><comprobante>&lt;?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body><ns2:autorizacionComprobanteResponse xmlns:ns2="http://ec.gob.sri.ws.autorizacion"><RespuestaAutorizacionComprobante><claveAccesoConsultada>0804202501010186684600110010010000007630000076313</claveAccesoConsultada><numeroComprobantes>1</numeroComprobantes><autorizaciones><autorizacion><estado>AUTORIZADO</estado><numeroAutorizacion>0804202501010186684600110010010000007630000076313</numeroAutorizacion><fechaAutorizacion>2025-04-08T15:24:34-05:00</fechaAutorizacion><ambiente>PRUEBAS</ambiente><comprobante>&lt;?xml version="1.0" encoding="UTF-8"?>
 &lt;factura id="comprobante" version="1.0.0">
   &lt;infoTributaria>
     &lt;ambiente>1&lt;/ambiente>
@@ -6,35 +6,35 @@
     &lt;razonSocial>ORELLANA GALARZA PIEDAD&lt;/razonSocial>
     &lt;nombreComercial>ORELLANA GALARZA PIEDAD&lt;/nombreComercial>
     &lt;ruc>0101866846001&lt;/ruc>
-    &lt;claveAcceso>0704202501010186684600110010010000007610000076113&lt;/claveAcceso>
+    &lt;claveAcceso>0804202501010186684600110010010000007630000076313&lt;/claveAcceso>
     &lt;codDoc>01&lt;/codDoc>
     &lt;estab>001&lt;/estab>
     &lt;ptoEmi>001&lt;/ptoEmi>
-    &lt;secuencial>000000761&lt;/secuencial>
+    &lt;secuencial>000000763&lt;/secuencial>
     &lt;dirMatriz>Dávila Chica y Manuel Moreno&lt;/dirMatriz>
   &lt;/infoTributaria>
   &lt;infoFactura>
-    &lt;fechaEmision>07/04/2025&lt;/fechaEmision>
+    &lt;fechaEmision>08/04/2025&lt;/fechaEmision>
     &lt;dirEstablecimiento>Dávila Chica y Manuel Moreno&lt;/dirEstablecimiento>
     &lt;obligadoContabilidad>NO&lt;/obligadoContabilidad>
     &lt;tipoIdentificacionComprador>05&lt;/tipoIdentificacionComprador>
     &lt;razonSocialComprador>Consumidor final&lt;/razonSocialComprador>
     &lt;identificacionComprador>0999999999&lt;/identificacionComprador>
     &lt;direccionComprador>dirección&lt;/direccionComprador>
-    &lt;totalSinImpuestos>3.50&lt;/totalSinImpuestos>
+    &lt;totalSinImpuestos>12.00&lt;/totalSinImpuestos>
     &lt;totalDescuento>0.00&lt;/totalDescuento>
     &lt;totalConImpuestos>
       &lt;totalImpuesto>
         &lt;codigo>2&lt;/codigo>
         &lt;codigoPorcentaje>0&lt;/codigoPorcentaje>
-        &lt;baseImponible>2.00&lt;/baseImponible>
+        &lt;baseImponible>5.50&lt;/baseImponible>
         &lt;valor>0.00&lt;/valor>
       &lt;/totalImpuesto>
       &lt;totalImpuesto>
         &lt;codigo>2&lt;/codigo>
         &lt;codigoPorcentaje>4&lt;/codigoPorcentaje>
-        &lt;baseImponible>1.50&lt;/baseImponible>
-        &lt;valor>0.23&lt;/valor>
+        &lt;baseImponible>6.50&lt;/baseImponible>
+        &lt;valor>0.98&lt;/valor>
       &lt;/totalImpuesto>
       &lt;totalImpuesto>
         &lt;codigo>3&lt;/codigo>
@@ -44,12 +44,12 @@
       &lt;/totalImpuesto>
     &lt;/totalConImpuestos>
     &lt;propina>0.00&lt;/propina>
-    &lt;importeTotal>3.73&lt;/importeTotal>
+    &lt;importeTotal>12.98&lt;/importeTotal>
     &lt;moneda>DOLAR&lt;/moneda>
     &lt;pagos>
       &lt;pago>
         &lt;formaPago>01&lt;/formaPago>
-        &lt;total>3.73&lt;/total>
+        &lt;total>12.98&lt;/total>
         &lt;plazo>90&lt;/plazo>
         &lt;unidadTiempo>dias&lt;/unidadTiempo>
       &lt;/pago>
@@ -57,18 +57,18 @@
   &lt;/infoFactura>
   &lt;detalles>
     &lt;detalle>
-      &lt;codigoPrincipal>9&lt;/codigoPrincipal>
-      &lt;descripcion>Agua mineral&lt;/descripcion>
+      &lt;codigoPrincipal>6&lt;/codigoPrincipal>
+      &lt;descripcion>Almuerzo&lt;/descripcion>
       &lt;cantidad>1&lt;/cantidad>
-      &lt;precioUnitario>2.00&lt;/precioUnitario>
+      &lt;precioUnitario>2.50&lt;/precioUnitario>
       &lt;descuento>0.00&lt;/descuento>
-      &lt;precioTotalSinImpuesto>2.00&lt;/precioTotalSinImpuesto>
+      &lt;precioTotalSinImpuesto>2.50&lt;/precioTotalSinImpuesto>
       &lt;impuestos>
         &lt;impuesto>
           &lt;codigo>2&lt;/codigo>
           &lt;codigoPorcentaje>0&lt;/codigoPorcentaje>
           &lt;tarifa>0.00&lt;/tarifa>
-          &lt;baseImponible>2.00&lt;/baseImponible>
+          &lt;baseImponible>2.50&lt;/baseImponible>
           &lt;valor>0.00&lt;/valor>
         &lt;/impuesto>
       &lt;/impuestos>
@@ -97,38 +97,106 @@
         &lt;/impuesto>
       &lt;/impuestos>
     &lt;/detalle>
+    &lt;detalle>
+      &lt;codigoPrincipal>15&lt;/codigoPrincipal>
+      &lt;descripcion>Capuchino&lt;/descripcion>
+      &lt;cantidad>1&lt;/cantidad>
+      &lt;precioUnitario>3.00&lt;/precioUnitario>
+      &lt;descuento>0.00&lt;/descuento>
+      &lt;precioTotalSinImpuesto>3.00&lt;/precioTotalSinImpuesto>
+      &lt;impuestos>
+        &lt;impuesto>
+          &lt;codigo>2&lt;/codigo>
+          &lt;codigoPorcentaje>4&lt;/codigoPorcentaje>
+          &lt;tarifa>15.00&lt;/tarifa>
+          &lt;baseImponible>3.00&lt;/baseImponible>
+          &lt;valor>0.45&lt;/valor>
+        &lt;/impuesto>
+      &lt;/impuestos>
+    &lt;/detalle>
+    &lt;detalle>
+      &lt;codigoPrincipal>3&lt;/codigoPrincipal>
+      &lt;descripcion>Expreso&lt;/descripcion>
+      &lt;cantidad>1&lt;/cantidad>
+      &lt;precioUnitario>1.50&lt;/precioUnitario>
+      &lt;descuento>0.00&lt;/descuento>
+      &lt;precioTotalSinImpuesto>1.50&lt;/precioTotalSinImpuesto>
+      &lt;impuestos>
+        &lt;impuesto>
+          &lt;codigo>2&lt;/codigo>
+          &lt;codigoPorcentaje>0&lt;/codigoPorcentaje>
+          &lt;tarifa>0.00&lt;/tarifa>
+          &lt;baseImponible>1.50&lt;/baseImponible>
+          &lt;valor>0.00&lt;/valor>
+        &lt;/impuesto>
+      &lt;/impuestos>
+    &lt;/detalle>
+    &lt;detalle>
+      &lt;codigoPrincipal>4&lt;/codigoPrincipal>
+      &lt;descripcion>Salchipapa&lt;/descripcion>
+      &lt;cantidad>1&lt;/cantidad>
+      &lt;precioUnitario>1.50&lt;/precioUnitario>
+      &lt;descuento>0.00&lt;/descuento>
+      &lt;precioTotalSinImpuesto>1.50&lt;/precioTotalSinImpuesto>
+      &lt;impuestos>
+        &lt;impuesto>
+          &lt;codigo>2&lt;/codigo>
+          &lt;codigoPorcentaje>0&lt;/codigoPorcentaje>
+          &lt;tarifa>0.00&lt;/tarifa>
+          &lt;baseImponible>1.50&lt;/baseImponible>
+          &lt;valor>0.00&lt;/valor>
+        &lt;/impuesto>
+      &lt;/impuestos>
+    &lt;/detalle>
+    &lt;detalle>
+      &lt;codigoPrincipal>10&lt;/codigoPrincipal>
+      &lt;descripcion>chocolate caliente&lt;/descripcion>
+      &lt;cantidad>1&lt;/cantidad>
+      &lt;precioUnitario>2.00&lt;/precioUnitario>
+      &lt;descuento>0.00&lt;/descuento>
+      &lt;precioTotalSinImpuesto>2.00&lt;/precioTotalSinImpuesto>
+      &lt;impuestos>
+        &lt;impuesto>
+          &lt;codigo>2&lt;/codigo>
+          &lt;codigoPorcentaje>4&lt;/codigoPorcentaje>
+          &lt;tarifa>15.00&lt;/tarifa>
+          &lt;baseImponible>2.00&lt;/baseImponible>
+          &lt;valor>0.30&lt;/valor>
+        &lt;/impuesto>
+      &lt;/impuestos>
+    &lt;/detalle>
   &lt;/detalles>
   &lt;infoAdicional>
     &lt;campoAdicional nombre="email">khipusistemas@gmail.com&lt;/campoAdicional>
   &lt;/infoAdicional>
-&lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature964318">
-&lt;ds:SignedInfo Id="Signature-SignedInfo476725">
+&lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature178428">
+&lt;ds:SignedInfo Id="Signature-SignedInfo460154">
 &lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315">&lt;/ds:CanonicalizationMethod>
 &lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1">&lt;/ds:SignatureMethod>
-&lt;ds:Reference Id="SignedPropertiesID504921" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature964318-SignedProperties913392">
+&lt;ds:Reference Id="SignedPropertiesID192565" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature178428-SignedProperties688556">
 &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1">&lt;/ds:DigestMethod>
-&lt;ds:DigestValue>KZOrY2+cPfjTdlZbjqAjwC/NkA8=&lt;/ds:DigestValue>
+&lt;ds:DigestValue>4Ya5qmQq+M/m57x88Nw96AgTJDo=&lt;/ds:DigestValue>
 &lt;/ds:Reference>
-&lt;ds:Reference URI="#Certificate1243670">
+&lt;ds:Reference URI="#Certificate1972197">
 &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1">&lt;/ds:DigestMethod>
-&lt;ds:DigestValue>BAcsTEuvm/z13VqBrMCgdH5+kYQ=&lt;/ds:DigestValue>
+&lt;ds:DigestValue>2OxA9AW4gNXlbqHa+KA/3Ic1gHM=&lt;/ds:DigestValue>
 &lt;/ds:Reference>
-&lt;ds:Reference Id="Reference-ID-542" URI="#comprobante">
+&lt;ds:Reference Id="Reference-ID-859683" URI="#comprobante">
 &lt;ds:Transforms>
 &lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature">&lt;/ds:Transform>
 &lt;/ds:Transforms>
 &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1">&lt;/ds:DigestMethod>
-&lt;ds:DigestValue>wRLhipIu0+hblOgSTMEO+eeW/+Y=&lt;/ds:DigestValue>
+&lt;ds:DigestValue>+/HUy6rOfZo/szZLwKBSqKO3CTc=&lt;/ds:DigestValue>
 &lt;/ds:Reference>
 &lt;/ds:SignedInfo>
-&lt;ds:SignatureValue Id="SignatureValue543795">
-K87C4R0anR8CQALnhp8yEoasCJZxgjFminNk7Bamc2cTSr8vLf4g/S2IrzzEUwyZWzV3GZnQVXH+
-5JAH99m4/qYOcnOJX7eVX7hxpdpF0ArS/4+2TLJ+0RRmrF8sSWz8GdyO90mO83QicEHzp6DfIZ7H
-iCX6l2pB3XLxMuFW05XdLto2OIvSBQ4IbzWTMXovcwaZSftTyoPqgg2GY5gnmtsDPrcXDWx2afDZ
-gn0jW28zglPtVJKWqVC3uKpOIa9uI9StCDPRNjvHTcymqjq0okyddvJWehJkiu8FOTLKJIDBeB9h
-BzWdX7FxWpqLoTDn/yc/yPdoYMOOVePw/lLJew==
+&lt;ds:SignatureValue Id="SignatureValue136514">
+HQ01ObPKhBhrCdAyMGXZ/ssLVT7dx+SFZYP3no59VkvXYrSK2fFRxqDKmqKR+msie8Bl68KHbkj5
+Qrh0n7BpSpAcWYSyhV7D5yAuK29lUrUHUA/5sjpjFJ2nKW6Gk7JtBxCvVSbrycqcPHo6bqWBagff
+4XqgjyrTZ42qvA6WLKyH4nxeM7l9HlXVXwG7+wNd4QtM/7v1SVVn5iPNF4UFtLVvRY3dVYnTmXr7
+2m0FwtiUr+aRTV4Q7GrxFSSj9dvWt3ilDjMAX9IfalsEK/9QmGMEwYBO8yTdnCf6qeWH8GzJ1AKc
+teMzRbSKdnsxdm3Yiv5rY7+/7lzgSS+cXO0wEw==
 &lt;/ds:SignatureValue>
-&lt;ds:KeyInfo Id="Certificate1243670">
+&lt;ds:KeyInfo Id="Certificate1972197">
 &lt;ds:X509Data>
 &lt;ds:X509Certificate>
 MIIHnTCCBYWgAwIBAgIIYfOuAUd3EpQwDQYJKoZIhvcNAQELBQAwgbUxCzAJBgNVBAYTAkVDMREw
@@ -181,4 +249,4 @@ M6rZGUDi9Oev9A2d+xqNA19Ik7nM801sX62MrQ==
 &lt;/ds:RSAKeyValue>
 &lt;/ds:KeyValue>
 &lt;/ds:KeyInfo>
-&lt;ds:Object Id="Signature964318-Object840609">&lt;etsi:QualifyingProperties Target="#Signature964318">&lt;etsi:SignedProperties Id="Signature964318-SignedProperties913392">&lt;etsi:SignedSignatureProperties>&lt;etsi:SigningTime>2025-04-07T16:18:35-05:00&lt;/etsi:SigningTime>&lt;etsi:SigningCertificate>&lt;etsi:Cert>&lt;etsi:CertDigest>&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1">&lt;/ds:DigestMethod>&lt;ds:DigestValue>mlyDoFi3vsJQZBbLF7BOYycZM+4=&lt;/ds:DigestValue>&lt;/etsi:CertDigest>&lt;etsi:IssuerSerial>&lt;ds:X509IssuerName>CN=ENTIDAD DE CERTIFICACION ICERT-EC,OU=SUBDIRECCION NACIONAL DE SEGURIDAD DE LA INFORMACION DNTICS,O=CONSEJO DE LA JUDICATURA,L=DM QUITO,C=EC&lt;/ds:X509IssuerName>&lt;ds:X509SerialNumber>7058176361536885396&lt;/ds:X509SerialNumber>&lt;/etsi:IssuerSerial>&lt;/etsi:Cert>&lt;/etsi:SigningCertificate>&lt;/etsi:SignedSignatureProperties>&lt;etsi:SignedDataObjectProperties>&lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-542">&lt;etsi:Description>Doc&lt;/etsi:Description>&lt;etsi:MimeType>text/xml&lt;/etsi:MimeType>&lt;/etsi:DataObjectFormat>&lt;/etsi:SignedDataObjectProperties>&lt;/etsi:SignedProperties>&lt;/etsi:QualifyingProperties>&lt;/ds:Object>&lt;/ds:Signature>&lt;/factura></comprobante><mensajes/></autorizacion></autorizaciones></RespuestaAutorizacionComprobante></ns2:autorizacionComprobanteResponse></soap:Body></soap:Envelope>
+&lt;ds:Object Id="Signature178428-Object296059">&lt;etsi:QualifyingProperties Target="#Signature178428">&lt;etsi:SignedProperties Id="Signature178428-SignedProperties688556">&lt;etsi:SignedSignatureProperties>&lt;etsi:SigningTime>2025-04-08T15:24:33-05:00&lt;/etsi:SigningTime>&lt;etsi:SigningCertificate>&lt;etsi:Cert>&lt;etsi:CertDigest>&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1">&lt;/ds:DigestMethod>&lt;ds:DigestValue>mlyDoFi3vsJQZBbLF7BOYycZM+4=&lt;/ds:DigestValue>&lt;/etsi:CertDigest>&lt;etsi:IssuerSerial>&lt;ds:X509IssuerName>CN=ENTIDAD DE CERTIFICACION ICERT-EC,OU=SUBDIRECCION NACIONAL DE SEGURIDAD DE LA INFORMACION DNTICS,O=CONSEJO DE LA JUDICATURA,L=DM QUITO,C=EC&lt;/ds:X509IssuerName>&lt;ds:X509SerialNumber>7058176361536885396&lt;/ds:X509SerialNumber>&lt;/etsi:IssuerSerial>&lt;/etsi:Cert>&lt;/etsi:SigningCertificate>&lt;/etsi:SignedSignatureProperties>&lt;etsi:SignedDataObjectProperties>&lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-859683">&lt;etsi:Description>Doc&lt;/etsi:Description>&lt;etsi:MimeType>text/xml&lt;/etsi:MimeType>&lt;/etsi:DataObjectFormat>&lt;/etsi:SignedDataObjectProperties>&lt;/etsi:SignedProperties>&lt;/etsi:QualifyingProperties>&lt;/ds:Object>&lt;/ds:Signature>&lt;/factura></comprobante><mensajes/></autorizacion></autorizaciones></RespuestaAutorizacionComprobante></ns2:autorizacionComprobanteResponse></soap:Body></soap:Envelope>
