@@ -50,6 +50,7 @@ class Facturas extends Component
     public $subTotSinImpuesto =0;
     public $subtotalSinImpuestos = 0; // Total de productos sin impuestos
 
+
      // producto seleccionado
      public $productIdSelected;
 
@@ -60,6 +61,7 @@ class Facturas extends Component
     // public $subtotal0 = 0, $subtotal15 = 0, $totalImpuesto15 =0;
       public  $impuestos = [];  // Ejemplo: ['IVA 15' => 5.00, 'ICE 3101' => 2.00]
      public $subtotales = []; // Ejemplo: ['IVA 15' => 30.00, 'ICE 3101' => 10.00]
+     public $resumenImpuestos = [];     // Nuevo arreglo para el Blade: nombre, base, valor
 
      protected $paginationTheme = "bootstrap";
 
@@ -254,7 +256,7 @@ class Facturas extends Component
       {
         $this->reset('cash','searchCustomer','searchProduct','customer_id','changes','customerSelected','productSelected','claveAcceso','secuencial','fechaFactura',
         'showListProducts','tabProducts','tabCategories','productsList','customers','products','totalCart','itemsCart','contentCart',
-        'subTotSinImpuesto','subtotalSinImpuestos','productIdSelected','totalDscto','impuestos','subtotales');
+        'subTotSinImpuesto','subtotalSinImpuestos','productIdSelected','totalDscto','impuestos','subtotales','resumenImpuestos');
       }
 
 
@@ -269,6 +271,7 @@ class Facturas extends Component
           $this->subtotales = []; // Ejemplo: ['IVA 15' => 30.00, 'ICE 3101' => 10.00]
 
           $this->subtotalSinImpuestos = 0; // Total de productos sin impuestos
+          $this->resumenImpuestos = [];     // Nuevo arreglo para el Blade: nombre, base, valor
 
           // Iterar los productos del carrito
           foreach ($this->contentCart as &$producto) { // Referencia con & para modificar directamente
@@ -292,7 +295,7 @@ class Facturas extends Component
 
               // Iterar sobre los impuestos asignados al producto
               foreach ($producto['impuestos'] as $tax) {
-                  $nombreImpuesto = $tax['nombre'] . ' ' . intval($tax['porcentaje']); // Ejemplo: IVA 15 o ICE 3101
+                  $nombreImpuesto = $tax['nombre'] ; // Ejemplo: IVA 15 o ICE 3101
                   $porcentaje = $tax['porcentaje'];
                   $montoImpuesto = round($baseImponible * $porcentaje / 100, 2);
 
@@ -302,7 +305,28 @@ class Facturas extends Component
                   // Acumular base imponible por tipo de impuesto
                   $this->subtotales[$nombreImpuesto] = ($this->subtotales[$nombreImpuesto] ?? 0) + $baseImponible;
 
+
+                  //sumamos en la nueva estructura
+                  $encontrado =  false;
+                  foreach ($this->resumenImpuestos  as $imp) {
+                    if($imp['nombre'] === $nombreImpuesto){
+                        $imp['base_imponible'] += $baseImponible;
+                        $imp['valor_impuesto'] += $montoImpuesto;
+                        $encontrado = true;
+                        break;
+                    }
+                  }
+
+                  if (!$encontrado) {
+                    $this->resumenImpuestos[]=[
+                        'nombre' => $nombreImpuesto,
+                        'base_imponible' => $baseImponible,
+                        'valor_impuesto' => $montoImpuesto
+                    ];
+                  }
+
                   // Sumar al total de impuestos del producto
+
                   $producto['total_impuesto'] += $montoImpuesto;
               }
           }
@@ -312,6 +336,7 @@ class Facturas extends Component
               $this->subTotSinImpuesto - $this->totalDscto + array_sum($this->impuestos),
               3
           );
+          //dd($this->resumenImpuestos);
 
           // Debug con dd para revisar los resultados
         //    dd([

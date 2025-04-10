@@ -248,29 +248,35 @@
                     <h1 class="text-2x1 font-bold">ITEMS</h1>
                     <h4 class="text-2x5">{{$itemsCart}}</h4>
                 </div>
-                <div class="mt-3">
-                    <h1 class="text-2x1 font-bold">SUBTOTAL FACTURA</h1>
-                    <h4 class="text-2x1">${{number_format($this->subTotSinImpuesto,2)}}</h4>
 
-
-                </div>
-                <div class="mt-3">
-                    <h1 class="text-2x1 font-bold">DESCUENTO FACTURA</h1>
-                    <h3 class="text-2x1">${{number_format($this->totalDscto,2)}}</h3>
-                </div>
 
                <!-- Subtotales dinámicos por tipo de impuesto -->
                  @foreach ($subtotales as $nombre => $valor)
                 <div class="mt-3">
-                    <h1 class="text-2x1 font-bold">base imponible {{ $nombre }}</h1>
+                    <h1 class="text-2x1 font-bold">SUBTOTAL {{ $nombre }}</h1>
                     <h4 class="text-2x1">${{ number_format($valor, 2) }}</h4>
                 </div>
                 @endforeach
-                 <div class="mt-3">
-                    <h1 class="text-2x1 font-bold">total impuestos</h1>
+                  <div class="mt-3">
+                    <h1 class="text-2x1 font-bold"></h1>
                         @foreach($this->impuestos as $nombre => $valor)
-                        <p>{{ $nombre }}: ${{ number_format($valor, 2) }}</p>
+                      <h4>total  <p>{{ $nombre }}: ${{ number_format($valor, 2) }}</p></h4>
                         @endforeach
+                </div>
+                {{-- @foreach ($resumenImpuestos as $imp)
+                    <div class="mt-3">
+                        <h1 class="text-2x1 font-bold">{{ $imp['nombre'] }}</h1>
+                        <p>Base imponible: ${{ number_format($imp['base_imponible'], 2) }}</p>
+                        <p>Impuesto: ${{ number_format($imp['valor_impuesto'], 2) }}</p>
+                    </div>
+                @endforeach --}}
+                <div class="mt-3">
+                    <h1 class="text-2x1 font-bold">SUBTOTAL FACTURA</h1>
+                    <h4 class="text-2x1">${{number_format($this->subTotSinImpuesto,2)}}</h4>
+                </div>
+                <div class="mt-3">
+                    <h1 class="text-2x1 font-bold">DESCUENTO FACTURA</h1>
+                    <h3 class="text-2x1">${{number_format($this->totalDscto,2)}}</h3>
                 </div>
                 <div class="mt-3">
                     <h1 class="text-2x1 font-bold">TOTAL</h1>
