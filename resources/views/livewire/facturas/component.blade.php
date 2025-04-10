@@ -252,17 +252,17 @@
 
                <!-- Subtotales dinámicos por tipo de impuesto -->
                  @foreach ($subtotales as $nombre => $valor)
-                <div class="mt-3">
-                    <h1 class="text-2x1 font-bold">SUBTOTAL {{ $nombre }}</h1>
-                    <h4 class="text-2x1">${{ number_format($valor, 2) }}</h4>
-                </div>
+                    <div class="mt-3">
+                        <h1 class="text-2x1 font-bold">SUBTOTAL {{ $nombre }}</h1>
+                        <h4 class="text-2x1">${{ number_format($valor, 2) }}</h4>
+                    </div>
                 @endforeach
-                  <div class="mt-3">
+                    <div class="mt-3">
                     <h1 class="text-2x1 font-bold"></h1>
                         @foreach($this->impuestos as $nombre => $valor)
-                      <h4>total  <p>{{ $nombre }}: ${{ number_format($valor, 2) }}</p></h4>
+                                <h4>total  <p>{{ $nombre }}: ${{ number_format($valor, 2) }}</p></h4>
                         @endforeach
-                </div>
+                    </div>
                 {{-- @foreach ($resumenImpuestos as $imp)
                     <div class="mt-3">
                         <h1 class="text-2x1 font-bold">{{ $imp['nombre'] }}</h1>

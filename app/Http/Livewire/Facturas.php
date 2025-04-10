@@ -61,7 +61,6 @@ class Facturas extends Component
     // public $subtotal0 = 0, $subtotal15 = 0, $totalImpuesto15 =0;
       public  $impuestos = [];  // Ejemplo: ['IVA 15' => 5.00, 'ICE 3101' => 2.00]
      public $subtotales = []; // Ejemplo: ['IVA 15' => 30.00, 'ICE 3101' => 10.00]
-     public $resumenImpuestos = [];     // Nuevo arreglo para el Blade: nombre, base, valor
 
      protected $paginationTheme = "bootstrap";
 
@@ -104,16 +103,6 @@ class Facturas extends Component
            // $this->subTotSinImpuesto =  $this->getTotalSICart();
             $this->contentCart = $this->getContentCart();
             $this->recalcularTotales();
-            //dd($this->contentCart);
-            // $this->iva12 = $this->getIva12();
-            // $this->iva0 = $this->getIva0();
-            // $this->totalImpuesto12 = $this->getImpuesto12();
-            // $this->totalIce = $this->getIce();
-            // $this->totalDscto = $this->getDscto();
-            //dd($totalImpuesto12);
-
-
-
 
             if(strlen($this->searchProduct) > 0) {
                 $this->products = Product::where('name', 'like', "%{$this->searchProduct}%")
@@ -256,7 +245,7 @@ class Facturas extends Component
       {
         $this->reset('cash','searchCustomer','searchProduct','customer_id','changes','customerSelected','productSelected','claveAcceso','secuencial','fechaFactura',
         'showListProducts','tabProducts','tabCategories','productsList','customers','products','totalCart','itemsCart','contentCart',
-        'subTotSinImpuesto','subtotalSinImpuestos','productIdSelected','totalDscto','impuestos','subtotales','resumenImpuestos');
+        'subTotSinImpuesto','subtotalSinImpuestos','productIdSelected','totalDscto','impuestos','subtotales');
       }
 
 
@@ -271,7 +260,7 @@ class Facturas extends Component
           $this->subtotales = []; // Ejemplo: ['IVA 15' => 30.00, 'ICE 3101' => 10.00]
 
           $this->subtotalSinImpuestos = 0; // Total de productos sin impuestos
-          $this->resumenImpuestos = [];     // Nuevo arreglo para el Blade: nombre, base, valor
+
 
           // Iterar los productos del carrito
           foreach ($this->contentCart as &$producto) { // Referencia con & para modificar directamente
@@ -306,24 +295,7 @@ class Facturas extends Component
                   $this->subtotales[$nombreImpuesto] = ($this->subtotales[$nombreImpuesto] ?? 0) + $baseImponible;
 
 
-                  //sumamos en la nueva estructura
-                  $encontrado =  false;
-                  foreach ($this->resumenImpuestos  as $imp) {
-                    if($imp['nombre'] === $nombreImpuesto){
-                        $imp['base_imponible'] += $baseImponible;
-                        $imp['valor_impuesto'] += $montoImpuesto;
-                        $encontrado = true;
-                        break;
-                    }
-                  }
 
-                  if (!$encontrado) {
-                    $this->resumenImpuestos[]=[
-                        'nombre' => $nombreImpuesto,
-                        'base_imponible' => $baseImponible,
-                        'valor_impuesto' => $montoImpuesto
-                    ];
-                  }
 
                   // Sumar al total de impuestos del producto
 
@@ -336,18 +308,7 @@ class Facturas extends Component
               $this->subTotSinImpuesto - $this->totalDscto + array_sum($this->impuestos),
               3
           );
-          //dd($this->resumenImpuestos);
 
-          // Debug con dd para revisar los resultados
-        //    dd([
-        //        'Subtotal sin impuestos' => $this->subTotSinImpuesto,
-        //        'Descuento' => $this->totalDscto,
-        //        'Subtotal sin impuestos específicos' => $this->subtotalSinImpuestos,
-        //        'Subtotales por tipo de impuesto' => $this->subtotales,
-        //        'Total impuestos' => $this->impuestos,
-        //        'Total Carrito' => $this->totalCart,
-        //        'Productos con total de impuesto' => $this->getContentCart(), // Aquí puedes ver el total de impuesto por producto
-        //    ]);
       }
 
 
@@ -383,19 +344,6 @@ class Facturas extends Component
             if ($tipo == 'ruc') {
                 $tipeIDenti = '04';  //ruc
             }
-
-           // $this->recalcularTotales();
-        //    dd([
-        //     'Subtotal sin impuestos' => $this->subTotSinImpuesto,
-        //     'Descuento' => $this->totalDscto,
-        //     'Subtotal sin impuestos específicos' => $this->subtotalSinImpuestos,
-        //     'Subtotales por tipo de impuesto' => $this->subtotales,
-        //     'Total impuestos' => $this->impuestos,
-        //     'Total Carrito' => $this->totalCart,
-        //     'Productos con total de impuesto' => $this->getContentCart(), // Aquí puedes ver el total de impuesto por producto
-        // ]);
-
-
 
             $factura  =  Factura::create([
                 //dd($this->secuencial, $this->claveAcceso), hasta aqui llega bien secuencial y clave
@@ -450,9 +398,6 @@ class Facturas extends Component
             }
 
             DB::commit();
-
-            //dd($factura->impuestos);
-            //ya no va : $this->subtotal15,   $this->totalImpuesto15,
 
             //********** crea xml , firma, envia y devuelve del sri  */
             $factura->xmlFactura(
