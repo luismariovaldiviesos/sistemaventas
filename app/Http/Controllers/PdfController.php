@@ -225,7 +225,8 @@ class PdfController extends Controller
         //dd($pdf_enviar);
 		if (!file_exists($pdfPath) || !file_exists($xmlPath)) {
 		   // return back()->with('error', 'Los archivos necesarios no existen.');
-		   dd('no se encuentran los archivos');
+           $this->pdfDowloader($factura);
+		   dd('se generó nuevamente el pdf');
 		}
 		else {
 			try {
