@@ -5,51 +5,26 @@ hace falta :
 
 
 * notas de credito boton descargar pdf revisar y construir eso ?
-
-
-*que el archivo y la contraseña para firmar salgan de setthing s
-* visualizar facturas en lsitado de facturas y notas de credito y ver si es necesario descargar archivo en nc (si se genera pdf ?)
-* hay un bug en una de las facturas de reprocesar en la ultima
+* hacer que se revierta el inventario cuando se genera la (ya esta )
+*NC  y ver si se genera pdf de la nc (? seria interno capaz)
 * boorar carrito desde factura
-* hacer que se revierta el inventario cuando se genera la NC  y ver si se genera pdf de la nc (? seria interno capaz)
-*revisar inventario en prductos si reuiqre ono
 * tenenat
+000000763  no se creo el pdf, considerar crear pdf cuando hay un error en el reset no se creo el pdf
+esto ya se creo, habria que poner un estado en la base para cuando no se cree el pdf, o sea en reprocesar
 *docker
 
 
 
-secuencia del xml  en factura ****
-paso uno NO_FIRMADO linea 506  (firmar, enviar y recibir) ok
-paso dos FIRMADO linea 600  (enviar y recibir)  //  no deberia ahcer nada ya que si no se firma queda como no firmado ok
-
-paso tres no hay red NO_ENVIADO linea 692  (enviar y recibir)   se guarda no enviado en xmlfiles ok
-
-paso cuatro DEVUELTA 690 (nada que hacer, devuelta con error)   aqui se debe guardar el error en el campo de la tabla ok
-paso cinco ENVIADO al sri 727 (recibir)  ok
-
-paso seis NO_AUTORIZADO 770 (nada que hacer)     aqui se debe guardar el error en el campo de la tabla ok
-paso siete AUTORIZADO   782 (nada que hacer, fin del proceso)   OK
-
-
-377  ice en factura, revisar que ese cree conel numero de impuestos que graba
 
 
 
-cambios
-716 linea de factura
 
 
 
-27  de marzo iniciamos modificacion de tabla factura para eliminar
-campos directos de impuestos; hasta aqui es funcional con impuestos
-directos pasados al crear el xml
-se deben elimnar los campos :
-subtotal0
-subtotal12
-ice
-iva12
 
-000000763  no se creo el pdf, considerar crear pdf cuando hay un error en el reset no se creo el pdf
+
+
+
 
 
 

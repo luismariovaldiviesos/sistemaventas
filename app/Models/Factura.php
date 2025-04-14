@@ -109,7 +109,7 @@ class Factura extends Model
          $serie  = $establecimiento.$puntoEmi;  //5
          $parteDos =  $ruc.$ambiente.$serie;  // 3 4 y 5***********
          $cadenaUNo = $parteUno.$parteDos;   /// 1 al 5 *********************
-         $secuencial =  $this->secuencial(); //6  aqui hay errror por que suma un digito mas al secuencial y la clave acceo en el xml se forma mal
+         $secuencial =  $this->secuencial(); //6
          $codigoNumerico  =substr($secuencial,-8);  // secuencial 8 desde la derecha
          $tipoEmi  = "1";   //8
          $cadenaDos  = $cadenaUNo.$secuencial.$codigoNumerico.$tipoEmi;   // 1 al 8   **********
