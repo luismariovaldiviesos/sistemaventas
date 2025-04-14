@@ -114,7 +114,8 @@ class Products extends Component
 
     public function Edit (Product $product)
     {
-        //dd($product);
+        $this->isPhysical = !$product->es_servicio;
+        //dd($this->isPhysical);
         $this->selected_id = $product->id;
         $this->name = $product->name;
         $this->code = $product->code;
@@ -126,7 +127,7 @@ class Products extends Component
         $this->price2 = number_format($product->price2,2) ;
         $this->stock = $product->stock;
         $this->minstock = $product->minstock;
-        $this->category = $product->category_id;
+         $this->category = $product->category_id;
         $this->impuestosSeleccionados = $product->impuestos->pluck('id')->toArray();
         $this->noty('', 'open-modal', false);
     }
