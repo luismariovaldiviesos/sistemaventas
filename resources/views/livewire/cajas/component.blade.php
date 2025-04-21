@@ -42,37 +42,29 @@
 
                                         <td class="dark:border-dark-5 text-center">
                                             <div class="d-flex justify-content-center">
-                                                {{-- @if ($caja->user->count() < 1)
+                                                 @if ($caja->user->count() < 1)
                                                     <button class="btn btn-danger text-white border-0"
                                                     onclick="destroy('cajas','Destroy', {{ $caja->id }})"
                                                     type="button">
                                                         <i class=" fas fa-trash f-2x"></i>
                                                     </button>
-                                                @endif --}}
+                                                @endif
 
-                                                @can('editar_caja')
+                                                {{-- @can('editar_caja') --}}
                                                 <button class="btn btn-warning text-white border-0 ml-3"
                                                     wire:click.prevent="Edit({{ $caja->id }})"
                                                     type="button">
                                                         <i class=" fas fa-edit f-2x"></i>
                                                 </button>
-                                                @endcan
+                                                {{-- @endcan --}}
 
 
                                                 @if ($caja->status == 0 && $caja->user_id == Auth()->user()->id)
-
-                                                {{-- <button class="btn btn-danger text-white border-0"
-                                                onclick="abrir('cajas','Abrir', {{ $caja->id }})"
-                                                type="button">
-                                                    <i class=" fas fa-folder-open f-2x"></i>
-                                                </button> --}}
-
-                                                <button class="btn btn-primary text-white border-0"
-                                                onclick="Abrircaja({{ $caja->id }})"
-                                                type="button">
-                                                   abrir caja
-                                                </button>
-
+                                                    <button class="btn btn-primary text-white border-0"
+                                                    onclick="Abrircaja({{ $caja->id }})"
+                                                    type="button">
+                                                    abrir caja
+                                                    </button>
                                               @endif
 
                                             </div>
@@ -81,7 +73,7 @@
                                 @empty
                                     <tr class="bg-gray-200 dark:bg-dark-1">
                                         <td colspan="2">
-                                            <h6 class="text-center">    NO HAY CAJAS  </h6>
+                                            <h6 class="text-center">NO HAY CAJAS</h6>
                                         </td>
                                     </tr>
                                 @endforelse

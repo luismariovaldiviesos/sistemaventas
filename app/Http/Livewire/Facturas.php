@@ -106,13 +106,19 @@ class Facturas extends Component
 
             if(strlen($this->searchProduct) > 0) {
                 $this->products = Product::where('name', 'like', "%{$this->searchProduct}%")
-                    ->orderBy('created_at', 'desc') // Ordena por fecha de creación para mostrar los más recientes primero
+                    ->where(function ($query){
+                        $query->where('stock','>',0)
+                            ->orWhere('es_servicio', true);
+                    })->orderBy('created_at', 'desc') // Ordena por fecha de creación para mostrar los más recientes primero
                     ->limit(5) // Trae solo los primeros 5 resultados
                     ->get();
             } else {
-                $this->products = Product::orderBy('created_at', 'desc') // Ordena los más recientes primero
-                    ->limit(5) // Trae solo los primeros 5
-                    ->get();
+                $this->products = Product::where(function ($query){
+                    $query->where('stock','>',0)
+                        ->orWhere('es_servicio', true);
+                        })->orderBy('created_at', 'desc') // Ordena los más recientes primero
+                        ->limit(5) // Trae solo los primeros 5
+                        ->get();
             }
 
             //dd($this->products);

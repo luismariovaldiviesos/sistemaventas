@@ -31,8 +31,8 @@
                                 <tr class="text-theme-1">
                                     <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">CAJA</th>
                                     <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">USUARIO</th>
-                                    <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">MONTO INICIAL</th>
-                                    <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">MONTO FINAL</th>
+                                    <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">CAJA INICIAL</th>
+                                    <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">CAJA FINAL</th>
                                     <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">TOTAL VENTAS</th>
                                     <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">TOTAL CAJA</th>
                                     <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">OBSERVACIONES</th>

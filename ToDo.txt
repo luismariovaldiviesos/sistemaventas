@@ -7,6 +7,7 @@ hace falta :
 * notas de credito boton descargar pdf revisar y construir eso ?
 * hacer que se revierta el inventario cuando se genera la (ya esta )
 *NC  y ver si se genera pdf de la nc (? seria interno capaz)
+* en buscar producto manual si sale producto que no tiene stcok validar ahi tambien que no salga
 * boorar carrito desde factura
 * tenenat
 000000763  no se creo el pdf, considerar crear pdf cuando hay un error en el reset no se creo el pdf
