@@ -17,6 +17,6 @@ class PermisosSeeder extends Seeder
     {
         //roles
         Role::create(['name'=>'Admin']);
-        Role::create(['name'=>'Official']);
+        Role::create(['name'=>'Employee']);
     }
 }
