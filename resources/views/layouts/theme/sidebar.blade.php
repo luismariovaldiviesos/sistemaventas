@@ -17,7 +17,7 @@
                 <div class="side-menu__title"> CATEGORIAS  </div>
             </a>
         </li>
-        @endhasrole()
+
 
         <li>
             <a href="{{ route('products') }}" class="side-menu">
@@ -25,6 +25,7 @@
                 <div class="side-menu__title"> PRODUCTOS  </div>
             </a>
         </li>
+        @endhasrole()
 
         {{-- <li>
             <a href="{{ route('sales') }}" class="side-menu">
