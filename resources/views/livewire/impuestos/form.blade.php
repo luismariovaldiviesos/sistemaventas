@@ -44,6 +44,7 @@
 
 
             <div class="col-span-12">
+                <x-back />
 
                 <x-save />
 

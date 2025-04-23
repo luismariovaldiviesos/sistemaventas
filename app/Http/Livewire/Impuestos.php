@@ -65,6 +65,7 @@ class Impuestos extends Component
 
     public function Edit(Impuesto $impuesto)
     {
+
         $this->selected_id = $impuesto->id;
         $this->nombre = $impuesto->nombre;
         $this->codigo = $impuesto->codigo;

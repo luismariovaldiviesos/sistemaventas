@@ -83,6 +83,8 @@
                                                         title="Eliminar Factura">
                                                     <i class="fas fa-trash-alt f-2x"></i>
                                                 </button>
+                                                @else
+                                               <small class="text-info">Procesado</small>
                                                 @endif
                                       </div>
                                         </td>

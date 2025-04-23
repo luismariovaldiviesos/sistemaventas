@@ -16,9 +16,20 @@ class Descuentos extends Component
     public function render()
     {
 
-        $products = Product::where('descuento','>', 0)
-        ->orderBy('id', 'desc')
-        ->paginate($this->pagination);
+        // $products = Product::where('descuento','>', 0)
+        // ->orderBy('id', 'desc')
+        // ->paginate($this->pagination);
+        if(strlen($this->search)>0){
+            $products = Product::where('descuento', '>', 0)
+            ->when($this->search, function ($query) {
+                $query->where('name', 'like', '%' . $this->search . '%');
+                 })->orderBy('id', 'desc')
+                    ->paginate($this->pagination);
+        }else{
+            $products = Product::where('descuento','>', 0)
+            ->orderBy('id', 'desc')
+            ->paginate($this->pagination);
+        }
 
         return view('livewire.descuentos.component', [
             'products' => $products

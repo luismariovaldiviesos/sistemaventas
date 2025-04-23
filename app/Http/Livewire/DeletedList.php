@@ -28,6 +28,7 @@ class DeletedList extends Component
             $facturas = DeletedFactura::where(function ($query) {
                     $query->where('secuencial', 'like', "%{$this->search}%")
                         ->orWhere('cliente', 'like', "%{$this->search}%")
+                        ->orWhere('estado', 'like', "%{$this->search}%")
                         ->orWhereDate('fecha_emision', 'like', "%{$this->search}%");
                 })
                 ->orderBy('fecha_emision', 'desc')

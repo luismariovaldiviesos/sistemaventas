@@ -21,6 +21,7 @@
                             <thead>
                                 <tr class="text-theme-1">
 
+                                    <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">CANT PROD x-search IMP</th>
                                     <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">NOMBRE</th>
                                     <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">CODIGO</th>
                                     <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">CODIGO %</th>
@@ -30,9 +31,8 @@
                             </thead>
                             <tbody>
                                 @forelse ($impuestos as $impuesto )
-                                    <tr class=" dark:bg-dark-1 {{ $loop->index % 2> 0 ? 'bg-gray-200' : '' }}">
 
-
+                                        <td class="text-center font-medium">{{$impuesto->productos->count()  }}</td>
                                         <td class="text-center font-medium">{{$impuesto->nombre  }}</td>
                                         <td class="text-center font-medium">{{$impuesto->codigo  }}</td>
                                         <td class="text-center font-medium">{{ $impuesto->codigo_porcentaje  }}</td>
@@ -42,7 +42,7 @@
                                         <td class="dark:border-dark-5 text-center">
                                             <div class="d-flex justify-content-center">
 
-                                                @if($impuesto->productos->count() < 0)
+                                                @if($impuesto->productos->count() <= 0)
 
                                                     <button class="btn btn-danger text-white border-0"
                                                     onclick="destroy('impuestos','Destroy', {{ $impuesto->id }})"
