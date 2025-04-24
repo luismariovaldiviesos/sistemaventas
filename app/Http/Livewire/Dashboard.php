@@ -6,10 +6,12 @@ use App\Models\DetalleFactura;
 use App\Models\Factura;
 use App\Models\Order;
 use App\Models\OrderDetail;
+use App\Models\User;
 use DateTime;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use Spatie\Permission\Models\Role;
 
 class Dashboard extends Component
 {
@@ -26,6 +28,16 @@ class Dashboard extends Component
     {
         // $empresa  =  Cache::get('settings');
         // dd($empresa);
+
+        // $usuarios  =  User::all();
+        // $roles =  Role::all();
+        //  dd($roles);
+        // // dd($usuarios);
+        // foreach ($usuarios as $user) {
+        //    foreach($user->roles as $rol){
+        //     dd($rol->name);
+        //    }
+        // }
 
         $this->listYears =[];
         $currentYear =  date('Y') -2;

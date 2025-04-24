@@ -272,5 +272,17 @@ class PermisosSistemaSeeder extends Seeder
             'guard_name' => 'web',
         ]);
 
+        $this->agregaPermisosAdmin();
+
+    }
+
+
+
+    public  function agregaPermisosAdmin(){
+        $permisos = Permission::all();
+        $rol = \Spatie\Permission\Models\Role::findByName('Admin');
+        foreach ($permisos as $permiso) {
+            $rol->givePermissionTo($permiso->name);
+        }
     }
 }
