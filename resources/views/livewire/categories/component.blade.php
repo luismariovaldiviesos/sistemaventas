@@ -1,5 +1,5 @@
 <div>
-
+@can('ver_categoria')
     @if (!$form)
 
         <div class="intro-y col-span-12">
@@ -11,7 +11,9 @@
             </h2>
 
             {{-- AQUI LLAMAMOS AL COMPONENTE SEARH --}}
+            @can('crear_categoria')
                 <x-search />
+            @endcan
             {{-- AQUI LLAMAMOS AL COMPONENTE SEARH --}}
 
             <div class="p-5">
@@ -20,9 +22,9 @@
                         <table class="table">
                             <thead>
                                 <tr class="text-theme-1">
-                                    <th class="border-b-2 dark:border-dark-5 whitespace-nowrap" width="10%"></th>
-                                    <th class="border-b-2 dark:border-dark-5 whitespace-nowrap" width="70%">DESCRIPCION</th>
-                                    <th class="border-b-2 dark:border-dark-5 whitespace-nowrap">ACCIONES</th>
+                                    <th class="border-b-2 dark:border-dark-5 whitespace-nowrap" >IMG</th>
+                                    <th class="border-b-2 dark:border-dark-5 whitespace-nowrap" >DESCRIPCION</th>
+                                    <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center" >ACCIONES</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -40,17 +42,21 @@
                                         <td class="dark:border-dark-5 text-center">
                                             <div class="d-flex justify-content-center">
                                                 @if ($category->products->count() < 1)
+                                                    @can('eliminar_categoria')
                                                     <button class="btn btn-danger text-white border-0"
                                                     onclick="destroy('categories','Destroy', {{ $category->id }})"
                                                     type="button">
                                                         <i class=" fas fa-trash f-2x"></i>
                                                     </button>
+                                                    @endcan
                                                 @endif
+                                                @can('editar_categoria')
                                                 <button class="btn btn-warning text-white border-0 ml-3"
                                                     wire:click.prevent="Edit({{ $category->id }})"
                                                     type="button">
                                                         <i class=" fas fa-edit f-2x"></i>
-                                                    </button>
+                                                </button>
+                                                @endcan
                                             </div>
                                         </td>
                                     </tr>
@@ -103,5 +109,11 @@
 
 
     </script>
+@else
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>¡Lo sentimos!</strong> No tienes permisos para ver esta sección.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    @endcan
 
 </div>
