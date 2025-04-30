@@ -85,19 +85,27 @@
 
                                         <td class="dark:border-dark-5 text-center">
                                             @if ($arqueo->created_at == $arqueo->updated_at)
+                                            @can('cerrar_caja')
                                             <button class="btn btn-danger text-white border-0"
                                             onclick="CerrarCaja({{ $arqueo->id }})"
                                             type="button">
                                                 Cerrar caja
                                             </button>
+                                            @endcan
                                                     {{-- <small class="font-normal ">Cerrar Caja</small> --}}
                                             @else
-                                                <button class="btn btn-success text-white border-0"
+                                                {{-- <button class="btn btn-success text-white border-0"
                                                     onclick="detalleArqueo({{ $arqueo->caja_id }})"
                                                     type="button">
-                                                        <i class=" fas fa-lock f-2x "></i>
+                                                    <i class="fas fa-file-pdf f-2x"></i>
                                                         <small class="font-normal">Detalle arqueo</small>
-                                                </button>
+                                                </button> --}}
+                                                <button class="btn btn-warning text-white border-0 ml-3"
+                                                    wire:click.prevent="downloadArqueo({{ $arqueo->caja_id }})"
+                                                    type="button"
+                                                    title="Descargar PDF">
+                                                    <i class="fas fa-file-pdf f-2x"></i>
+                                                 </button>
                                             @endif
                                         </td>
 
@@ -170,6 +178,8 @@
      window.addEventListener('close-modal-cierre', event => {
         closeModal()
     })
+
+
     </script>
 
 

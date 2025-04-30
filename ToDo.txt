@@ -3,7 +3,7 @@ para poder enviar desde el server los correos revisar el .env de desarollo
 
 hace falta :
 
-
+* revisar detalle arque creo que no iría
 * notas de credito boton descargar pdf revisar y construir eso ?
 * hacer que se revierta el inventario cuando se genera la (ya esta )
 *NC  y ver si se genera pdf de la nc (? seria interno capaz)

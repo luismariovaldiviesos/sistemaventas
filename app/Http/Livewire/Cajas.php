@@ -153,12 +153,12 @@ class Cajas extends Component
 
     public function Destroy(Caja $caja)
     {
-        if ($caja->user->count() < 1 ) {
+        if ($caja->arqueos->count() < 1 ) {
             $caja->delete();
             $this->noty("La caja <b>$caja->nombre</b> fue eliminada del sistema");
         }
         else{
-             $this->noty("La caja no puede ser eliminada, tiene usuarios asignados");
+             $this->noty("La caja no puede ser eliminada, tiene arqueos ");
         }
 
 

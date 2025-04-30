@@ -55,13 +55,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('descuentos', Descuentos::class)->name('descuentos');
     Route::get('facturas', Facturas::class)->name('facturas');
     Route::get('archivop12', Certificados::class)->name('archivop12');
-    Route::get('/pdf', [Facturas::class, 'pdfController']);
     Route::get('/descargar-pdf/{factura}', [PdfController::class, 'pdfDowloader'])->name('descargar-pdf');
     Route::get('reprocesar', XmlFiles::class)->name('reprocesar');
     Route::get('listadofacturas', InvoiceList::class)->name('listadofacturas');
     Route::get('deletedlist', DeletedList::class)->name('deletedlist');
     Route::get('notascredito', NotasCredito::class)->name('notascredito');
     Route::get('impuestos', Impuestos::class)->name('impuestos');
+
+
 
 
 });

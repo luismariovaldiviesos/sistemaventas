@@ -95,4 +95,10 @@ class Arqueos extends Component
         return ( [ 'totalVenta' => $totalVenta, 'caja_id' => $arqueo->caja_id  ]);
         //dd(Arr::add($data, $totalVenta, $arqueo->caja_id ));
     }
+
+    public function downloadArqueo(Arqueo $arqueo)
+    {
+        dd($arqueo);
+
+    }
 }
