@@ -243,6 +243,35 @@ class PdfController extends Controller
 
     public function arqueoDowloader (Arqueo $arqueo){
 
-        dd($arqueo);
+        //dd($arqueo);
+        $pdf = new Fpdf();
+    $pdf->AddPage();
+    $pdf->SetFont('Arial', 'B', 14);
+    $pdf->Cell(0, 10, 'Reporte de Arqueo de Caja', 0, 1, 'C');
+
+    $pdf->SetFont('Arial', '', 12);
+    $pdf->Ln(5);
+
+    $pdf->Cell(50, 10, 'ID Arqueo:', 0, 0);
+    $pdf->Cell(50, 10, $arqueo->id, 0, 1);
+    $pdf->Cell(50, 10, 'Usuario:', 0, 0);
+    $pdf->Cell(50, 10, $arqueo->user->name ?? '---', 0, 1);
+    $pdf->Cell(50, 10, 'Caja:', 0, 0);
+    $pdf->Cell(50, 10, $arqueo->caja->nombre ?? '---', 0, 1);
+    $pdf->Cell(50, 10, 'Fecha apertura:', 0, 0);
+    $pdf->Cell(50, 10, $arqueo->fecha_apertura, 0, 1);
+    $pdf->Cell(50, 10, 'Fecha cierre:', 0, 0);
+    $pdf->Cell(50, 10, $arqueo->fecha_cierre ?? '---', 0, 1);
+    $pdf->Cell(50, 10, 'Total en caja:', 0, 0);
+    $pdf->Cell(50, 10, '$' . number_format($arqueo->total, 2), 0, 1);
+
+    // Obtener el contenido del PDF
+    $pdfContent = $pdf->Output('S');
+
+    // Forzar descarga
+    return response($pdfContent)
+        ->header('Content-Type', 'application/pdf')
+        ->header('Content-Disposition', 'attachment; filename="arqueo_' . $arqueo->id . '.pdf"')
+        ->header('Content-Length', strlen($pdfContent));
     }
 }

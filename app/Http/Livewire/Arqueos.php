@@ -105,37 +105,7 @@ class Arqueos extends Component
         //dd($arqueo);
         //crear pdf
         // Crear PDF
-    // $pdf = new Fpdf();
-    // $pdf->AddPage();
-    // $pdf->SetFont('Arial', 'B', 14);
-    // $pdf->Cell(0, 10, 'Reporte de Arqueo de Caja', 0, 1, 'C');
 
-    // $pdf->SetFont('Arial', '', 12);
-    // $pdf->Ln(5);
-
-    // $pdf->Cell(50, 10, 'ID Arqueo:', 0, 0);
-    // $pdf->Cell(50, 10, $arqueo->id, 0, 1);
-
-    // $pdf->Cell(50, 10, 'Usuario:', 0, 0);
-    // $pdf->Cell(50, 10, $arqueo->user->name ?? '---', 0, 1);
-
-    // $pdf->Cell(50, 10, 'Caja:', 0, 0);
-    // $pdf->Cell(50, 10, $arqueo->caja->nombre ?? '---', 0, 1);
-
-    // $pdf->Cell(50, 10, 'Fecha de apertura:', 0, 0);
-    // $pdf->Cell(50, 10, $arqueo->created_at, 0, 1);
-
-    // $pdf->Cell(50, 10, 'Fecha de cierre:', 0, 0);
-    // $pdf->Cell(50, 10, $arqueo->fecha_cierre ?? '---', 0, 1);
-
-    // $pdf->Cell(50, 10, 'Total en caja:', 0, 0);
-    // $pdf->Cell(50, 10, '$' . number_format($arqueo->total, 2), 0, 1);
-
-    //  // Obtener el contenido del PDF
-    //  $pdfContent = $pdf->Output('S');
-    //     //dd($pdfContent);
-    //  // Forzar descarga
-    //  return response($pdf->Output('D',$arqueo->id.'.pdf'));
 
 
     }
