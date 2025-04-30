@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\FacturaMail;
+use App\Models\Arqueo;
 use App\Models\Factura;
 use App\Models\Setting;
 use Illuminate\Http\Request;
@@ -237,5 +238,11 @@ class PdfController extends Controller
 			}
 		}
 
+    }
+
+
+    public function arqueoDowloader (Arqueo $arqueo){
+
+        dd($arqueo);
     }
 }

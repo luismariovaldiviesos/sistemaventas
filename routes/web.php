@@ -56,6 +56,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('facturas', Facturas::class)->name('facturas');
     Route::get('archivop12', Certificados::class)->name('archivop12');
     Route::get('/descargar-pdf/{factura}', [PdfController::class, 'pdfDowloader'])->name('descargar-pdf');
+    Route::get('/descargar-arqueo/{arqueo}', [PdfController::class, 'arqueoDowloader'])->name('descargar-arqueo');
     Route::get('reprocesar', XmlFiles::class)->name('reprocesar');
     Route::get('listadofacturas', InvoiceList::class)->name('listadofacturas');
     Route::get('deletedlist', DeletedList::class)->name('deletedlist');
