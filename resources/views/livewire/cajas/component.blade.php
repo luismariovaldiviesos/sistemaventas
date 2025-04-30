@@ -1,4 +1,5 @@
 <div>
+    @can('ver_caja')
 
     @if (!$form)
 
@@ -11,7 +12,9 @@
             </h2>
 
             {{-- AQUI LLAMAMOS AL COMPONENTE SEARH --}}
+                @can('crear_caja')
                 <x-search />
+                @endcan
             {{-- AQUI LLAMAMOS AL COMPONENTE SEARH --}}
 
             <div class="p-5">
@@ -42,29 +45,33 @@
 
                                         <td class="dark:border-dark-5 text-center">
                                             <div class="d-flex justify-content-center">
-                                                 @if ($caja->user->count() < 1)
+                                                 @if ($caja->arqueos->count() < 1)
+                                                    @can('eliminar_caja')
                                                     <button class="btn btn-danger text-white border-0"
                                                     onclick="destroy('cajas','Destroy', {{ $caja->id }})"
                                                     type="button">
                                                         <i class=" fas fa-trash f-2x"></i>
                                                     </button>
+                                                    @endcan
                                                 @endif
 
-                                                {{-- @can('editar_caja') --}}
+                                                 @can('editar_caja')
                                                 <button class="btn btn-warning text-white border-0 ml-3"
                                                     wire:click.prevent="Edit({{ $caja->id }})"
                                                     type="button">
                                                         <i class=" fas fa-edit f-2x"></i>
                                                 </button>
-                                                {{-- @endcan --}}
+                                                 @endcan
 
 
                                                 @if ($caja->status == 0 && $caja->user_id == Auth()->user()->id)
+                                                @can('abrir_caja')
                                                     <button class="btn btn-primary text-white border-0"
                                                     onclick="Abrircaja({{ $caja->id }})"
                                                     type="button">
                                                     abrir caja
                                                     </button>
+                                                @endcan
                                               @endif
 
                                             </div>
@@ -99,6 +106,16 @@
 
     @include('livewire.sales.keyboard')
     @include('livewire.cajas.modal-valor-inicio')
+
+    @else
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>¡Lo sentimos!</strong> No tienes permisos para ver esta sección.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    @endcan
+
+
+
 
 
     {{-- para el buscador  --}}

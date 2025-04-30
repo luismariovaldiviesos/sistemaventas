@@ -1,5 +1,8 @@
 
+@can('ver_facturacion')
+
 @if ($estadoCaja === 'nocajasasignadas')
+
 
 <h1 class="text-2xl font-bold"> <i class="fas fa-lock"></i> USUARIO NO TIENE CAJA ASIGNADA</h1>
 
@@ -318,3 +321,14 @@
     </div>
 
  @endif
+
+ @else
+
+ <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>¡Lo sentimos!</strong> No tienes permisos para ver esta sección.
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+ @endcan
+
+
