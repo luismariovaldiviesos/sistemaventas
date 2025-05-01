@@ -1,4 +1,5 @@
 <div>
+    @can('ver_arqueo')
     <div class="intro-y col-span-12">
 
         <div class="intro-y box">
@@ -94,12 +95,6 @@
                                             @endcan
                                                     {{-- <small class="font-normal ">Cerrar Caja</small> --}}
                                             @else
-                                                {{-- <button class="btn btn-success text-white border-0"
-                                                    onclick="detalleArqueo({{ $arqueo->caja_id }})"
-                                                    type="button">
-                                                    <i class="fas fa-file-pdf f-2x"></i>
-                                                        <small class="font-normal">Detalle arqueo</small>
-                                                </button> --}}
                                                 <button class="btn btn-warning text-white border-0 ml-3"
                                                     wire:click.prevent="downloadArqueo({{ $arqueo->caja_id }})"
                                                     type="button"
@@ -131,6 +126,12 @@
             </div>
         </div>
     </div>
+    @else
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>¡Lo sentimos!</strong> No tienes permisos para ver esta sección.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    @endcan
 
 
 

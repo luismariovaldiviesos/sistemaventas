@@ -1,5 +1,6 @@
 <div>
     <div class="intro-y col-span-12">
+        @can('ver_reprocesar')
 
         <div class="intro-y box">
 
@@ -57,11 +58,13 @@
                                         @if($xml->error  == null)
                                         <td class="dark:border-dark-5 text-center">
                                             <div class="d-flex justify-content-center">
+                                                    @can('reprocesar')
                                                     <button class="btn btn-warning text-white border-0 ml-3"
                                                     wire:click.prevent="retry({{ $xml->id }})"
                                                     type="button">
                                                         <i class=" fas fa-edit f-2x"></i>
                                                     </button>
+                                                    @endcan
                                             </div>
                                         </td>
                                         @else
@@ -75,13 +78,14 @@
                                         @endif
                                         <td class="dark:border-dark-5 text-center">
                                             <div class="d-flex justify-content-center">
-
+                                                @can('anular_factura_emitida')
                                                 <button class="btn btn-danger text-white border-0 ml-3"
-                                                wire:click="confirmDelete({{ $xml->id }})"
-                                                type="button"
-                                                title="Anular Factura">
-                                            <i class="fas fa-trash-alt f-2x"></i>
-                                        </button>
+                                                    wire:click="confirmDelete({{ $xml->id }})"
+                                                    type="button"
+                                                    title="Anular Factura">
+                                                <i class="fas fa-trash-alt f-2x"></i>
+                                                </button>
+                                                @endcan
                                             </div>
                                         </td>
                                     </tr>
@@ -99,9 +103,13 @@
                 </div>
             </div>
 
-            <div class="col-spam-12 p-5">
-                {{-- {{ $products->links() }} --}}
+            @else
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>¡Lo sentimos!</strong> No tienes permisos para ver esta sección.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
+            @endcan
+
         </div>
     </div>
 

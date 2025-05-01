@@ -147,6 +147,10 @@ class PermisosSistemaSeeder extends Seeder
             'guard_name' => 'web',
         ]);
         Permission::firstOrCreate([
+            'name' => 'crear_nota_credito',
+            'guard_name' => 'web',
+        ]);
+        Permission::firstOrCreate([
             'name' => 'ver_detalle_nota_credito',
             'guard_name' => 'web',
         ]);
