@@ -1,4 +1,5 @@
 <div>
+    @can('ver_impuestos')
 
     @if (!$form)
 
@@ -11,7 +12,9 @@
             </h2>
 
             {{-- AQUI LLAMAMOS AL COMPONENTE SEARH --}}
+            @can('crear_impuestos')
                 <x-search />
+            @endcan
             {{-- AQUI LLAMAMOS AL COMPONENTE SEARH --}}
 
             <div class="p-5">
@@ -21,7 +24,7 @@
                             <thead>
                                 <tr class="text-theme-1">
 
-                                    <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">CANT PROD x-search IMP</th>
+                                    <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">CANT PROD x IMP</th>
                                     <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">NOMBRE</th>
                                     <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">CODIGO</th>
                                     <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">CODIGO %</th>
@@ -43,19 +46,21 @@
                                             <div class="d-flex justify-content-center">
 
                                                 @if($impuesto->productos->count() <= 0)
-
+                                                    @can('eliminar_impuestos')
                                                     <button class="btn btn-danger text-white border-0"
                                                     onclick="destroy('impuestos','Destroy', {{ $impuesto->id }})"
                                                     type="button">
                                                         <i class=" fas fa-trash f-2x"></i>
                                                     </button>
+                                                    @endcan
                                                 @endif
-
+                                                @can('editar_impuestos')
                                                 <button class="btn btn-warning text-white border-0 ml-3"
                                                     wire:click.prevent="Edit({{ $impuesto->id }})"
                                                     type="button">
                                                         <i class=" fas fa-edit f-2x"></i>
                                                     </button>
+                                                @endcan
                                             </div>
                                         </td>
                                     </tr>
@@ -108,5 +113,13 @@
 
 
     </script>
+
+@else
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>¡Lo sentimos!</strong> No tienes permisos para ver esta sección.
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endcan
+
 
 </div>

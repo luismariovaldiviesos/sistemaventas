@@ -1,4 +1,5 @@
 <div>
+    @can('asignar_permisos')
 
     @if (!$form)
 
@@ -157,5 +158,11 @@
     })
 
     </script>
+@else
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>¡Lo sentimos!</strong> No tienes permisos para ver esta sección.
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endcan
 
 </div>

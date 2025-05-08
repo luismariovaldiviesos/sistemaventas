@@ -213,22 +213,22 @@ class PermisosSistemaSeeder extends Seeder
             'guard_name' => 'web',
         ]);
         //permisos
-        Permission::firstOrCreate([
-            'name' => 'ver_permisos',
-            'guard_name' => 'web',
-        ]);
-        Permission::firstOrCreate([
-            'name' => 'crear_permisos',
-            'guard_name' => 'web',
-        ]);
-        Permission::firstOrCreate([
-            'name' => 'editar_permisos',
-            'guard_name' => 'web',
-        ]);
-        Permission::firstOrCreate([
-            'name' => 'eliminar_permisos',
-            'guard_name' => 'web',
-        ]);
+        // Permission::firstOrCreate([
+        //     'name' => 'ver_permisos',
+        //     'guard_name' => 'web',
+        // ]);
+        // Permission::firstOrCreate([
+        //     'name' => 'crear_permisos',
+        //     'guard_name' => 'web',
+        // ]);
+        // Permission::firstOrCreate([
+        //     'name' => 'editar_permisos',
+        //     'guard_name' => 'web',
+        // ]);
+        // Permission::firstOrCreate([
+        //     'name' => 'eliminar_permisos',
+        //     'guard_name' => 'web',
+        // ]);
         //asginar permsisos a roles
         Permission::firstOrCreate([
             'name' => 'asignar_permisos',

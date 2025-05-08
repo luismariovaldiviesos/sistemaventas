@@ -50,7 +50,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('cajas', Cajas::class)->name('cajas');
     Route::get('arqueos', Arqueos::class)->name('arqueos');
     Route::get('roles', Roles::class)->name('roles');
-    Route::get('permisos', Permisos::class)->name('permisos');
+    // Route::get('permisos', Permisos::class)->name('permisos');
     Route::get('asignar', Asignar::class)->name('asignar');
     Route::get('descuentos', Descuentos::class)->name('descuentos');
     Route::get('facturas', Facturas::class)->name('facturas');

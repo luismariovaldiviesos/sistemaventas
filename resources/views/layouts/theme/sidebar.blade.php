@@ -150,12 +150,12 @@
                         <div class="side-menu__title"> ROLES  </div>
                     </a>
                 </li>
-                <li>
+                {{-- <li>
                     <a href="{{ route('permisos') }}" class="side-menu">
                         <div class="side-menu__icon"> <i data-feather="activity"></i> </div>
                         <div class="side-menu__title"> PERMISOS  </div>
                     </a>
-                </li>
+                </li> --}}
                 <li>
                     <a href="{{ route('asignar') }}" class="side-menu">
                         <div class="side-menu__icon"> <i data-feather="activity"></i> </div>

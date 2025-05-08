@@ -1,4 +1,5 @@
 <div>
+    @can('ver_descuentos')
     <div class="intro-y col-span-12">
 
         <div class="intro-y box">
@@ -54,16 +55,13 @@
 
                                         <td class="dark:border-dark-5 text-center">
                                             <div class="d-flex justify-content-center">
+                                                @can('eliminar_descuentos')
                                                 <button class="btn btn-danger text-white border-0"
                                                 onclick="revoque('descuentos','Revoque', {{ $product->id }})"
                                                 type="button">
                                                     <i class=" fas fa-trash f-2x"></i>
                                                 </button>
-                                                {{-- <button class="btn btn-primary text-white border-0"
-                                                wire:click.prevent="deleteDescuento({{ $product->id }})"
-                                                type="button">
-                                                Revocar descuento
-                                                </button> --}}
+                                                @endcan
                                             </div>
                                         </td>
                                     </tr>
@@ -179,5 +177,14 @@
             }
         }))
     </script>
+
+
+@else
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>¡Lo sentimos!</strong> No tienes permisos para ver esta sección.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endcan
+
 
 </div>

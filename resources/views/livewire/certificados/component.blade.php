@@ -1,4 +1,5 @@
 <div class="intro-y col-span-12">
+    @can('ver_firma')
     <div class="intro-y box">
         <div class="flex flex-col sm:flex-row items-center p-5 border-b border-gray-200 dark:border-dark-5">
             <h2 class="font-medium text-base mr-auto">
@@ -54,5 +55,12 @@
             })
         }
     </script>
+    @else
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>¡Lo sentimos!</strong> No tienes permisos para ver esta sección.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endcan
+
 
 </div>

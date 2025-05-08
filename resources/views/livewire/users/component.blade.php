@@ -1,5 +1,5 @@
 <div>
-
+@can('ver_usuarios')
     @if (!$form)
 
         <div class="intro-y col-span-12">
@@ -11,7 +11,9 @@
             </h2>
 
             {{-- AQUI LLAMAMOS AL COMPONENTE SEARH --}}
+            @can('crear_usuarios')
                 <x-search />
+            @endcan
             {{-- AQUI LLAMAMOS AL COMPONENTE SEARH --}}
 
             <div class="p-5">
@@ -43,17 +45,21 @@
                                         <td class="dark:border-dark-5 text-center">
                                             <div class="d-flex justify-content-center">
                                                 @if ($user->sales->count() < 1)
+                                                @can('eliminar_usuarios')
                                                     <button class="btn btn-danger text-white border-0"
                                                     onclick="destroy('users','Destroy', {{ $user->id }})"
                                                     type="button">
                                                         <i class=" fas fa-trash f-2x"></i>
                                                     </button>
+                                                @endcan
                                                 @endif
+                                                @can('editar_usuarios')
                                                 <button class="btn btn-warning text-white border-0 ml-3"
                                                     wire:click.prevent="Edit({{ $user->id }})"
                                                     type="button">
                                                         <i class=" fas fa-edit f-2x"></i>
                                                     </button>
+                                                @endcan
                                             </div>
                                         </td>
                                     </tr>
@@ -107,5 +113,13 @@
 
 
     </script>
+
+@else
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>¡Lo sentimos!</strong> No tienes permisos para ver esta sección.
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endcan
+
 
 </div>
