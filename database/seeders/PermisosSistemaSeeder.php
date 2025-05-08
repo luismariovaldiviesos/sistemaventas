@@ -284,6 +284,93 @@ class PermisosSistemaSeeder extends Seeder
             'guard_name' => 'web',
         ]);
 
+
+        //para los menus
+        Permission::firstOrCreate([
+            'name' => 'menu_dashboard',
+            'guard_name' => 'web',
+        ]);
+          Permission::firstOrCreate([
+            'name' => 'menu_productos',
+            'guard_name' => 'web',
+        ]);
+          Permission::firstOrCreate([
+            'name' => 'menu_categorias',
+            'guard_name' => 'web',
+        ]);
+          Permission::firstOrCreate([
+            'name' => 'menu_facturar',
+            'guard_name' => 'web',
+        ]);
+           Permission::firstOrCreate([
+            'name' => 'menu_cajas',
+            'guard_name' => 'web',
+        ]);
+           Permission::firstOrCreate([
+            'name' => 'menu_arqueos',
+            'guard_name' => 'web',
+        ]);
+           Permission::firstOrCreate([
+            'name' => 'menu_reprocesar',
+            'guard_name' => 'web',
+        ]);
+           Permission::firstOrCreate([
+            'name' => 'menu_facturas_emitidas',
+            'guard_name' => 'web',
+        ]);
+           Permission::firstOrCreate([
+            'name' => 'menu_faturas_anuladas',
+            'guard_name' => 'web',
+        ]);
+           Permission::firstOrCreate([
+            'name' => 'menu_notas_credito',
+            'guard_name' => 'web',
+        ]);
+           Permission::firstOrCreate([
+            'name' => 'menu_clientes',
+            'guard_name' => 'web',
+        ]);
+           Permission::firstOrCreate([
+            'name' => 'menu_reportes',
+            'guard_name' => 'web',
+        ]);
+           Permission::firstOrCreate([
+            'name' => 'menu_ventas_diarias',
+            'guard_name' => 'web',
+        ]);
+           Permission::firstOrCreate([
+            'name' => 'menu_configuracion',
+            'guard_name' => 'web',
+        ]);
+
+           Permission::firstOrCreate([
+            'name' => 'menu_empresa',
+            'guard_name' => 'web',
+        ]);
+           Permission::firstOrCreate([
+            'name' => 'menu_roles',
+            'guard_name' => 'web',
+        ]);
+           Permission::firstOrCreate([
+            'name' => 'menu_asginar_permisos',
+            'guard_name' => 'web',
+        ]);
+           Permission::firstOrCreate([
+            'name' => 'menu_usuarios',
+            'guard_name' => 'web',
+        ]);
+           Permission::firstOrCreate([
+            'name' => 'menu_descuentos',
+            'guard_name' => 'web',
+        ]);
+           Permission::firstOrCreate([
+            'name' => 'menu_impuestos',
+            'guard_name' => 'web',
+        ]);
+           Permission::firstOrCreate([
+            'name' => 'menu_firma_electronica',
+            'guard_name' => 'web',
+        ]);
         $this->agregaPermisosAdmin();
 
     }
