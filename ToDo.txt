@@ -2,12 +2,13 @@ pdfController linea 160 editada para enviar mail
 para poder enviar desde el server los correos revisar el .env de desarollo
 
 hace falta :
-
+*listado de notas de credito boton descargar archivo falta descargar pdf o sea construit el pdf
+*reportes diarios de ventas falta cnstruir
 * revisar detalle arque creo que no iría
 * notas de credito boton descargar pdf revisar y construir eso ?
 * hacer que se revierta el inventario cuando se genera la (ya esta )
 *NC  y ver si se genera pdf de la nc (? seria interno capaz)
-* en buscar producto manual si sale producto que no tiene stcok validar ahi tambien que no salga
+
 * boorar carrito desde factura
 * tenenat
 000000763  no se creo el pdf, considerar crear pdf cuando hay un error en el reset no se creo el pdf

@@ -9,16 +9,11 @@ Renew Support: https://themeforest.net/user/left4code/portfolio
 License: You must have a valid license purchased only from themeforest(the above link) in order to legally use the theme for your project.
 -->
 <html lang="en" class="light">
-
     <!-- END: Head -->
     <body class="main">
-
-
+        @can('ver_venta_diaria')
         <div class="flex">
-
-
             <div class="content">
-
                 <div class="grid grid-cols-12 gap-6">
                     <div class="col-span-12 xxl:col-span-9">
                         <div class="grid grid-cols-12 gap-6">
@@ -440,5 +435,11 @@ License: You must have a valid license purchased only from themeforest(the above
         <script src="https://maps.googleapis.com/maps/api/js?key=["your-google-map-api"]&libraries=places"></script>
 
         <!-- END: JS Assets-->
+        @else
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>¡Lo sentimos!</strong> No tienes permisos para ver esta sección.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endcan
     </body>
 </html>

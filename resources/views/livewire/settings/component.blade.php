@@ -1,3 +1,4 @@
+@can('ver_empresa')
 <div class="intro-y col-span-12">
     <div class="intro-y box">
         <div class="flex flex-col sm:flex-row items-center p-5 border-b border-gray-200 dark:border-dark-5">
@@ -196,13 +197,20 @@
 
 
             <div class="col-span-12">
+                @can('editar_empresa')
 
                 <x-save />
+                @endcan
 
             </div>
         </div>
 
     </div>
 </div>
-
 </div>
+@else
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>¡Lo sentimos!</strong> No tienes permisos para ver esta sección.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endcan

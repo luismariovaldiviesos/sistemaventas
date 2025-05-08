@@ -175,6 +175,10 @@ class PermisosSistemaSeeder extends Seeder
             'name' => 'eliminar_cliente',
             'guard_name' => 'web',
         ]);
+        Permission::firstOrCreate([
+            'name' => 'ver_reportes',
+            'guard_name' => 'web',
+        ]);
         //ventar diaria
         Permission::firstOrCreate([
             'name' => 'ver_venta_diaria',

@@ -1,4 +1,5 @@
 <div>
+    @can('ver_reportes')
     <div class=" col-span-12">
         <div class="intro-y box">
             <h2 class="text-lg font-medium text-center text-theme-1 py-4">
@@ -187,5 +188,11 @@ document.querySelectorAll('.mydp').forEach( function (el) {
 
 
 </script>
+@else
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>¡Lo sentimos!</strong> No tienes permisos para ver esta sección.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endcan
 
 </div>

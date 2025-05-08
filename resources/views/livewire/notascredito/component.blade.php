@@ -1,4 +1,5 @@
 <div>
+    @can('ver_notas_credito')
     <div class="intro-y col-span-12">
 
         <div class="intro-y box">
@@ -66,6 +67,7 @@
                                          <td class="dark:border-dark-5 text-center">
                                             <div class="d-flex justify-content-center">
                                                 <!-- Botón para detalles    -->
+                                                @can('ver_detalle_nota_credito')
                                                 <button class="btn btn-dark text-white border-0 ml-3"
                                                         wire:click.prevent="show({{ $factura->id }})"
                                                         type="button"
@@ -73,6 +75,7 @@
                                                     <i class="fas fa-eye
                                                     f-2x"></i>
                                                 </button>
+                                                @endcan
 
                                                  {{-- <button class="btn btn-warning text-white border-0 ml-3"
                                                         wire:click.prevent="retry({{ $factura->id }})"
@@ -82,12 +85,14 @@
                                                     </button> --}}
 
                                                 <!-- Botón para descargar archivos -->
+                                                @can('descargar_nota_credito')
                                                 <button class="btn btn-primary text-white border-0 ml-3"
-                                                wire:click.prevent="downloadFiles({{ $factura->id }})"
-                                                type="button"
-                                                title="Descargar Archivos">
-                                            <i class="fas fa-download f-2x text-white"></i>
-                                            </button>
+                                                    wire:click.prevent="downloadFiles({{ $factura->id }})"
+                                                    type="button"
+                                                    title="Descargar Archivos">
+                                                    <i class="fas fa-download f-2x text-white"></i>
+                                                </button>
+                                                @endcan
 
 
 
@@ -171,6 +176,13 @@
 
 
 </script>
+
+@else
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>¡Lo sentimos!</strong> No tienes permisos para ver esta sección.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    @endcan
 
 
 </div>
