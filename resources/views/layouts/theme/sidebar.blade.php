@@ -1,59 +1,63 @@
 <nav class="side-nav">
-    {{-- @hasrole('Admin') --}}
+    @can('menu_dashboard')
     <a href="{{ url('dash') }}" class="intro-x flex items-center pl-5 pt-4">
         <img alt="logo" class="w-6" src="{{ asset('dist/images/logo.svg') }}">
         <span class="hidden xl:block text-white text-lg ml-3"><span class="font-medium">VENTAS</span> </span>
-
-
     </a>
-    {{-- @endhasrole --}}
+    @endcan
+
     <div class="side-nav__devider my-6"></div>
 
     <ul>
-        {{-- @hasrole('Admin') --}}
+        @can('menu_categorias')
         <li>
             <a href="{{ url('categories') }}" class="side-menu">
                 <div class="side-menu__icon"> <i data-feather="layers"></i> </div>
                 <div class="side-menu__title"> CATEGORIAS  </div>
             </a>
         </li>
+        @endcan
 
 
+        @can('menu_productos')
         <li>
             <a href="{{ route('products') }}" class="side-menu">
                 <div class="side-menu__icon"> <i data-feather="coffee"></i> </div>
                 <div class="side-menu__title"> PRODUCTOS  </div>
             </a>
         </li>
-        {{-- @endhasrole() --}}
+        @endcan
 
-        {{-- <li>
-            <a href="{{ route('sales') }}" class="side-menu">
-                <div class="side-menu__icon"> <i data-feather="dollar-sign"></i> </div>
-                <div class="side-menu__title"> sales  </div>
-            </a>
-        </li> --}}
+
+        @can('menu_facturar')
         <li>
             <a href="{{ route('facturas') }}" class="side-menu">
                 <div class="side-menu__icon"> <i data-feather="dollar-sign"></i> </div>
                 <div class="side-menu__title"> FACTURAR  </div>
             </a>
         </li>
+        @endcan
 
-        {{-- @hasrole('Admin') --}}
+
+        @can('menu_cajas')
         <li>
             <a href="{{ route('cajas') }}" class="side-menu">
                 <div class="side-menu__icon"> <i data-feather="shopping-cart"></i> </div>
                 <div class="side-menu__title"> CAJAS  </div>
             </a>
         </li>
-        {{-- @endhasrole --}}
+        @endcan
+
+        @can('menu_arqueos')
         <li>
             <a href="{{ route('arqueos') }}" class="side-menu">
                 <div class="side-menu__icon"> <i data-feather="edit"></i> </div>
                 <div class="side-menu__title"> ARQUEOS  </div>
             </a>
         </li>
+        @endcan
+
+        @can('menu_reprocesar')
         <li>
             <a href="{{ route('reprocesar') }}" class="side-menu">
                 <div class="side-menu__icon"> <i data-feather="edit"></i> </div>
@@ -64,12 +68,18 @@
                 </div>
             </a>
         </li>
+        @endcan
+
+        @can('menu_facturas_emitidas')
         <li>
             <a href="{{ route('listadofacturas') }}" class="side-menu">
                 <div class="side-menu__icon"> <i data-feather="eye"></i> </div>
                 <div class="side-menu__title">FACTURAS EMITIDAS</div>
             </a>
         </li>
+        @endcan
+
+        @can('menu_faturas_anuladas')
         <li>
             <a href="{{ route('deletedlist') }}" class="side-menu">
                 <div class="side-menu__icon"> <i data-feather="eye"></i> </div>
@@ -80,6 +90,9 @@
                 </div>
             </a>
         </li>
+        @endcan
+
+        @can('menu_notas_credito')
 
         <li>
             <a href="{{ route('notascredito') }}" class="side-menu">
@@ -88,36 +101,41 @@
                 </div>
             </a>
         </li>
+        @endcan
 
         <div class="side-nav__devider my-6"></div>
 
+        @can('menu_clientes')
         <li>
             <a href="{{ route('customers') }}" class="side-menu">
                 <div class="side-menu__icon"> <i data-feather="users"></i> </div>
                 <div class="side-menu__title"> CLIENTES  </div>
             </a>
         </li>
+        @endcan
 
 
 
 
         <div class="side-nav__devider my-6"></div>
 
-        {{-- @hasrole('admin') --}}
+        @can('menu_reportes')
         <li>
             <a href="{{ route('reports') }}" class="side-menu">
                 <div class="side-menu__icon"> <i data-feather="calendar"></i> </div>
                 <div class="side-menu__title"> REPORTES  </div>
             </a>
         </li>
-        {{-- @endhasrole --}}
+        @endcan
 
+        @can('menu_ventas_diarias')
         <li>
             <a href="{{ route('diario') }}" class="side-menu">
                 <div class="side-menu__icon"> <i data-feather="eye"></i> </div>
                 <div class="side-menu__title"> VENTA DIARIA  </div>
             </a>
         </li>
+        @endcan
 
         <div class="side-nav__devider my-6"></div>
 
@@ -126,7 +144,7 @@
 
         <li>
 
-            {{-- @hasrole('Admin') --}}
+            @can('menu_configuracion')
             <a href="javascript:;" class="side-menu">
                 <div class="side-menu__icon"> <i data-feather="settings"></i> </div>
                 <div class="side-menu__title">
@@ -134,9 +152,12 @@
                     <div class="side-menu__sub-icon "> <i data-feather="chevron-down"></i> </div>
                 </div>
             </a>
-            {{-- @endhasrole --}}
+            @endcan
+
 
             <ul class="">
+
+                @can('menu_empresa')
 
                 <li>
                     <a href="{{ route('settings') }}" class="side-menu">
@@ -144,50 +165,66 @@
                         <div class="side-menu__title"> EMPRESA  </div>
                     </a>
                 </li>
+                @endcan
+
+                @can('menu_roles')
                 <li>
                     <a href="{{ route('roles') }}" class="side-menu">
                         <div class="side-menu__icon"> <i data-feather="settings"></i> </div>
                         <div class="side-menu__title"> ROLES  </div>
                     </a>
                 </li>
+                @endcan
                 {{-- <li>
                     <a href="{{ route('permisos') }}" class="side-menu">
                         <div class="side-menu__icon"> <i data-feather="activity"></i> </div>
                         <div class="side-menu__title"> PERMISOS  </div>
                     </a>
                 </li> --}}
+                @can('menu_asginar_permisos')
                 <li>
                     <a href="{{ route('asignar') }}" class="side-menu">
                         <div class="side-menu__icon"> <i data-feather="activity"></i> </div>
                         <div class="side-menu__title"> ASIGNAR PERMISOS  </div>
                     </a>
                 </li>
+                @endcan
+
+                @can('menu_usuarios')
                 <li>
                     <a href="{{ route('users') }}" class="side-menu">
                         <div class="side-menu__icon"> <i data-feather="key"></i> </div>
                         <div class="side-menu__title"> USUARIOS  </div>
                     </a>
                 </li>
+                @endcan
 
+                @can('menu_descuentos')
                 <li>
                     <a href="{{ route('descuentos') }}" class="side-menu">
                         <div class="side-menu__icon"> <i data-feather="key"></i> </div>
                         <div class="side-menu__title"> Descuentos  </div>
                     </a>
                 </li>
+                @endcan
+
+                @can('menu_impuestos')
                 <li>
                     <a href="{{ route('impuestos') }}" class="side-menu">
                         <div class="side-menu__icon"> <i data-feather="key"></i> </div>
                         <div class="side-menu__title"> Impuestos  </div>
                     </a>
                 </li>
+                @endcan
 
+                @can('menu_firma_electronica')
                 <li>
                     <a href="{{ route('archivop12') }}" class="side-menu">
                         <div class="side-menu__icon"> <i data-feather="key"></i> </div>
                         <div class="side-menu__title"> Firma electrónica  </div>
                     </a>
                 </li>
+                @endcan
             </ul>
         </li>
 
