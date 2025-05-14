@@ -36,6 +36,7 @@
                                     <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">CLAVE ACCESO</th>
                                     <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">AUTORIZACION</th>
                                     <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">ANULADO SRI</th>
+                                    <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">FECHA ANULACION</th>
                                     <th class="border-b-2 dark:border-dark-5 whitespace-nowrap text-center">ACCIONES</th>
                                 </tr>
                             </thead>
@@ -49,6 +50,7 @@
                                         <td class="text-center font-medium">{{ $factura->clave_acceso }}</td>
                                         <td class="text-center font-medium">{{ \Carbon\Carbon::parse($factura->fecha_emision)->format('d-m-Y') }}</td>
                                         <td class="text-center font-medium">{{ $factura->estado }}</td>
+                                        <td class="text-center font-medium">{{ $factura->created_at }}</td>
 
                                          <td class="dark:border-dark-5 text-center">
                                             <div class="d-flex justify-content-center">
