@@ -25,7 +25,7 @@ class Settings extends Component
         //$info =  Cache::get('settings');
         //dd(Cache::get('settings'));
         $info =  empresa();
-        //dd($info->razonSocial);
+        //dd($info->cert_file->getclientOriginalName());
 
         if($info){
             $this->selected_id = $info->id;
