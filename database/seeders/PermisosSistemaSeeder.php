@@ -371,6 +371,19 @@ class PermisosSistemaSeeder extends Seeder
             'name' => 'menu_firma_electronica',
             'guard_name' => 'web',
         ]);
+          Permission::firstOrCreate([
+            'name' => 'menu_mail_envio',
+            'guard_name' => 'web',
+        ]);
+          Permission::firstOrCreate([
+            'name' => 'ver_mail_envio',
+            'guard_name' => 'web',
+        ]);
+          Permission::firstOrCreate([
+            'name' => 'editar_mail_envio',
+            'guard_name' => 'web',
+        ]);
+
         $this->agregaPermisosAdmin();
 
     }

@@ -38,29 +38,10 @@
         </li>
         @endcan
 
-
-        @can('menu_cajas')
-        <li>
-            <a href="{{ route('cajas') }}" class="side-menu">
-                <div class="side-menu__icon"> <i data-feather="shopping-cart"></i> </div>
-                <div class="side-menu__title"> CAJAS  </div>
-            </a>
-        </li>
-        @endcan
-
-        @can('menu_arqueos')
-        <li>
-            <a href="{{ route('arqueos') }}" class="side-menu">
-                <div class="side-menu__icon"> <i data-feather="edit"></i> </div>
-                <div class="side-menu__title"> ARQUEOS  </div>
-            </a>
-        </li>
-        @endcan
-
         @can('menu_reprocesar')
         <li>
             <a href="{{ route('reprocesar') }}" class="side-menu">
-                <div class="side-menu__icon"> <i data-feather="edit"></i> </div>
+                <div class="side-menu__icon"> <i data-feather="repeat"></i> </div>
                 <div class="side-menu__title"> REPROCESAR
                 <span class="badge badge-danger ml-2">
                     {{ \App\Models\XmlFile::where('estado', '!=', 'autorizado')->count() }}
@@ -82,7 +63,7 @@
         @can('menu_faturas_anuladas')
         <li>
             <a href="{{ route('deletedlist') }}" class="side-menu">
-                <div class="side-menu__icon"> <i data-feather="eye"></i> </div>
+                <div class="side-menu__icon"> <i data-feather="trash"></i> </div>
                 <div class="side-menu__title">FACTURAS ANULADAS
                     <span class="badge badge-danger ml-2">
                         {{-- {{ \App\Models\DeletedFactura::where('estado', '=', 'pendiente')->count() }} --}}
@@ -96,9 +77,27 @@
 
         <li>
             <a href="{{ route('notascredito') }}" class="side-menu">
-                <div class="side-menu__icon"> <i data-feather="eye"></i> </div>
+                <div class="side-menu__icon"> <i data-feather="list"></i> </div>
                 <div class="side-menu__title">NOTAS DE CRÉDITO
                 </div>
+            </a>
+        </li>
+        @endcan
+
+        @can('menu_cajas')
+        <li>
+            <a href="{{ route('cajas') }}" class="side-menu">
+                <div class="side-menu__icon"> <i data-feather="shopping-cart"></i> </div>
+                <div class="side-menu__title"> CAJAS  </div>
+            </a>
+        </li>
+        @endcan
+
+        @can('menu_arqueos')
+        <li>
+            <a href="{{ route('arqueos') }}" class="side-menu">
+                <div class="side-menu__icon"> <i data-feather="power"></i> </div>
+                <div class="side-menu__title"> ARQUEOS  </div>
             </a>
         </li>
         @endcan
@@ -131,7 +130,7 @@
         @can('menu_ventas_diarias')
         <li>
             <a href="{{ route('diario') }}" class="side-menu">
-                <div class="side-menu__icon"> <i data-feather="eye"></i> </div>
+                <div class="side-menu__icon"> <i data-feather="search"></i> </div>
                 <div class="side-menu__title"> VENTA DIARIA  </div>
             </a>
         </li>
@@ -161,8 +160,8 @@
 
                 <li>
                     <a href="{{ route('settings') }}" class="side-menu">
-                        <div class="side-menu__icon"> <i data-feather="settings"></i> </div>
-                        <div class="side-menu__title"> EMPRESA  </div>
+                        <div class="side-menu__icon"> <i data-feather="slack"></i> </div>
+                        <div class="side-menu__title"> Empresa  </div>
                     </a>
                 </li>
                 @endcan
@@ -170,8 +169,8 @@
                 @can('menu_roles')
                 <li>
                     <a href="{{ route('roles') }}" class="side-menu">
-                        <div class="side-menu__icon"> <i data-feather="settings"></i> </div>
-                        <div class="side-menu__title"> ROLES  </div>
+                        <div class="side-menu__icon"> <i data-feather="thumbs-up"></i> </div>
+                        <div class="side-menu__title"> Roles  </div>
                     </a>
                 </li>
                 @endcan
@@ -185,7 +184,7 @@
                 <li>
                     <a href="{{ route('asignar') }}" class="side-menu">
                         <div class="side-menu__icon"> <i data-feather="activity"></i> </div>
-                        <div class="side-menu__title"> ASIGNAR PERMISOS  </div>
+                        <div class="side-menu__title"> Asignar Permisos  </div>
                     </a>
                 </li>
                 @endcan
@@ -193,8 +192,8 @@
                 @can('menu_usuarios')
                 <li>
                     <a href="{{ route('users') }}" class="side-menu">
-                        <div class="side-menu__icon"> <i data-feather="key"></i> </div>
-                        <div class="side-menu__title"> USUARIOS  </div>
+                        <div class="side-menu__icon"> <i data-feather="users"></i> </div>
+                        <div class="side-menu__title"> Usuarios  </div>
                     </a>
                 </li>
                 @endcan
@@ -202,7 +201,7 @@
                 @can('menu_descuentos')
                 <li>
                     <a href="{{ route('descuentos') }}" class="side-menu">
-                        <div class="side-menu__icon"> <i data-feather="key"></i> </div>
+                        <div class="side-menu__icon"> <i data-feather="percent"></i> </div>
                         <div class="side-menu__title"> Descuentos  </div>
                     </a>
                 </li>
@@ -211,7 +210,7 @@
                 @can('menu_impuestos')
                 <li>
                     <a href="{{ route('impuestos') }}" class="side-menu">
-                        <div class="side-menu__icon"> <i data-feather="key"></i> </div>
+                        <div class="side-menu__icon"> <i data-feather="dollar-sign"></i> </div>
                         <div class="side-menu__title"> Impuestos  </div>
                     </a>
                 </li>
@@ -220,8 +219,18 @@
                 @can('menu_firma_electronica')
                 <li>
                     <a href="{{ route('archivop12') }}" class="side-menu">
-                        <div class="side-menu__icon"> <i data-feather="key"></i> </div>
+                        <div class="side-menu__icon"> <i data-feather="terminal"></i> </div>
                         <div class="side-menu__title"> Firma electrónica  </div>
+                    </a>
+                </li>
+                @endcan
+
+                @can('menu_mail_envio')
+
+                   <li>
+                    <a href="{{ route('smtpsetting') }}" class="side-menu">
+                        <div class="side-menu__icon"> <i data-feather="mail"></i> </div>
+                        <div class="side-menu__title"> Configurar maiil  </div>
                     </a>
                 </li>
                 @endcan

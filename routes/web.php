@@ -22,7 +22,9 @@ use App\Http\Livewire\Sales;
 use App\Http\Livewire\Settings;
 use App\Http\Livewire\Users;
 use App\Http\Livewire\Roles;
+use App\Http\Livewire\SmtpSettings;
 use App\Http\Livewire\XmlFiles;
+use App\Models\SmtpSetting;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -62,6 +64,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('deletedlist', DeletedList::class)->name('deletedlist');
     Route::get('notascredito', NotasCredito::class)->name('notascredito');
     Route::get('impuestos', Impuestos::class)->name('impuestos');
+    Route::get('smtpsetting', SmtpSettings::class)->name('smtpsetting');
 
 
 
