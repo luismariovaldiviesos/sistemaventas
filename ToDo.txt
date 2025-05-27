@@ -16,6 +16,8 @@ esto ya se creo, habria que poner un estado en la base para cuando no se cree el
 *docker
 
 
+cambiar .jar por algun paqete de php ver si es posible
+
 
 
 
