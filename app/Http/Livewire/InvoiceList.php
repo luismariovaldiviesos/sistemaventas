@@ -75,7 +75,7 @@ public function noty($msg, $eventName= 'noty', )
 
         //dd('reenviar pdf de ', $factura->secuencial);
         $pdfcontroller  =  New PdfController();
-        $pdfcontroller->enviarFacturea($factura);
+        $pdfcontroller->enviarFactura($factura);
         $this->noty('PDF FACTURA REENVIADA  CORRECTAMENTE !!!!!!');
 
     }

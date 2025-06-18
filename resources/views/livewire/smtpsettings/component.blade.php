@@ -66,6 +66,13 @@
                 class="form-control  kioskboard"  placeholder="SMTP" />
             </div>
 
+              <div class="col-span-4">
+               <button wire:click="testSmtpConnection" type="button" class="btn btn-warning">
+                     Probar Conexión SMTP
+                </button>
+            </div>
+
+
             <div class="col-span-12">
                 @can('editar_mail_envio')
 

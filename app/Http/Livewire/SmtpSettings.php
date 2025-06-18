@@ -11,12 +11,11 @@ class SmtpSettings extends Component
 
     public  $empresa_id,$provider,$mailer,$host,$port,$encryption,$username,$password,$from_address,$from_name;
 
-    public $providers = ['Gmail', 'Outlook', 'Otro'];
-
+   public $providers = ['Gmail', 'Outlook', 'Hotmail', 'Yahoo', 'Otro'];
 
     public function mount(){
         $this->empresa_id  =  empresa()->id;
-        $this->mailer = 'smtp';
+        //$this->mailer = 'smtp';
 
         $smtpSetting =  SmtpSetting::first();
         if($smtpSetting){
@@ -57,29 +56,42 @@ class SmtpSettings extends Component
         ]);
     }
 
-     public function setProvider($provider){
-        $this->provider = $provider;
-        //$this->mailer = 'smtp';   // cambiar aqui mailer
-        //dd($provider);
-        switch ($provider){
-            case 'Gmail':
-                 $this->host = 'smtp.gmail.com';
-                $this->port = '587';
-                $this->encryption = 'tls';
-                break;
-            case 'Outlook':
-                 $this->host = 'smtp.office365.com';
-                $this->port = '587';
-                $this->encryption = 'tls';
-                break;
-            default:
+
+
+  public function setProvider($provider)
+{
+    $this->provider = $provider;
+    $this->mailer = 'smtp'; // Fijo para todos
+
+    switch (strtolower($provider)) {
+        case 'gmail':
+            $this->host = 'smtp.gmail.com';
+            $this->port = 587;
+            $this->encryption = 'tls';
+            break;
+        case 'outlook':
+            $this->host = 'smtp.office365.com';
+            $this->port = 587;
+            $this->encryption = 'tls';
+            break;
+        case 'hotmail':
+            $this->host = 'smtp.live.com';
+            $this->port = 587;
+            $this->encryption = 'tls';
+            break;
+        case 'yahoo':
+            $this->host = 'smtp.mail.yahoo.com';
+            $this->port = 465;
+            $this->encryption = 'ssl';
+            break;
+        case 'otro':
+            // Permitir edición manual
             $this->host = '';
-                $this->port = '';
-                $this->encryption = '';
-                break;
-        }
-       // dd($this->host,$this->port,$this->encryption);
-     }
+            $this->port = '';
+            $this->encryption = '';
+            break;
+    }
+}
 
      public function  Store (){
 
@@ -109,32 +121,67 @@ class SmtpSettings extends Component
 
         $this->empresa_id = $this->empresa_id;
         $this->password = Crypt::encryptString($this->password);
-        // dd($this->empresa_id, $this->provider, $this->mailer,
-        //   $this->host,$this->port,$this->encryption, $this->username,
-        //   $this->password, $this->from_address, $this->from_name);
-      SmtpSetting::updateOrCreate(
-        ['id' => 1], // Se asegura que solo exista un registro (ID fijo o puedes usar first() y update manual)
-        [
-            'empresa_id'   => $this->empresa_id,
-            'provider'     => $this->provider,
-            'mailer'       => $this->mailer,
-            'host'         => $this->host,
-            'port'         => $this->port,
-            'encryption'   => $this->encryption,
-            'username'     => $this->username,
-            'password'     => Crypt::encryptString($this->password),
-            'from_address' => $this->from_address,
-            'from_name'    => $this->from_name,
-        ]
-    );
-
-
+        //  dd($this->empresa_id, $this->provider, $this->mailer,
+        //    $this->host,$this->port,$this->encryption, $this->username,
+        //    $this->password, $this->from_address, $this->from_name);
+        SmtpSetting::updateOrCreate(
+            ['id' => 1], // Se asegura que solo exista un registro (ID fijo o puedes usar first() y update manual)
+                [
+                    'empresa_id'   => $this->empresa_id,
+                    'provider'     => $this->provider,
+                    'mailer'       => $this->mailer,
+                    'host'         => $this->host,
+                    'port'         => $this->port,
+                    'encryption'   => $this->encryption,
+                    'username'     => $this->username,
+                    'password'     => Crypt::encryptString($this->password),
+                    'from_address' => $this->from_address,
+                    'from_name'    => $this->from_name,
+                ]
+                    );
         $this->dispatchBrowserEvent('noty', ['msg' => 'Configuración guardada correctamente', 'type' => 'success']);
      }
+
+
+   public function testSmtpConnection()
+{
+    try {
+        $encryption = strtolower($this->encryption);
+
+        // TRUE si es 'ssl', FALSE para 'tls' (STARTTLS)
+        $useSsl = ($encryption === 'ssl');
+
+        // Crear transporte SMTP (el 3er parámetro es bool para SSL, no string)
+        $transport = new \Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport(
+            $this->host,
+            intval($this->port),
+            $useSsl
+        );
+
+        $transport->setUsername($this->username);
+        $transport->setPassword(Crypt::decryptString($this->password));
+       // dd($this->username, $this->password, $this->host, $this->port, $useSsl);
+        // Esto valida la conexión SMTP
+        $transport->start();
+
+        $this->dispatchBrowserEvent('noty', [
+            'msg' => '✅ Conexión SMTP exitosa',
+            'type' => 'success',
+        ]);
+    } catch (\Exception $e) {
+        $this->dispatchBrowserEvent('noty', [
+            'msg' => '❌ Error de conexión SMTP: ' . $e->getMessage(),
+            'type' => 'error',
+        ]);
+    }
+}
+
 
     public function render()
     {
         return view('livewire.smtpsettings.component')
         ->layout('layouts.theme.app');
     }
+
+
 }

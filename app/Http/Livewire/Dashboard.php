@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Helpers\MailHelper;
 use App\Models\DetalleFactura;
 use App\Models\Factura;
 use App\Models\Order;
@@ -10,6 +11,7 @@ use App\Models\User;
 use DateTime;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 use Spatie\Permission\Models\Role;
 
@@ -38,6 +40,8 @@ class Dashboard extends Component
         //     dd($rol->name);
         //    }
         // }
+        //dd('Dashboard');
+        //MailHelper::setSmtpFromDatabase();
 
         $this->listYears =[];
         $currentYear =  date('Y') -2;

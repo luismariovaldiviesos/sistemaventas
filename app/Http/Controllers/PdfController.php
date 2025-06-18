@@ -203,16 +203,17 @@ class PdfController extends Controller
         $pdfContent = $pdf->Output('S');
         $fileName = $factura->customer->businame .'_'.$factura->secuencial .'.pdf';
         Storage::disk('comprobantes/pdfs')->put($fileName, $pdfContent);
-       $this->enviarFacturea($factura);
+       $this->enviarFactura($factura);
         //$this->noty('PDF CREADO   CORRECTAMENTE !!!!!!');
         return response($pdf->Output('D',$factura->customer->businame.'.pdf'));
 
     }
 
 
-    public function enviarFacturea(Factura $factura)  {
+    public function enviarFactura(Factura $factura)  {
 
-        //dd($factura);
+         // Cargar la configuración SMTP dinámica ANTES de enviar el correo
+        \App\Helpers\MailHelper::setSmtpFromDatabase();
          // Rutas de los archivos
          $pdf_name =  $factura->customer->businame.'_'.$factura->secuencial;
          $xml_name =  $factura->customer->valueidenti.'_'.$factura->secuencial;
