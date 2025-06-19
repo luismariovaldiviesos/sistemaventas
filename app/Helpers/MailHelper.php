@@ -21,7 +21,7 @@ class MailHelper
             Config::set('mail.mailers.smtp.port', $smtp->port);
             Config::set('mail.mailers.smtp.encryption', $smtp->encryption);
             Config::set('mail.mailers.smtp.username', $smtp->username);
-            Config::set('mail.mailers.smtp.password', Crypt::decryptString($smtp->password));
+            Config::set('mail.mailers.smtp.password', $smtp->password);
 
             Config::set('mail.from.address', $smtp->from_address);
             Config::set('mail.from.name', $smtp->from_name);

@@ -213,7 +213,7 @@ class PdfController extends Controller
     public function enviarFactura(Factura $factura)  {
 
          // Cargar la configuración SMTP dinámica ANTES de enviar el correo
-        \App\Helpers\MailHelper::setSmtpFromDatabase();
+
          // Rutas de los archivos
          $pdf_name =  $factura->customer->businame.'_'.$factura->secuencial;
          $xml_name =  $factura->customer->valueidenti.'_'.$factura->secuencial;
@@ -232,6 +232,7 @@ class PdfController extends Controller
 		}
 		else {
 			try {
+                 \App\Helpers\MailHelper::setSmtpFromDatabase();
 				Mail::to($factura->customer->email)->send(new FacturaMail($factura, $pdfPath, $xmlPath));
 			} catch (\Exception $e) {
 				// Handle the error

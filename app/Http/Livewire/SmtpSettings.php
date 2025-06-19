@@ -25,7 +25,7 @@ class SmtpSettings extends Component
              $this->port = $smtpSetting->port;
              $this->encryption = $smtpSetting->encryption;
              $this->username = $smtpSetting->username;
-             $this->password = Crypt::decryptString($smtpSetting->password);
+             $this->password = $smtpSetting->password;
              $this->from_address = $smtpSetting->from_address;
              $this->from_name = $smtpSetting->from_name;
         }else{
@@ -120,7 +120,7 @@ class SmtpSettings extends Component
         $this->validate($rules, $messages);
 
         $this->empresa_id = $this->empresa_id;
-        $this->password = Crypt::encryptString($this->password);
+        //$this->password = Crypt::encryptString($this->password);
         //  dd($this->empresa_id, $this->provider, $this->mailer,
         //    $this->host,$this->port,$this->encryption, $this->username,
         //    $this->password, $this->from_address, $this->from_name);
@@ -134,7 +134,7 @@ class SmtpSettings extends Component
                     'port'         => $this->port,
                     'encryption'   => $this->encryption,
                     'username'     => $this->username,
-                    'password'     => Crypt::encryptString($this->password),
+                    'password'     => $this->password,
                     'from_address' => $this->from_address,
                     'from_name'    => $this->from_name,
                 ]
@@ -159,7 +159,7 @@ class SmtpSettings extends Component
         );
 
         $transport->setUsername($this->username);
-        $transport->setPassword(Crypt::decryptString($this->password));
+        $transport->setPassword($this->password);
        // dd($this->username, $this->password, $this->host, $this->port, $useSsl);
         // Esto valida la conexión SMTP
         $transport->start();

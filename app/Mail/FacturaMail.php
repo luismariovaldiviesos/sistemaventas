@@ -30,11 +30,12 @@ class FacturaMail extends Mailable
     public function build()
     {
         //$settings =  Cache::get('settings');
-        $body = "Estimado cliente, adjuntamos su factura. Gracias por su preferencia.";
+
         //$settings = Setting::first();
         $settings =  empresa();
         $email =  $settings['email'];
         $razonSocial = $settings['razonSocial'];
+         $body = "Estimad@ ,".$razonSocial." adjunto al presente mail sírvase encontrar su factura. Gracias por su preferencia.";
 
         return $this
             ->subject("Factura N° {$this->factura->secuencial}")
