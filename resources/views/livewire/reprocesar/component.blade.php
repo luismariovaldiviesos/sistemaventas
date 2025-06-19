@@ -50,6 +50,8 @@
                                                 Reenviar al SRI
                                             @elseif ($xml->estado === 'creado')
                                                 Pendiente de firmar
+                                            @elseif ($xml->estado === 'pdf_nocreado')
+                                               Pendiente Generar PDF
                                             @else
                                                 {{ ucfirst($xml->estado) }} <!-- Muestra el estado por defecto si no coincide -->
                                             @endif

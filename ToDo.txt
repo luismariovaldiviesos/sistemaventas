@@ -5,12 +5,12 @@ hace falta :
 *reportes diarios de ventas falta cnstruir
 * revisar detalle arque creo que no iría
 * notas de credito boton descargar pdf revisar y construir eso ?
-*NC  y ver si se genera pdf de la nc (? seria interno capaz)
 
+
+* revisar crear pdf cuando no se crea aparantemente esta
+* encriptar la cibtraseña en smtsetthings
 * boorar carrito desde factura
 * tenenat
-000000763  no se creo el pdf, considerar crear pdf cuando hay un error en el reset no se creo el pdf
-esto ya se creo, habria que poner un estado en la base para cuando no se cree el pdf, o sea en reprocesar
 *docker
 
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Http\Controllers\PdfController;
 use App\Models\DeletedFactura;
 use App\Models\Factura;
 use App\Models\XmlFile;
@@ -93,6 +94,12 @@ class XmlFiles extends Component
                 $this->Refetch($claveAccesoFactura,$nombre_fact_xml_firmada,$xml->factura_id);
                 $this->updateFact($fac);
             }
+            elseif ($estado === 'pdf_nocreado')
+            {
+                //dd('no se ha creado el pdf, no se ha enviado al sri');
+                $pdf = new   PdfController();
+                $pdf->pdfDowloader($fac);
+            }
             else
              {
                 //throw new Exception("Estado no reconocido: $estado");
@@ -109,6 +116,9 @@ class XmlFiles extends Component
 
 
     }
+
+
+
 
 
     public function updateFact(Factura $factura) {

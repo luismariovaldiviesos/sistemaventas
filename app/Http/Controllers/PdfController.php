@@ -6,6 +6,7 @@ use App\Mail\FacturaMail;
 use App\Models\Arqueo;
 use App\Models\Factura;
 use App\Models\Setting;
+use App\Models\XmlFile;
 use Illuminate\Http\Request;
 use Codedge\Fpdf\Fpdf\Fpdf;
 use Illuminate\Support\Facades\Cache;
@@ -19,6 +20,7 @@ class PdfController extends Controller
     public  function pdfDowloader (Factura $factura){
 
         $empresa =  empresa();
+        $xmlFile  =  XmlFile::where('factura_id', $factura->id)->first();
         //$empresa =  Setting::first();
         // Limpia cualquier salida previa
         //dd('hola pdf ctm');
@@ -202,8 +204,25 @@ class PdfController extends Controller
         // Salida del PDF
         $pdfContent = $pdf->Output('S');
         $fileName = $factura->customer->businame .'_'.$factura->secuencial .'.pdf';
-        Storage::disk('comprobantes/pdfs')->put($fileName, $pdfContent);
-       $this->enviarFactura($factura);
+
+        // Verificamos que el contenido no esté vacío y que se haya guardado correctamente
+        if(!empty($pdfContent) &&   Storage::disk('comprobantes/pdfs')->put($fileName, $pdfContent)){
+
+             $xmlFile->update([
+                'directorio' => 'comprobantes/autorizados',
+                'estado' => 'autorizado',
+             ]);
+            $this->enviarFactura($factura);
+        }
+        else{
+                 // Si falla, actualiza el estado del archivo (ej. para reprocesar)
+             $xmlFile->update([
+                'directorio' => 'comprobantes/xmlaprobados',
+                'estado' => 'pdf_nocreado',
+             ]);
+                dd('Error al guardar el PDF, por favor reporcesar ');
+        }  ;
+
         //$this->noty('PDF CREADO   CORRECTAMENTE !!!!!!');
         return response($pdf->Output('D',$factura->customer->businame.'.pdf'));
 

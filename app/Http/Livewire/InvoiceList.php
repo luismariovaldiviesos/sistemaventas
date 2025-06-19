@@ -113,7 +113,7 @@ public function noty($msg, $eventName= 'noty', )
 
         $factura->codDoc = '04'; //nota de credito
         $factura->save();
-        $this->noty('Nota de Crédito emitida con éxito');
+        $this->noty('Nota de Crédito emitida con éxito aqui hay que crear el proceso de emisión de NC');
     }
 
     function delete(Factura $factura)
