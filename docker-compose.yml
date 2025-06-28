@@ -1,0 +1,66 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sistemaventas_app
+    volumes:
+      - .:/var/www
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    environment:
+      APP_ENV: local
+      DB_HOST: mysql
+      DB_DATABASE: sistemaventas
+      DB_USERNAME: root
+      DB_PASSWORD: root
+    depends_on:
+      - mysql
+    networks:
+      - svnet
+
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: sistemaventas_nginx
+    ports:
+      - "80:80"
+    volumes:
+      - .:/var/www
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - app
+    networks:
+      - svnet
+
+  mysql:
+    image: mysql:8.0
+    container_name: sistemaventas_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: sistemaventas
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - svnet
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: sistemaventas_phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql
+    networks:
+      - svnet
+
+volumes:
+  db_data:
+
+networks:
+  svnet:
