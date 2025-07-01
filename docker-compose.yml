@@ -29,18 +29,17 @@ services:
 
   db:
     image: mysql:8.0
-    container_name: db
+    container_name: mysql-server
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-      MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_USER: ${DB_USERNAME}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: sistemaventas
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-}  # Permite contraseña vacía
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"      # Permite acceso sin contraseña
     ports:
       - "3306:3306"
     volumes:
-      - dbdata:/var/lib/mysql
+      - mysql_data:/var/lib/mysql
     networks:
-      - laravel_network
+      - laravel-network
 
   redis:
     image: redis:alpine
