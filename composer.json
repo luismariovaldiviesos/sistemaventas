@@ -52,27 +52,7 @@
             "@php artisan package:discover --ansi"
         ],
         "post-install-cmd": [
-            "@php artisan storage:link",
-            "@php -r \"
-                $paths = [
-                    'app/comprobantes/autorizados',
-                    'app/comprobantes/pdfs',
-                    'app/comprobantes/xmlaprobados',
-                    'app/comprobantes/enviados',
-                    'app/comprobantes/firmados',
-                    'app/comprobantes/no_firmados',
-                    'app/comprobantes/no_autorizados',
-                    'app/comprobantes/devueltos',
-                    'app/comprobantes/no_enviados'
-                ];
-                foreach ($paths as $path) {
-                    $fullPath = storage_path($path);
-                    if (!is_dir($fullPath)) {
-                        mkdir($fullPath, 0777, true);
-                        echo 'Directorio creado: ' . $fullPath . PHP_EOL;
-                    }
-                }
-                    \""
+            "@php scripts/create_comprobante_dirs.php"
         ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
