@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
+use App\Models\Impuesto;
 
 class PermisosSistemaSeeder extends Seeder
 {
@@ -373,6 +374,25 @@ class PermisosSistemaSeeder extends Seeder
         ]);
         $this->agregaPermisosAdmin();
 
+
+
+           // impuestos generales
+
+            Impuesto::firstOrCreate([
+                'nombre' => 'IVA0',
+                'codigo' => '2',
+                'codigo_porcentaje' => 0,
+                'porcentaje' => 0.00,
+            ]);
+
+              Impuesto::firstOrCreate([
+                'nombre' => 'IVA15',
+                'codigo' => '2',
+                'codigo_porcentaje' => 4,
+                'porcentaje' => 15.00,
+            ]);
+
+
     }
 
 
@@ -384,4 +404,8 @@ class PermisosSistemaSeeder extends Seeder
             $rol->givePermissionTo($permiso->name);
         }
     }
+
+
+
+
 }
